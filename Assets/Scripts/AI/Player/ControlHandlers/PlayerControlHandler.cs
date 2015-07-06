@@ -73,8 +73,25 @@ public class PlayerControlHandler : BaseControlHandler
   {
     float speed = _playerController.inputStateManager["Dash"].IsPressed ? _playerController.runSettings.runSpeed : _playerController.runSettings.walkSpeed;
 
-    // apply horizontal speed smoothing it
-    var smoothedMovementFactor = _playerController.characterPhysicsManager.isGrounded ? _playerController.runSettings.groundDamping : _playerController.jumpSettings.inAirDamping; // how fast do we change direction?
+    float smoothedMovementFactor;
+    if (_playerController.characterPhysicsManager.isGrounded)
+    {
+      if (normalizedHorizontalSpeed == 0f)
+      {
+        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;  
+      }
+      else if (Mathf.Sign(normalizedHorizontalSpeed) == Mathf.Sign( velocity.x))
+      {// accelerating...
+        smoothedMovementFactor = _playerController.runSettings.accelerationGroundDamping;        
+      }
+      else
+        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;        
+    }
+    else
+    {
+      smoothedMovementFactor = _playerController.jumpSettings.inAirDamping;
+    }
+
     float groundedAdjustmentFactor = _playerController.characterPhysicsManager.isGrounded ? Mathf.Abs(hAxis) : 1f;
 
     return Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * speed * groundedAdjustmentFactor

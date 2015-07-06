@@ -147,7 +147,8 @@ MonoBehaviour:
   runSettings:
     walkSpeed: 600
     runSpeed: 900
-    groundDamping: 20
+    accelerationGroundDamping: 6
+    decelerationGroundDamping: 4
   boxColliderOffsetCrouched: {x: 48, y: -72}
   boxColliderSizeCrouched: {x: 96, y: 48}
   boxColliderOffsetDefault: {x: 0, y: 0}

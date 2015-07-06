@@ -16,7 +16,8 @@ public class RunSettings
 {
   public float walkSpeed = 600f;
   public float runSpeed = 900f;
-  public float groundDamping = 20f; // how fast do we change direction? higher means faster
+  public float accelerationGroundDamping = 5f; // how fast do we change direction? higher means faster
+  public float decelerationGroundDamping = 20f; // how fast do we change direction? higher means faster
 }
 
 [Serializable]
