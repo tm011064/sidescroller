@@ -20,7 +20,7 @@ public class TrooperBounceControlHandler : PlayerControlHandler
     if (!_isCompleted)
     {
       _isCompleted = true;
-      velocity.y = Mathf.Sqrt(2f * _playerController.jumpHeight * -_playerController.gravity) * .8f; // TODO (Roman): hardcoded...
+      velocity.y = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * -_playerController.jumpSettings.gravity) * .8f; // TODO (Roman): hardcoded...
 
       Logger.Info("Trooper Jump executed. Velocity y: " + velocity.y);
 

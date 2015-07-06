@@ -7,6 +7,15 @@ public class PlayerControlHandler : BaseControlHandler
   protected PlayerMetricSettings _playerMetricSettings;
 
   protected float jumpHeightMultiplier = 1f;
+  
+  public override void DrawGizmos()
+  {
+    if (doDrawDebugBoundingBox)
+    {
+      GizmoUtility.DrawBoundingBox(_playerController.transform.position + _playerController.boxCollider.offset.ToVector3()
+       , _playerController.boxCollider.bounds.extents, debugBoundingBoxColor);
+    }
+  }
 
   protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity)
   {
@@ -33,7 +42,7 @@ public class PlayerControlHandler : BaseControlHandler
     {
       if (this.CanJump())
       {
-        value = Mathf.Sqrt(2f * _playerController.jumpHeight * jumpHeightMultiplier * -_playerController.gravity);
+        value = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * jumpHeightMultiplier * -_playerController.jumpSettings.gravity);
 
         Logger.Info("Ground Jump executed. Velocity y: " + velocity.y);
       }
@@ -62,13 +71,13 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float GetHorizontalVelocityWithDamping(Vector3 velocity, float hAxis, float normalizedHorizontalSpeed)
   {
-    float dashMultiplier = _playerController.inputStateManager["Dash"].IsPressed ? 2f : 1f;
+    float speed = _playerController.inputStateManager["Dash"].IsPressed ? _playerController.runSettings.runSpeed : _playerController.runSettings.walkSpeed;
 
     // apply horizontal speed smoothing it
-    var smoothedMovementFactor = _playerController.characterPhysicsManager.isGrounded ? _playerController.groundDamping : _playerController.inAirDamping; // how fast do we change direction?
+    var smoothedMovementFactor = _playerController.characterPhysicsManager.isGrounded ? _playerController.runSettings.groundDamping : _playerController.jumpSettings.inAirDamping; // how fast do we change direction?
     float groundedAdjustmentFactor = _playerController.characterPhysicsManager.isGrounded ? Mathf.Abs(hAxis) : 1f;
 
-    return Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * _playerController.runSpeed * dashMultiplier * groundedAdjustmentFactor
+    return Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * speed * groundedAdjustmentFactor
       , Time.deltaTime * smoothedMovementFactor);
   }
 
@@ -87,7 +96,7 @@ public class PlayerControlHandler : BaseControlHandler
 
     return (
           _playerController.characterPhysicsManager.isGrounded
-        || (Time.time - _playerController.characterPhysicsManager.lastTimeGrounded < _playerController.allowJumpAfterGroundLostThreashold) // give the player some leeway TODO (Roman): hardcoded
+        || (Time.time - _playerController.characterPhysicsManager.lastTimeGrounded < _playerController.jumpSettings.allowJumpAfterGroundLostThreashold) // give the player some leeway TODO (Roman): hardcoded
         );
   }
 
@@ -114,7 +123,7 @@ public class PlayerControlHandler : BaseControlHandler
     {
       float yAxis = Input.GetAxis("Vertical");
 
-      float threshold = _playerController.runSpeed * .05f;
+      float threshold = _playerController.runSettings.walkSpeed * .05f;
       if (yAxis < 0f)
       {
         if (_playerController.characterPhysicsManager.velocity.x > -threshold
@@ -130,10 +139,10 @@ public class PlayerControlHandler : BaseControlHandler
         if (!_isCrouching)
         {
           // we also need to adjust the collider size...
-          _characterPhysicsManager.boxCollider.offset = new Vector2(_characterPhysicsManager.boxCollider.offset.x, -_characterPhysicsManager.boxCollider.size.y * .75f);
-          _characterPhysicsManager.boxCollider.size = new Vector2(_characterPhysicsManager.boxCollider.size.x, _characterPhysicsManager.boxCollider.size.y * .5f);
+          _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetCrouched;
+          _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeCrouched;
           _characterPhysicsManager.recalculateDistanceBetweenRays();
-          Logger.Info("Box Collider set to: " + _characterPhysicsManager.boxCollider.size + ", " + _characterPhysicsManager.boxCollider.offset);
+          Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
           _isCrouching = true;
         }
       }
@@ -145,12 +154,11 @@ public class PlayerControlHandler : BaseControlHandler
           {
             // we need to check whether we can stand up
 
-            // TODO (Roman): send a raycast top and see collision...
             // we also need to adjust the collider size...
-            _characterPhysicsManager.boxCollider.size = new Vector2(_characterPhysicsManager.boxCollider.size.x, _characterPhysicsManager.boxCollider.size.y * 2f);
-            _characterPhysicsManager.boxCollider.offset = new Vector2(_characterPhysicsManager.boxCollider.offset.x, -_characterPhysicsManager.boxCollider.size.y * .5f);
+            _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetDefault;
+            _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
             _characterPhysicsManager.recalculateDistanceBetweenRays();
-            Logger.Info("Box Collider set to: " + _characterPhysicsManager.boxCollider.size + ", " + _characterPhysicsManager.boxCollider.offset);
+            Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
             _isCrouching = false;
           }
           else

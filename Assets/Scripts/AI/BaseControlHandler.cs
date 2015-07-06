@@ -12,11 +12,6 @@ public class BaseControlHandler : IDisposable
 
   public virtual void DrawGizmos()
   {
-    if (doDrawDebugBoundingBox)
-    {
-      GizmoUtility.DrawBoundingBox(_characterPhysicsManager.transform.position
-       , _characterPhysicsManager.boxCollider.bounds.extents, debugBoundingBoxColor);
-    }
   }
 
   public virtual void OnEnemyMoveMaskCollision(Collider2D col)

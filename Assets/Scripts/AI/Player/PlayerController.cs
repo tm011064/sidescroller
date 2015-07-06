@@ -11,52 +11,60 @@ public class WallJumpSettings
   public float wallStickGravity = -100f;
 }
 
+[Serializable]
+public class RunSettings
+{
+  public float walkSpeed = 600f;
+  public float runSpeed = 900f;
+  public float groundDamping = 20f; // how fast do we change direction? higher means faster
+}
+
+[Serializable]
+public class JumpSettings
+{
+  public float gravity = -3960f;
+  public float walkJumpHeight = 400f;
+  public float runJumpHeight = 400f;
+  public float inAirDamping = 2.5f;
+  public float allowJumpAfterGroundLostThreashold = .05f;
+}
+
+
 public partial class PlayerController : BaseCharacterController
 {
   private const string TRACE_TAG = "PlayerController";
-
-  // movement config
-  public float gravity = -25f;
-  public float runSpeed = 8f;
-  public float groundDamping = 20f; // how fast do we change direction? higher means faster
-  public float inAirDamping = 5f;
-  public float jumpHeight = 3f;
-
+  
   public WallJumpSettings wallJumpSettings = new WallJumpSettings();
+  public JumpSettings jumpSettings = new JumpSettings();
+  public RunSettings runSettings = new RunSettings();
 
-  public float allowJumpAfterGroundLostThreashold = .1f;
+  public Vector2 boxColliderOffsetCrouched = Vector2.zero;
+  public Vector2 boxColliderSizeCrouched = Vector2.zero;
 
+  [HideInInspector]
+  public Vector2 boxColliderOffsetDefault= Vector2.zero;
+  [HideInInspector]
+  public Vector2 boxColliderSizeDefault = Vector2.zero;  
   [HideInInspector]
   public float adjustedGravity;
-
   [HideInInspector]
   public Animator animator;
-
   [HideInInspector]
   public BoxCollider2D boxCollider;
-
-  private RaycastHit2D _lastControllerColliderHit;
-  private Vector3 _velocity;
-
-  private float _currentJumpVelocity;
-  private float _currentJumpVelocityMultiplier;
-
-  private WallJumpControlHandler _reusableWallJumpControlHandler;
-
   [HideInInspector]
   public InputStateManager inputStateManager;
-
-  private Vector3 _lastLostGroundPos = Vector3.zero;
-
-  [HideInInspector]
-  public Quaternion spriteRotation = Quaternion.Euler(0f, 0f, 0f);
-
   [HideInInspector]
   public Vector3 spawnLocation;
-
   [HideInInspector]
   public GameObject currentPlatform = null;
 
+  private RaycastHit2D _lastControllerColliderHit;
+  private Vector3 _velocity;
+  private float _currentJumpVelocity;
+  private float _currentJumpVelocityMultiplier;
+  private WallJumpControlHandler _reusableWallJumpControlHandler;  
+  private Vector3 _lastLostGroundPos = Vector3.zero;
+    
   void Awake()
   {
     // register with game context so this game object can be accessed everywhere
@@ -64,6 +72,9 @@ public partial class PlayerController : BaseCharacterController
     Logger.Info("Playercontroller awoke and added to game context instance.");
 
     boxCollider = GetComponent<BoxCollider2D>();
+    boxColliderOffsetDefault = boxCollider.offset;
+    boxColliderSizeDefault = boxCollider.size;
+
     characterPhysicsManager = GetComponent<CharacterPhysicsManager>();
     animator = this.transform.GetComponent<Animator>();
 
@@ -79,7 +90,7 @@ public partial class PlayerController : BaseCharacterController
 
     _controlHandlers.Push(new GoodHealthPlayerControlHandler(this, float.MaxValue));
 
-    adjustedGravity = gravity;
+    adjustedGravity = jumpSettings.gravity;
   }
 
   void characterPhysicsManager_onControllerBecameGrounded(GameObject obj)

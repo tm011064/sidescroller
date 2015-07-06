@@ -29,7 +29,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
 
   public override void Dispose()
   {
-    _playerController.adjustedGravity = _playerController.gravity;
+    _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
   }
 
   protected override bool DoUpdate()
@@ -81,7 +81,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
     {
       if (_isFloating)
       {
-        _playerController.adjustedGravity = Mathf.Lerp(_playerController.adjustedGravity, _playerController.gravity, Time.deltaTime * .05f); // TODO (Roman): hard coded...
+        _playerController.adjustedGravity = Mathf.Lerp(_playerController.adjustedGravity, _playerController.jumpSettings.gravity, Time.deltaTime * .05f); // TODO (Roman): hard coded...
       }
       else
       {
@@ -90,7 +90,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
     }
     else
     {
-      _playerController.adjustedGravity = _playerController.gravity;
+      _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
     }
     _isFloating = isFloating;
 

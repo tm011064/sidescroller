@@ -12,5 +12,10 @@ public static class GeometryExtensions
     Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
     return GeometryUtility.TestPlanesAABB(planes, collider.bounds);
   }
+
+  public static Vector3 ToVector3(this Vector2 vector)
+  {
+    return new Vector3(vector.x, vector.y);
+  }
 }
 

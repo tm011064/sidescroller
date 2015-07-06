@@ -34,14 +34,14 @@ public class PowerUpDoubleJumpControlHandler : PlayerControlHandler
     {
       if (this.CanJump())
       {
-        velocity.y = Mathf.Sqrt(2f * _playerController.jumpHeight * jumpHeightMultiplier * -_playerController.gravity);
+        velocity.y = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * jumpHeightMultiplier * -_playerController.jumpSettings.gravity);
         //_animator.Play(Animator.StringToHash("Jump"));
 
         Logger.Info("Ground Jump executed. Velocity y: " + velocity.y);
       }
       else if (_canDoubleJump)
       {
-        velocity.y = Mathf.Sqrt(2f * _playerController.jumpHeight * jumpHeightMultiplier * -_playerController.gravity);
+        velocity.y = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * jumpHeightMultiplier * -_playerController.jumpSettings.gravity);
         _canDoubleJump = false;
       }
     }

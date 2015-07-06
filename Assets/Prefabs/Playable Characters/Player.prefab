@@ -132,22 +132,29 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   characterPhysicsManager: {fileID: 0}
-  gravity: -3960
-  runSpeed: 600
-  groundDamping: 20
-  inAirDamping: 2.5
-  jumpHeight: 400
   wallJumpSettings:
     wallJumpEnabledTime: 10000
     wallVelocityDownThreshold: -100000
-    wallJumpPushOffAxisOverrideTime: .200000003
+    wallJumpPushOffAxisOverrideTime: .300000012
     wallStickTime: .200000003
     wallStickGravity: -2000
-  allowJumpAfterGroundLostThreashold: .0500000007
+  jumpSettings:
+    gravity: -3960
+    walkJumpHeight: 400
+    runJumpHeight: 400
+    inAirDamping: 2.5
+    allowJumpAfterGroundLostThreashold: .0500000007
+  runSettings:
+    walkSpeed: 600
+    runSpeed: 900
+    groundDamping: 20
+  boxColliderOffsetCrouched: {x: 48, y: -72}
+  boxColliderSizeCrouched: {x: 96, y: 48}
+  boxColliderOffsetDefault: {x: 0, y: 0}
+  boxColliderSizeDefault: {x: 0, y: 0}
   adjustedGravity: 0
   animator: {fileID: 0}
   boxCollider: {fileID: 0}
-  spriteRotation: {x: 0, y: 0, z: 0, w: 1}
   spawnLocation: {x: 0, y: 0, z: 0}
   currentPlatform: {fileID: 0}
 --- !u!114 &11491702

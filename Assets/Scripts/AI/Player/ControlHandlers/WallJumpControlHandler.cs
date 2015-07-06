@@ -28,7 +28,7 @@ public class WallJumpControlHandler : PlayerControlHandler
 
   protected override void BeforeHandlerPop()
   {
-    _playerController.adjustedGravity = _playerController.gravity;
+    _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
   }
 
   public WallJumpControlHandler(PlayerController playerController, float overrideEndTime, bool isWallRight, WallJumpSettings wallJumpSettings)
@@ -70,7 +70,7 @@ public class WallJumpControlHandler : PlayerControlHandler
     if (velocity.y < 0f)
       _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity;
     else
-      _playerController.adjustedGravity = _playerController.gravity;
+      _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
 
     bool isWallJump = false;
     if (!_hasJumpedFromWall
@@ -83,7 +83,7 @@ public class WallJumpControlHandler : PlayerControlHandler
       this._overrideEndTime = Time.time + _wallJumpSettings.wallJumpPushOffAxisOverrideTime;
 
       // set jump height as usual
-      velocity.y = Mathf.Sqrt(2f * _playerController.jumpHeight * -_playerController.gravity);
+      velocity.y = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * -_playerController.jumpSettings.gravity);
 
       // disable jump
       _hasJumpedFromWall = true;
@@ -125,8 +125,8 @@ public class WallJumpControlHandler : PlayerControlHandler
 
     if (isWallJump)
     {
-      float dashMultiplier = _playerController.inputStateManager["Dash"].IsPressed ? 2f : 1f;
-      velocity.x = normalizedHorizontalSpeed * _playerController.runSpeed * dashMultiplier;
+      float speed = _playerController.inputStateManager["Dash"].IsPressed ? _playerController.runSettings.runSpeed : _playerController.runSettings.walkSpeed;
+      velocity.x = normalizedHorizontalSpeed * speed;
     }
     else
     {

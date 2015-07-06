@@ -20,7 +20,7 @@ public class TrooperHitControlHandler : PlayerControlHandler
     if (!_isCompleted)
     {
       _isCompleted = true;
-      velocity.x = -Mathf.Sign(velocity.x) * _playerController.runSpeed * 4f; // TODO (Roman): hardcoded...
+      velocity.x = -Mathf.Sign(velocity.x) * _playerController.runSettings.walkSpeed * 4f; // TODO (Roman): hardcoded...
 
       Logger.Info("Trooper Jump executed. Velocity y: " + velocity.y);
 

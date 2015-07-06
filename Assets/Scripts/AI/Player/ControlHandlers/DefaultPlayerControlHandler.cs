@@ -11,20 +11,20 @@ public class DefaultPlayerControlHandler : PlayerControlHandler
   {
 
   }
-
+  
   protected override bool DoUpdate()
   {
     CheckOneWayPlatformFallThrough();
 
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
-    
+
     velocity.y = GetJumpVerticalVelocity(velocity);
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);
 
     _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
-    
+
     return true;
   }
 
