@@ -6,6 +6,8 @@ using UnityEngine;
 
 public class InputState
 {
+  private const string TRACE_TAG = "InputState";
+
   private string _buttonName;
   private float _pressStarted;
 
@@ -22,7 +24,7 @@ public class InputState
       _pressStarted = Time.time;
       this.IsDown = true;
 
-      Logger.Trace("Button " + _buttonName + " down at " + Time.time);
+      Logger.Trace(TRACE_TAG, "Button " + _buttonName + " is down.");
     }
     else
     {

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEngine;
+using System.Threading;
 
 public class Logger : IDisposable
 {
@@ -25,6 +26,10 @@ public class Logger : IDisposable
   private LogSettings _loggerSettings;
   private StreamWriter _outputStream;
   private HashSet<string> _enabledTraceTags;
+
+  private Timer _writeTimer;
+  private List<string> _messagesToWrite = new List<string>();
+  private readonly object _messagesToWriteLock = new object();
   #endregion
 
   #region properties
@@ -38,11 +43,11 @@ public class Logger : IDisposable
 #if !FINAL
     if (!string.IsNullOrEmpty(traceTag))
     {
-      if (!_loggerSettings. enableAllTraceTags && !_enabledTraceTags.Contains(traceTag))
+      if (!_loggerSettings.enableAllTraceTags && !_enabledTraceTags.Contains(traceTag))
         return;
 
       if (_loggerSettings.addTraceTagToMessage)
-        message = "[" + traceTag + "] " + message; 
+        message = "[" + traceTag + "] " + message;
     }
 
     if (_loggerSettings.addTimeStamp)
@@ -50,11 +55,9 @@ public class Logger : IDisposable
       message = Time.time.ToString(".0000000") + " " + message;
     }
 
-    if (_outputStream != null)
+    lock (_messagesToWriteLock)
     {
-
-      _outputStream.WriteLine(message);
-      _outputStream.Flush();
+      _messagesToWrite.Add(message);
     }
 
     if (_loggerSettings.echoToConsole)
@@ -67,6 +70,26 @@ public class Logger : IDisposable
         UnityEngine.Debug.LogError(message);
     }
 #endif
+  }
+
+  private void WriteToDisk(object obj)
+  {
+    if (_outputStream != null)
+    {
+      List<string> messages;
+      lock (_messagesToWrite)
+      {
+        // make a local copy so we don't lock the main thread while writing
+        messages = new List<string>(_messagesToWrite);
+        _messagesToWrite = new List<string>();
+      }
+
+      for (int i = 0; i < messages.Count; i++)
+      {
+        _outputStream.WriteLine(messages[i]);
+        _outputStream.Flush();
+      }
+    }
   }
 
   #region static
@@ -208,6 +231,10 @@ public class Logger : IDisposable
 #if !FINAL
     if (_outputStream != null)
     {
+      // write remaining messages
+      WriteToDisk(null);
+      _writeTimer.Dispose();
+
       try
       {
         _outputStream.Dispose();
@@ -290,6 +317,8 @@ public class Logger : IDisposable
     this._enabledTraceTags = new HashSet<string>(_loggerSettings.enabledTraceTags);
 
 #if !FINAL
+    _writeTimer = new Timer(WriteToDisk, null, TimeSpan.FromSeconds(1), TimeSpan.FromSeconds(1));
+
     FileInfo fileInfo = new FileInfo(logSettings.logFile);
     if (!fileInfo.Exists)
     {

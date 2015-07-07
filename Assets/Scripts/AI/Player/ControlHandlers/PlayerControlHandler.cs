@@ -3,11 +3,14 @@ using System.Collections;
 
 public class PlayerControlHandler : BaseControlHandler
 {
+  private const string TRACE_TAG = "PlayerControlHandler";
+
   protected PlayerController _playerController;
   protected PlayerMetricSettings _playerMetricSettings;
 
+  private bool _isCrouching = false;
   protected float jumpHeightMultiplier = 1f;
-  
+
   public override void DrawGizmos()
   {
     if (doDrawDebugBoundingBox)
@@ -31,6 +34,16 @@ public class PlayerControlHandler : BaseControlHandler
     return value;
   }
 
+  protected float CalculateJumpHeight(Vector2 velocity)
+  {
+    return Mathf.Sqrt(
+          2f
+          * jumpHeightMultiplier
+          * -_playerController.jumpSettings.gravity
+          * (Mathf.Abs(velocity.x) >= _playerController.jumpSettings.runJumpHeightSpeedTrigger ? _playerController.jumpSettings.runJumpHeight : _playerController.jumpSettings.walkJumpHeight)
+          );
+  }
+
   protected float GetJumpVerticalVelocity(Vector3 velocity)
   {
     float value = velocity.y;
@@ -42,9 +55,8 @@ public class PlayerControlHandler : BaseControlHandler
     {
       if (this.CanJump())
       {
-        value = Mathf.Sqrt(2f * _playerController.jumpSettings.walkJumpHeight * jumpHeightMultiplier * -_playerController.jumpSettings.gravity);
-
-        Logger.Info("Ground Jump executed. Velocity y: " + velocity.y);
+        value = CalculateJumpHeight(velocity);
+        Logger.Info("Ground Jump executed. Velocity y: " + value);
       }
     }
 
@@ -71,21 +83,31 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float GetHorizontalVelocityWithDamping(Vector3 velocity, float hAxis, float normalizedHorizontalSpeed)
   {
-    float speed = _playerController.inputStateManager["Dash"].IsPressed ? _playerController.runSettings.runSpeed : _playerController.runSettings.walkSpeed;
-
+    float speed = _playerController.runSettings.walkSpeed;
+    if (_playerController.inputStateManager["Dash"].IsPressed)
+    {      
+      if (                                                            // allow dash speed if
+                _characterPhysicsManager.isGrounded                   // either the player is grounded
+            ||  velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velociuty is higher than the walkspeed, meaning that the player jumped while running
+        )
+      {
+        speed = _playerController.runSettings.runSpeed ;
+      }
+    }
+    
     float smoothedMovementFactor;
     if (_playerController.characterPhysicsManager.isGrounded)
     {
       if (normalizedHorizontalSpeed == 0f)
       {
-        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;  
+        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;
       }
-      else if (Mathf.Sign(normalizedHorizontalSpeed) == Mathf.Sign( velocity.x))
+      else if (Mathf.Sign(normalizedHorizontalSpeed) == Mathf.Sign(velocity.x))
       {// accelerating...
-        smoothedMovementFactor = _playerController.runSettings.accelerationGroundDamping;        
+        smoothedMovementFactor = _playerController.runSettings.accelerationGroundDamping;
       }
       else
-        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;        
+        smoothedMovementFactor = _playerController.runSettings.decelerationGroundDamping;
     }
     else
     {
@@ -102,7 +124,7 @@ public class PlayerControlHandler : BaseControlHandler
   {
     float hAxis = Input.GetAxis("Horizontal");
     float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(hAxis);
-    
+
     return GetHorizontalVelocityWithDamping(velocity, hAxis, normalizedHorizontalSpeed);
   }
 
@@ -131,11 +153,11 @@ public class PlayerControlHandler : BaseControlHandler
       }
     }
   }
-
-  private bool _isCrouching = false;
-
-  protected override void SetAnimation()
+  
+  protected override void OnAfterUpdate()
   {
+    Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
+
     if (_playerController.characterPhysicsManager.isGrounded)
     {
       float yAxis = Input.GetAxis("Vertical");
@@ -158,9 +180,11 @@ public class PlayerControlHandler : BaseControlHandler
           // we also need to adjust the collider size...
           _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetCrouched;
           _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeCrouched;
+
           _characterPhysicsManager.recalculateDistanceBetweenRays();
-          Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
           _isCrouching = true;
+
+          Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
         }
       }
       else
@@ -174,9 +198,11 @@ public class PlayerControlHandler : BaseControlHandler
             // we also need to adjust the collider size...
             _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetDefault;
             _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
+
             _characterPhysicsManager.recalculateDistanceBetweenRays();
-            Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
             _isCrouching = false;
+
+            Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
           }
           else
           {

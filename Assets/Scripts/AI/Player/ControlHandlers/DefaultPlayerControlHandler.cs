@@ -22,9 +22,9 @@ public class DefaultPlayerControlHandler : PlayerControlHandler
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);
-
+    
     _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
-
+    
     return true;
   }
 

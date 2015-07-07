@@ -24,8 +24,9 @@ public class RunSettings
 public class JumpSettings
 {
   public float gravity = -3960f;
-  public float walkJumpHeight = 400f;
+  public float walkJumpHeight = 380f;
   public float runJumpHeight = 400f;
+  public float runJumpHeightSpeedTrigger = 800f;
   public float inAirDamping = 2.5f;
   public float allowJumpAfterGroundLostThreashold = .05f;
 }

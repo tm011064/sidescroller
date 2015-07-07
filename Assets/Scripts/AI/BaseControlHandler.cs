@@ -10,24 +10,10 @@ public class BaseControlHandler : IDisposable
   protected Color debugBoundingBoxColor = Color.green;
   protected bool doDrawDebugBoundingBox = false;
 
-  public virtual void DrawGizmos()
-  {
-  }
-
-  public virtual void OnEnemyMoveMaskCollision(Collider2D col)
-  {
-
-  }
-
-  protected virtual void SetAnimation()
-  {
-
-  }
-
-  protected virtual void BeforeHandlerPop()
-  {
-  }
-
+  public virtual void DrawGizmos() { /* can be overridden */ }
+  public virtual void OnEnemyMoveMaskCollision(Collider2D col) { /* can be overridden */ }
+  protected virtual void OnBeforeHandlerPop() { /* can be overridden */ }
+  protected virtual void OnAfterUpdate() { /* can be overridden */ }
   public virtual void Dispose() { /* can be overridden */}
 
   /// <summary>
@@ -38,16 +24,16 @@ public class BaseControlHandler : IDisposable
   {
     if (this._overrideEndTime < Time.time)
     {
-      BeforeHandlerPop();
+      OnBeforeHandlerPop();
       return false;
     }
 
     bool doUpdate = DoUpdate();
 
-    SetAnimation();
+    OnAfterUpdate();
 
     if (!doUpdate)
-      BeforeHandlerPop();
+      OnBeforeHandlerPop();
 
     return doUpdate;
   }

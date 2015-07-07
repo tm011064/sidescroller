@@ -140,15 +140,16 @@ MonoBehaviour:
     wallStickGravity: -2000
   jumpSettings:
     gravity: -3960
-    walkJumpHeight: 400
+    walkJumpHeight: 380
     runJumpHeight: 400
+    runJumpHeightSpeedTrigger: 620
     inAirDamping: 2.5
     allowJumpAfterGroundLostThreashold: .0500000007
   runSettings:
     walkSpeed: 600
     runSpeed: 900
     accelerationGroundDamping: 6
-    decelerationGroundDamping: 4
+    decelerationGroundDamping: 8
   boxColliderOffsetCrouched: {x: 48, y: -72}
   boxColliderSizeCrouched: {x: 96, y: 48}
   boxColliderOffsetDefault: {x: 0, y: 0}

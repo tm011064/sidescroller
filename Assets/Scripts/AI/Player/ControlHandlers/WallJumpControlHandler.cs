@@ -26,7 +26,7 @@ public class WallJumpControlHandler : PlayerControlHandler
     this._wallJumpSettings = wallJumpSettings;
   }
 
-  protected override void BeforeHandlerPop()
+  protected override void OnBeforeHandlerPop()
   {
     _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
   }
@@ -125,7 +125,7 @@ public class WallJumpControlHandler : PlayerControlHandler
 
     if (isWallJump)
     {
-      float speed = _playerController.inputStateManager["Dash"].IsPressed ? _playerController.runSettings.runSpeed : _playerController.runSettings.walkSpeed;
+      float speed = _playerController.runSettings.walkSpeed;
       velocity.x = normalizedHorizontalSpeed * speed;
     }
     else
@@ -133,7 +133,6 @@ public class WallJumpControlHandler : PlayerControlHandler
       velocity.x = GetHorizontalVelocityWithDamping(velocity, hAxis, normalizedHorizontalSpeed);
     }
 
-    Debug.Log(_playerController.adjustedGravity);
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
     _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
