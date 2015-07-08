@@ -24,7 +24,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136188}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1536, y: 528, z: 0}
+  m_LocalPosition: {x: 17568, y: 1744, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -40,7 +40,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  floatingAttachedPlatform: {fileID: 120430, guid: df935cf6e0aa7cd448f03f653f7374df,
+  floatingAttachedPlatform: {fileID: 124956, guid: 3054ef3c73255f54b9c17f60e65fe728,
     type: 2}
   easeType: 14
   loopType: 2
@@ -61,8 +61,8 @@ MonoBehaviour:
   pathName: Path1
   pathColor: {r: 0, g: 1, b: 1, a: 1}
   nodes:
-  - {x: 1536, y: 780, z: 0}
-  - {x: 1536, y: 360, z: 0}
+  - {x: 17568, y: 1792, z: 0}
+  - {x: 17568, y: 2144, z: 0}
   nodeCount: 2
   initialized: 1
   initialName: New Path 1

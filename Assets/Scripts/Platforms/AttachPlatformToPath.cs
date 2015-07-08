@@ -55,7 +55,7 @@ public class AttachPlatformToPath : BaseMonoBehaviour
   void Awake()
   {
     var pathContainer = GetComponent<iTweenPath>();
-    pathContainer.pathName = Guid.NewGuid().ToString();
+    pathContainer.SetPathName(Guid.NewGuid().ToString());
   }
 
   protected override void OnGotVisible()
