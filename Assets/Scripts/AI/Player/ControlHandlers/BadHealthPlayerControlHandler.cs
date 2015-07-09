@@ -6,8 +6,8 @@ using UnityEngine;
 
 public class BadHealthPlayerControlHandler : DefaultPlayerControlHandler
 {
-  public BadHealthPlayerControlHandler(PlayerController playerController, float overrideEndTime)
-    : base(playerController, overrideEndTime)
+  public BadHealthPlayerControlHandler(PlayerController playerController)
+    : base(playerController)
   {
     base.doDrawDebugBoundingBox = true;
     base.debugBoundingBoxColor = Color.red;

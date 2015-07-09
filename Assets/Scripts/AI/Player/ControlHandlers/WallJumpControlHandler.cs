@@ -16,9 +16,9 @@ public class WallJumpControlHandler : PlayerControlHandler
 
   private WallJumpSettings _wallJumpSettings;
 
-  public void Reset(float overrideEndTime, bool isWallRight, WallJumpSettings wallJumpSettings)
+  public void Reset(float duration, bool isWallRight, WallJumpSettings wallJumpSettings)
   {
-    this._overrideEndTime = overrideEndTime;
+    this._overrideEndTime = Time.time + duration;
     this._hasJumpedFromWall = false;
     this._oppositeDirectionPressedTime = -1f;
     this._isWallRight = isWallRight;
@@ -26,13 +26,13 @@ public class WallJumpControlHandler : PlayerControlHandler
     this._wallJumpSettings = wallJumpSettings;
   }
 
-  protected override void OnBeforeHandlerPop()
+  public override void Dispose()
   {
     _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
   }
 
-  public WallJumpControlHandler(PlayerController playerController, float overrideEndTime, bool isWallRight, WallJumpSettings wallJumpSettings)
-    : base(playerController, overrideEndTime)
+  public WallJumpControlHandler(PlayerController playerController, float duration, bool isWallRight, WallJumpSettings wallJumpSettings)
+    : base(playerController, duration)
   {
     this._isWallRight = isWallRight;
     this._wallJumpDirectionMultiplier = isWallRight ? -1f : 1f;
@@ -135,7 +135,7 @@ public class WallJumpControlHandler : PlayerControlHandler
 
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
-    _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
+    _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
 
     // TODO (Roman): we always need to check whether we are still on a wall (whole height is on wall...)
 

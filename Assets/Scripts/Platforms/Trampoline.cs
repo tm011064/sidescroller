@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TrampolineBounceControlHandler : DefaultPlayerControlHandler
 {
-  public TrampolineBounceControlHandler(PlayerController playerController, float overrideEndTime, float jumpHeightMultiplier)
-    : base(playerController, overrideEndTime)
+  public TrampolineBounceControlHandler(PlayerController playerController, float duration, float jumpHeightMultiplier)
+    : base(playerController, duration)
   {
     this.jumpHeightMultiplier = jumpHeightMultiplier;
   }
@@ -21,7 +21,7 @@ public class Trampoline : MonoBehaviour
     if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
     {
       PlayerController playerController = col.gameObject.GetComponent<PlayerController>();
-      playerController.PushControlHandler(new TrampolineBounceControlHandler(playerController, Time.time + jumpButtonDelayTime, jumpHeightMultiplier));
+      playerController.PushControlHandler(new TrampolineBounceControlHandler(playerController, jumpButtonDelayTime, jumpHeightMultiplier));
     }
   }
 }

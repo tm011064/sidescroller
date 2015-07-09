@@ -60,6 +60,11 @@ public partial class PlayerController : BaseCharacterController
   [HideInInspector]
   public GameObject currentPlatform = null;
 
+  [HideInInspector]
+  public bool isInvincible = false;
+  [HideInInspector]
+  public bool isTakingDamage = false;
+
   private RaycastHit2D _lastControllerColliderHit;
   private Vector3 _velocity;
   private float _currentJumpVelocity;
@@ -90,7 +95,8 @@ public partial class PlayerController : BaseCharacterController
 
     _reusableWallJumpControlHandler = new WallJumpControlHandler(this, -1f, false, wallJumpSettings);
 
-    _controlHandlers.Push(new GoodHealthPlayerControlHandler(this, float.MaxValue));
+    PushControlHandler(new GoodHealthPlayerControlHandler(this));
+    GameManager.instance.powerUpManager.PowerMeter = 1;
 
     adjustedGravity = jumpSettings.gravity;
   }
@@ -143,24 +149,22 @@ public partial class PlayerController : BaseCharacterController
       //  spriteRotation = Quaternion.Euler(0f, 0f, toAngle);
       //}
 
-      if (characterPhysicsManager.collisionState.isOnWall)
+      if (characterPhysicsManager.lastMoveCalculationResult.collisionState.isOnWall)
       {
-        if (characterPhysicsManager.collisionState.left && !characterPhysicsManager.isGrounded)
+        if (characterPhysicsManager.lastMoveCalculationResult.collisionState.left && !characterPhysicsManager.isGrounded)
         {
-          if (_controlHandlers.Peek() != _reusableWallJumpControlHandler)
+          if (this.CurrentControlHandler != _reusableWallJumpControlHandler)
           {
-            _reusableWallJumpControlHandler.Reset(Time.time + wallJumpSettings.wallJumpEnabledTime, false, wallJumpSettings);
-            Logger.Info("Pushing handler: " + _reusableWallJumpControlHandler.ToString());
-            _controlHandlers.Push(_reusableWallJumpControlHandler);
+            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpEnabledTime, false, wallJumpSettings);
+            PushControlHandler(_reusableWallJumpControlHandler);
           }
         }
-        else if (characterPhysicsManager.collisionState.right && !characterPhysicsManager.isGrounded)
+        else if (characterPhysicsManager.lastMoveCalculationResult.collisionState.right && !characterPhysicsManager.isGrounded)
         {
-          if (_controlHandlers.Peek() != _reusableWallJumpControlHandler)
+          if (this.CurrentControlHandler != _reusableWallJumpControlHandler)
           {
-            _reusableWallJumpControlHandler.Reset(Time.time + wallJumpSettings.wallJumpEnabledTime, true, wallJumpSettings);
-            Logger.Info("Pushing handler: " + _reusableWallJumpControlHandler.ToString());
-            _controlHandlers.Push(_reusableWallJumpControlHandler);
+            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpEnabledTime, true, wallJumpSettings);
+            PushControlHandler(_reusableWallJumpControlHandler);
           }
         }
       }
@@ -185,27 +189,22 @@ public partial class PlayerController : BaseCharacterController
 #if UNITY_EDITOR
   void OnDrawGizmos()
   {
-    if (_controlHandlers.Count > 0)
+    if (this.CurrentControlHandler != null)
     {
-      _controlHandlers.Peek().DrawGizmos();
+      this.CurrentControlHandler.DrawGizmos();
     }
   }
 #endif
-
-  public void PushControlHandler(PlayerControlHandler playerControlHandler)
-  {
-    _controlHandlers.Push(playerControlHandler);
-  }
-
+  
   public void Respawn()
   {
-    characterPhysicsManager.velocity.x = 0f;
-    characterPhysicsManager.velocity.y = 0f;
-
+    characterPhysicsManager.velocity = Vector3.zero;
     characterPhysicsManager.transform.position = spawnLocation;
 
-    _controlHandlers.Clear();
-    _controlHandlers.Push(new GoodHealthPlayerControlHandler(this, float.MaxValue));
+    adjustedGravity = jumpSettings.gravity;
+
+    ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
+    GameManager.instance.powerUpManager.PowerMeter = 1;
   }
 
   protected override void Update()
@@ -215,7 +214,7 @@ public partial class PlayerController : BaseCharacterController
 
     if (inputStateManager["SwitchPowerUp"].IsUp)
     {
-      GameManager.instance.powerUpManager.ApplyNextInventotyPowerUpItem();
+      GameManager.instance.powerUpManager.ApplyNextInventoryPowerUpItem();
     }
 
     base.Update();

@@ -59,7 +59,7 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 48, y: -48}
+  m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 96, y: 96}
 --- !u!95 &9523714
@@ -150,7 +150,7 @@ MonoBehaviour:
     runSpeed: 900
     accelerationGroundDamping: 6
     decelerationGroundDamping: 8
-  boxColliderOffsetCrouched: {x: 48, y: -72}
+  boxColliderOffsetCrouched: {x: 0, y: -24}
   boxColliderSizeCrouched: {x: 96, y: 48}
   boxColliderOffsetDefault: {x: 0, y: 0}
   boxColliderSizeDefault: {x: 0, y: 0}
@@ -159,6 +159,7 @@ MonoBehaviour:
   boxCollider: {fileID: 0}
   spawnLocation: {x: 0, y: 0, z: 0}
   currentPlatform: {fileID: 0}
+  isInvincible: 0
 --- !u!114 &11491702
 MonoBehaviour:
   m_ObjectHideFlags: 1

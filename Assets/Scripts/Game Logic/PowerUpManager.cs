@@ -16,6 +16,13 @@ public enum PowerUpType
 [Serializable]
 public class PowerUpManager
 {
+  public enum DamageResult
+  {
+    IsDead,
+    LostPower,
+    LostItem
+  }
+
   private GameManager _gameManager;
 
   public PowerUpManager(GameManager gameManager)
@@ -32,7 +39,7 @@ public class PowerUpManager
   }
 
 
-  public void ApplyNextInventotyPowerUpItem()
+  public void ApplyNextInventoryPowerUpItem()
   {
     Logger.Info("Switch to next powerup item");
     if (_orderedPowerUpInventory.Count > 0)
@@ -75,32 +82,35 @@ public class PowerUpManager
     Logger.Info("Added damage, respawn. " + this.ToString());
     _gameManager.player.Respawn();
   }
-  public void AddDamage()
+  public DamageResult AddDamage()
   {
     if (_currentPowerUpItem.HasValue)
     {
       _orderedPowerUpInventory.Remove(_currentPowerUpItem.Value);
-
+      
       _currentPowerUpControlHandler.Dispose();
       _gameManager.player.RemoveControlHandler(_currentPowerUpControlHandler);
 
       _currentPowerUpControlHandler = null;
       _currentPowerUpItem = null;
       Logger.Info("Added damage, removed power up item. " + this.ToString());
+      return DamageResult.LostItem;
     }
     else
     {
       if (_powerMeter == 1)
       {
         _powerMeter = 0; // TODO (Roman): notify player for rendering...    
-        _gameManager.player.ExchangeControlHandler(0, new BadHealthPlayerControlHandler(_gameManager.player, float.MaxValue));
+        _gameManager.player.ExchangeControlHandler(0, new BadHealthPlayerControlHandler(_gameManager.player));
         Logger.Info("Added damage, reduced power meter. " + this.ToString());
+        return DamageResult.LostPower;
       }
       else
       {
         // player died
         Logger.Info("Added damage, respawn. " + this.ToString());
         _gameManager.player.Respawn();
+        return DamageResult.IsDead;
       }
     }
   }
@@ -110,7 +120,7 @@ public class PowerUpManager
     if (powerUpType == PowerUpType.Basic)
     {
       _powerMeter = 1;
-      _gameManager.player.ExchangeControlHandler(0, new GoodHealthPlayerControlHandler(_gameManager.player, float.MaxValue));
+      _gameManager.player.ExchangeControlHandler(0, new GoodHealthPlayerControlHandler(_gameManager.player));
       Logger.Info("Added basic power up. " + this.ToString());
     }
     else
@@ -120,7 +130,7 @@ public class PowerUpManager
         // when getting a non basic power up, we want to set the power meter to 1 so we automatically go back to that state in case we lose the
         // power up.
         _powerMeter = 1;
-        _gameManager.player.ExchangeControlHandler(0, new GoodHealthPlayerControlHandler(_gameManager.player, float.MaxValue));
+        _gameManager.player.ExchangeControlHandler(0, new GoodHealthPlayerControlHandler(_gameManager.player));
         Logger.Info("Added basic power up. " + this.ToString());
       }
 

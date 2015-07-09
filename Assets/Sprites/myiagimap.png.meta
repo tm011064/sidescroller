@@ -1,6 +1,6 @@
 fileFormatVersion: 2
 guid: 29689edf152f76a40916850ad149b4a2
-timeCreated: 1435647518
+timeCreated: 1436461067
 licenseType: Free
 TextureImporter:
   fileIDToRecycleName:
@@ -70,8 +70,8 @@ TextureImporter:
         y: 416
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_1
       rect:
@@ -80,8 +80,8 @@ TextureImporter:
         y: 416
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_2
       rect:
@@ -90,8 +90,8 @@ TextureImporter:
         y: 416
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_3
       rect:
@@ -100,8 +100,8 @@ TextureImporter:
         y: 416
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_4
       rect:
@@ -110,8 +110,8 @@ TextureImporter:
         y: 416
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_5
       rect:
@@ -120,8 +120,8 @@ TextureImporter:
         y: 320
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_6
       rect:
@@ -130,18 +130,18 @@ TextureImporter:
         y: 320
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_7
       rect:
         serializedVersion: 2
         x: 192
-        y: 320
+        y: 321
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_8
       rect:
@@ -150,8 +150,8 @@ TextureImporter:
         y: 320
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_10
       rect:
@@ -160,8 +160,8 @@ TextureImporter:
         y: 224
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_11
       rect:
@@ -170,8 +170,8 @@ TextureImporter:
         y: 224
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_12
       rect:
@@ -180,8 +180,8 @@ TextureImporter:
         y: 224
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_13
       rect:
@@ -190,8 +190,8 @@ TextureImporter:
         y: 224
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
     - name: myiagimap_14
       rect:
@@ -200,8 +200,8 @@ TextureImporter:
         y: 224
         width: 96
         height: 96
-      alignment: 1
-      pivot: {x: 0, y: 0}
+      alignment: 0
+      pivot: {x: .5, y: .5}
       border: {x: 0, y: 0, z: 0, w: 0}
   spritePackingTag: 
   userData: 

@@ -6,8 +6,13 @@ using UnityEngine;
 
 public class DefaultPlayerControlHandler : PlayerControlHandler
 {
-  public DefaultPlayerControlHandler(PlayerController playerController, float overrideEndTime)
-    : base(playerController, overrideEndTime)
+  public DefaultPlayerControlHandler(PlayerController playerController)
+    : base(playerController)
+  {
+
+  }
+  public DefaultPlayerControlHandler(PlayerController playerController, float duration)
+    : base(playerController, duration)
   {
 
   }
@@ -23,7 +28,7 @@ public class DefaultPlayerControlHandler : PlayerControlHandler
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);
     
-    _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
+    _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
     
     return true;
   }

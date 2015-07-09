@@ -26,7 +26,7 @@ public class TrooperController : EnemyController //MonoBehaviour
     characterPhysicsManager.onTriggerEnterEvent += onTriggerEnterEvent;
     characterPhysicsManager.onControllerCollidedEvent += characterPhysicsManager_onControllerCollidedEvent;
 
-    PushControlHandler(new DefaultTrooperControlHandler(this, float.MaxValue));
+    PushControlHandler(new DefaultTrooperControlHandler(this));
 
     _anim.Play("Idle");
   }
@@ -44,7 +44,7 @@ public class TrooperController : EnemyController //MonoBehaviour
   {
     if (col.gameObject.layer == LayerMask.NameToLayer("EnemyMoveMask"))
     {
-      _controlHandlers.Peek().OnEnemyMoveMaskCollision(col);
+      this.CurrentControlHandler.OnEnemyMoveMaskCollision(col);
     }
   }
 

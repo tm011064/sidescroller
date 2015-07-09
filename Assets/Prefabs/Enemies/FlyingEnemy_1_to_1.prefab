@@ -11,7 +11,7 @@ GameObject:
   - 212: {fileID: 21293404}
   - 50: {fileID: 5065572}
   - 61: {fileID: 6187094}
-  - 114: {fileID: 11471448}
+  - 114: {fileID: 11460006}
   m_Layer: 10
   m_Name: FlyingEnemy_1_to_1
   m_TagString: Untagged
@@ -59,7 +59,7 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 96, y: 96}
---- !u!114 &11471448
+--- !u!114 &11460006
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
@@ -67,12 +67,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 124956}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4337a34866cbd62419f2487ee4304f09, type: 3}
+  m_Script: {fileID: 11500000, guid: 5760c1218f4e14344ac86ebc156128e9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   characterPhysicsManager: {fileID: 0}
-  moveDirectionFactor: 1
-  dropPowerUpChance: .800000012
+  startDirection: 2
   bounceJumpMultiplier: .800000012
   allowJumpFromTopThresholdInSeconds: .100000001
   allowedTopCollisionAngleFrom: -38

@@ -34,7 +34,7 @@ public class EnemySpawnManager : BaseMonoBehaviour
   public RespawnMode respawnMode = RespawnMode.SpawnOnce;
   public float continuousSpawnInterval = 10f;
   public float visibiltyCheckInterval = .1f;
-  public float moveDirectionFactor = 1f;
+  public Direction startDirection = Direction.Right;
   public BallisticTrajectory ballisticTrajectory = new BallisticTrajectory();
 
   [Range(1f / 30.0f, float.MaxValue)]
@@ -51,7 +51,7 @@ public class EnemySpawnManager : BaseMonoBehaviour
     if (_enemyController == null)
       throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
 
-    _enemyController.moveDirectionFactor = moveDirectionFactor;
+    _enemyController.startDirection = startDirection;
 
     _spawnedEnemy.transform.position = this.transform.position;
     

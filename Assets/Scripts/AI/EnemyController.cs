@@ -1,13 +1,14 @@
-﻿public class EnemyController : BaseCharacterController
+﻿using UnityEngine;
+public class EnemyController : BaseCharacterController
 {
-  public float moveDirectionFactor = 1f;
+  public Direction startDirection = Direction.Right;
 
-  public virtual void onPlayerCollide(PlayerController playerController)
+  void Awake()
   {
-
+    characterPhysicsManager = GetComponent<CharacterPhysicsManager>();
   }
 
-  public virtual void OnProjectilePathFinished()
+  public virtual void onPlayerCollide(PlayerController playerController)
   {
 
   }

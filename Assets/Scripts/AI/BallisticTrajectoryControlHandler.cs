@@ -12,7 +12,7 @@ public class BallisticTrajectoryControlHandler : BaseControlHandler
 
   public BallisticTrajectoryControlHandler(CharacterPhysicsManager characterPhysicsManager, Vector3 startPosition, Vector3 endPosition, float gravity
     , float angle)
-    : base(characterPhysicsManager, float.MaxValue)
+    : base(characterPhysicsManager)
   {
     base.doDrawDebugBoundingBox = true;
     base.debugBoundingBoxColor = Color.cyan;
@@ -48,7 +48,7 @@ public class BallisticTrajectoryControlHandler : BaseControlHandler
   protected override bool DoUpdate()
   {
     _velocity.y += _gravity * Time.deltaTime;
-    _characterPhysicsManager.move(_velocity * Time.deltaTime);
+    _characterPhysicsManager.Move(_velocity * Time.deltaTime);
 
     return _keepAlive;
   }

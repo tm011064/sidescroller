@@ -10,7 +10,7 @@ public class PowerUpDoubleJumpControlHandler : PlayerControlHandler
   private bool _hasUsedDoubleJump;
   
   public PowerUpDoubleJumpControlHandler(PlayerController playerController)
-    : base(playerController, float.MaxValue)
+    : base(playerController)
   {
     base.doDrawDebugBoundingBox = true;
     base.debugBoundingBoxColor = Color.yellow;
@@ -49,7 +49,7 @@ public class PowerUpDoubleJumpControlHandler : PlayerControlHandler
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);
     
-    _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
+    _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
 
     return true;
   }

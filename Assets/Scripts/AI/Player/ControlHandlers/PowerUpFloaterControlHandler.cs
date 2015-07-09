@@ -19,7 +19,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
   private bool _isFloating;
 
   public PowerUpFloaterControlHandler(PlayerController playerController, PowerUpSettings powerUpSettings)
-    : base(playerController, float.MaxValue)
+    : base(playerController)
   {
     _powerUpSettings = powerUpSettings;
 
@@ -96,7 +96,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
 
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
-    _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
+    _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
 
     return true;
   }

@@ -40,6 +40,12 @@ public class LogSettings
   public bool enableAllTraceTags = false;
   public bool addTraceTagToMessage = true;
 }
+[Serializable]
+public class PlayerDamageControlHandlerSettings
+{
+  public float duration = 3f;
+  public float suspendPhysicsTime = 1f;
+}
 
 [Serializable]
 public class GameSettings
@@ -48,6 +54,7 @@ public class GameSettings
   public PlayerMetricSettings playerMetricSettings = new PlayerMetricSettings();
   public PooledObjects pooledObjects = new PooledObjects();
   public LogSettings logSettings = new LogSettings();
+  public PlayerDamageControlHandlerSettings playerDamageControlHandlerSettings = new PlayerDamageControlHandlerSettings();
 }
 
 public class GameLoader : MonoBehaviour

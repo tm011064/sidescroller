@@ -11,15 +11,18 @@ public class DefaultTrooperControlHandler : BaseControlHandler
 
   private TrooperController _trooperController;
 
-  public DefaultTrooperControlHandler(TrooperController trooperController, float overrideEndTime)
-    : base(trooperController.characterPhysicsManager, overrideEndTime)
+  public DefaultTrooperControlHandler(TrooperController trooperController)
+    : this(trooperController, -1f) { }
+  public DefaultTrooperControlHandler(TrooperController trooperController, float duration)
+    : base(trooperController.characterPhysicsManager, duration)
   {
     _trooperController = trooperController;
+    _moveDirectionFactor = trooperController.startDirection == Direction.Left ? -1f : 1f;
   }
 
   public override void OnEnemyMoveMaskCollision(Collider2D col)
   {
-    _trooperController.moveDirectionFactor *= -1;
+    _moveDirectionFactor *= -1;
     _hasChangedDirection = true;
   }
 
@@ -35,19 +38,19 @@ public class DefaultTrooperControlHandler : BaseControlHandler
       velocity = _characterPhysicsManager.velocity;
 
       var smoothedMovementFactor = _characterPhysicsManager.isGrounded ? _trooperController.groundDamping : _trooperController.inAirDamping; // how fast do we change direction?
-      velocity.x = Mathf.Lerp(velocity.x, _trooperController.moveDirectionFactor * _trooperController.runSpeed, Time.deltaTime * smoothedMovementFactor);
+      velocity.x = Mathf.Lerp(velocity.x, _moveDirectionFactor * _trooperController.runSpeed, Time.deltaTime * smoothedMovementFactor);
     }
     else
     {
       _hasChangedDirection = false;
-      velocity.x = _trooperController.moveDirectionFactor * _trooperController.runSpeed;
+      velocity.x = _moveDirectionFactor * _trooperController.runSpeed;
       _trooperController.transform.localScale = new Vector3(-_trooperController.transform.localScale.x, _trooperController.transform.localScale.y, _trooperController.transform.localScale.z);
     }
 
     // apply gravity before moving
     velocity.y += _trooperController.gravity * Time.deltaTime;
 
-    _characterPhysicsManager.move(velocity * Time.deltaTime);
+    _characterPhysicsManager.Move(velocity * Time.deltaTime);
 
     return true;
   }

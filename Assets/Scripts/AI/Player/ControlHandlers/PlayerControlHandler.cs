@@ -3,6 +3,7 @@ using System.Collections;
 
 public class PlayerControlHandler : BaseControlHandler
 {
+  #region members
   private const string TRACE_TAG = "PlayerControlHandler";
 
   protected PlayerController _playerController;
@@ -10,7 +11,11 @@ public class PlayerControlHandler : BaseControlHandler
 
   private bool _isCrouching = false;
   protected float jumpHeightMultiplier = 1f;
+  #endregion
 
+  #region methods
+
+  #region overrides
   public override void DrawGizmos()
   {
     if (doDrawDebugBoundingBox)
@@ -19,6 +24,102 @@ public class PlayerControlHandler : BaseControlHandler
        , _playerController.boxCollider.bounds.extents, debugBoundingBoxColor);
     }
   }
+
+  protected override void OnAfterUpdate()
+  {
+    Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
+
+    if (_playerController.isTakingDamage)
+    {
+      _playerController.animator.Play(Animator.StringToHash("PlayerDamageTaken"));
+    }
+    else if (_playerController.characterPhysicsManager.isGrounded)
+    {
+      float yAxis = Input.GetAxis("Vertical");
+
+      float threshold = _playerController.runSettings.walkSpeed * .05f;
+      if (yAxis < 0f)
+      {
+        if (_playerController.characterPhysicsManager.velocity.x > -threshold
+          && _playerController.characterPhysicsManager.velocity.x < threshold)
+        {
+          _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
+        }
+        else
+        {
+          _playerController.animator.Play(Animator.StringToHash("PlayerCrouchRun"));
+        }
+
+        if (!_isCrouching)
+        {
+          // we also need to adjust the collider size...
+          _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetCrouched;
+          _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeCrouched;
+
+          _characterPhysicsManager.RecalculateDistanceBetweenRays();
+          _isCrouching = true;
+
+          Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
+        }
+      }
+      else
+      {
+        if (_isCrouching)
+        {
+          if (_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
+          {
+            // we need to check whether we can stand up
+
+            // we also need to adjust the collider size...
+            _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetDefault;
+            _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
+
+            _characterPhysicsManager.RecalculateDistanceBetweenRays();
+            _isCrouching = false;
+
+            Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
+          }
+          else
+          {
+            if (_playerController.characterPhysicsManager.velocity.x > -threshold
+              && _playerController.characterPhysicsManager.velocity.x < threshold)
+            {
+              _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
+            }
+            else
+            {
+              _playerController.animator.Play(Animator.StringToHash("PlayerCrouchRun"));
+            }
+          }
+        }
+
+        if (!_isCrouching)
+        {
+          if (_playerController.characterPhysicsManager.velocity.x > -threshold
+            && _playerController.characterPhysicsManager.velocity.x < threshold)
+          {
+            _playerController.animator.Play(Animator.StringToHash("PlayerIdle"));
+          }
+          else
+          {
+            _playerController.animator.Play(Animator.StringToHash("PlayerRun"));
+          }
+        }
+      }
+    }
+    else
+    {
+      if (_playerController.characterPhysicsManager.velocity.y >= 0f)
+      {
+        _playerController.animator.Play(Animator.StringToHash("PlayerJump"));
+      }
+      else
+      {
+        _playerController.animator.Play(Animator.StringToHash("PlayerFall"));
+      }
+    }
+  }
+  #endregion
 
   protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity)
   {
@@ -85,16 +186,16 @@ public class PlayerControlHandler : BaseControlHandler
   {
     float speed = _playerController.runSettings.walkSpeed;
     if (_playerController.inputStateManager["Dash"].IsPressed)
-    {      
+    {
       if (                                                            // allow dash speed if
                 _characterPhysicsManager.isGrounded                   // either the player is grounded
-            ||  velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velociuty is higher than the walkspeed, meaning that the player jumped while running
+            || velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velociuty is higher than the walkspeed, meaning that the player jumped while running
         )
       {
-        speed = _playerController.runSettings.runSpeed ;
+        speed = _playerController.runSettings.runSpeed;
       }
     }
-    
+
     float smoothedMovementFactor;
     if (_playerController.characterPhysicsManager.isGrounded)
     {
@@ -130,7 +231,7 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected virtual bool CanJump()
   {
-    if (!_characterPhysicsManager.canMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
+    if (!_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
       return false;
 
     return (
@@ -153,102 +254,16 @@ public class PlayerControlHandler : BaseControlHandler
       }
     }
   }
-  
-  protected override void OnAfterUpdate()
-  {
-    Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
+  #endregion
 
-    if (_playerController.characterPhysicsManager.isGrounded)
-    {
-      float yAxis = Input.GetAxis("Vertical");
-
-      float threshold = _playerController.runSettings.walkSpeed * .05f;
-      if (yAxis < 0f)
-      {
-        if (_playerController.characterPhysicsManager.velocity.x > -threshold
-          && _playerController.characterPhysicsManager.velocity.x < threshold)
-        {
-          _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
-        }
-        else
-        {
-          _playerController.animator.Play(Animator.StringToHash("PlayerCrouchRun"));
-        }
-
-        if (!_isCrouching)
-        {
-          // we also need to adjust the collider size...
-          _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetCrouched;
-          _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeCrouched;
-
-          _characterPhysicsManager.recalculateDistanceBetweenRays();
-          _isCrouching = true;
-
-          Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
-        }
-      }
-      else
-      {
-        if (_isCrouching)
-        {
-          if (_characterPhysicsManager.canMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
-          {
-            // we need to check whether we can stand up
-
-            // we also need to adjust the collider size...
-            _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetDefault;
-            _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
-
-            _characterPhysicsManager.recalculateDistanceBetweenRays();
-            _isCrouching = false;
-
-            Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
-          }
-          else
-          {
-            if (_playerController.characterPhysicsManager.velocity.x > -threshold
-              && _playerController.characterPhysicsManager.velocity.x < threshold)
-            {
-              _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
-            }
-            else
-            {
-              _playerController.animator.Play(Animator.StringToHash("PlayerCrouchRun"));
-            }
-          }
-        }
-
-        if (!_isCrouching)
-        {
-          if (_playerController.characterPhysicsManager.velocity.x > -threshold
-            && _playerController.characterPhysicsManager.velocity.x < threshold)
-          {
-            _playerController.animator.Play(Animator.StringToHash("PlayerIdle"));
-          }
-          else
-          {
-            _playerController.animator.Play(Animator.StringToHash("PlayerRun"));
-          }
-        }
-      }
-    }
-    else
-    {
-      if (_playerController.characterPhysicsManager.velocity.y >= 0f)
-      {
-        _playerController.animator.Play(Animator.StringToHash("PlayerJump"));
-      }
-      else
-      {
-        _playerController.animator.Play(Animator.StringToHash("PlayerFall"));
-      }
-    }
-  }
-
-  public PlayerControlHandler(PlayerController playerController, float overrideEndTime)
-    : base(playerController.characterPhysicsManager, overrideEndTime)
+  #region constructors
+  public PlayerControlHandler(PlayerController playerController)
+    : this(playerController, -1f) { }
+  public PlayerControlHandler(PlayerController playerController, float duration)
+    : base(playerController.characterPhysicsManager, duration)
   {
     _playerController = playerController;
     _playerMetricSettings = GameManager.instance.gameSettings.playerMetricSettings;
   }
+  #endregion
 }

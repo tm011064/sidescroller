@@ -9,7 +9,7 @@ public class TrooperHitControlHandler : PlayerControlHandler
   bool _isCompleted = false;
 
   public TrooperHitControlHandler(PlayerController playerController)
-    : base(playerController, float.MaxValue)
+    : base(playerController)
   {
 
   }
@@ -24,7 +24,7 @@ public class TrooperHitControlHandler : PlayerControlHandler
 
       Logger.Info("Trooper Jump executed. Velocity y: " + velocity.y);
 
-      _playerController.characterPhysicsManager.move(velocity * Time.deltaTime);
+      _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
       return true;
     }
     else

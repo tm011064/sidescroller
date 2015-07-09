@@ -124,6 +124,23 @@ AnimatorState:
   m_Mirror: 0
   m_Motion: {fileID: 7400000, guid: 00281a2be21509b47be9a4b3962a2154, type: 2}
   m_Tag: 
+--- !u!1102 &110294206
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: PlayerDamageTaken
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_Motion: {fileID: 7400000, guid: 79bfc3273d75edd488b7e3bfc95512a7, type: 2}
+  m_Tag: 
 --- !u!1107 &110733256
 AnimatorStateMachine:
   serializedVersion: 5
@@ -150,6 +167,9 @@ AnimatorStateMachine:
   - serializedVersion: 1
     m_State: {fileID: 110283834}
     m_Position: {x: 375, y: 325, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 110294206}
+    m_Position: {x: 410, y: 390, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

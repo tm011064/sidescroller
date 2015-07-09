@@ -22,7 +22,7 @@ TagManager:
   - Enemy
   - Background
   - Platforms
-  - DeathTriggerMask
+  - 
   - EnemyMoveMask
   - PlayerTriggerMask
   - Editor
@@ -44,4 +44,19 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: Player
+    uniqueID: 3542713641
+    locked: 0
+  - name: Enemy
+    uniqueID: 1846444093
+    locked: 0
+  - name: Platforms
+    uniqueID: 2231808707
+    locked: 0
+  - name: OneWayPlatform
+    uniqueID: 3408753345
+    locked: 0
+  - name: Background
+    uniqueID: 3161111147
     locked: 0
