@@ -54,8 +54,6 @@ public partial class PlayerController : BaseCharacterController
   [HideInInspector]
   public BoxCollider2D boxCollider;
   [HideInInspector]
-  public InputStateManager inputStateManager;
-  [HideInInspector]
   public Vector3 spawnLocation;
   [HideInInspector]
   public GameObject currentPlatform = null;
@@ -71,11 +69,14 @@ public partial class PlayerController : BaseCharacterController
   private float _currentJumpVelocityMultiplier;
   private WallJumpControlHandler _reusableWallJumpControlHandler;  
   private Vector3 _lastLostGroundPos = Vector3.zero;
+  private GameManager _gameManager;
     
   void Awake()
   {
     // register with game context so this game object can be accessed everywhere
-    GameManager.instance.player = this;
+    _gameManager = GameManager.instance;
+
+    _gameManager.player = this;
     Logger.Info("Playercontroller awoke and added to game context instance.");
 
     boxCollider = GetComponent<BoxCollider2D>();
@@ -90,13 +91,11 @@ public partial class PlayerController : BaseCharacterController
     characterPhysicsManager.onTriggerEnterEvent += onTriggerEnterEvent;
     characterPhysicsManager.onControllerLostGround += characterPhysicsManager_onControllerLostGround;
     characterPhysicsManager.onControllerBecameGrounded += characterPhysicsManager_onControllerBecameGrounded;
-
-    inputStateManager = new InputStateManager("Jump", "Dash", "Fall", "SwitchPowerUp");
-
+    
     _reusableWallJumpControlHandler = new WallJumpControlHandler(this, -1f, false, wallJumpSettings);
 
     PushControlHandler(new GoodHealthPlayerControlHandler(this));
-    GameManager.instance.powerUpManager.PowerMeter = 1;
+    _gameManager.powerUpManager.PowerMeter = 1;
 
     adjustedGravity = jumpSettings.gravity;
   }
@@ -149,7 +148,7 @@ public partial class PlayerController : BaseCharacterController
       //  spriteRotation = Quaternion.Euler(0f, 0f, toAngle);
       //}
 
-      if (characterPhysicsManager.lastMoveCalculationResult.collisionState.isOnWall)
+      if ((characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
       {
         if (characterPhysicsManager.lastMoveCalculationResult.collisionState.left && !characterPhysicsManager.isGrounded)
         {
@@ -204,17 +203,14 @@ public partial class PlayerController : BaseCharacterController
     adjustedGravity = jumpSettings.gravity;
 
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
-    GameManager.instance.powerUpManager.PowerMeter = 1;
+    _gameManager.powerUpManager.PowerMeter = 1;
   }
 
   protected override void Update()
   {
-    // TODO (Roman): input states should be updated elsewhere maybe?
-    inputStateManager.Update();
-
-    if (inputStateManager["SwitchPowerUp"].IsUp)
+    if (_gameManager.inputStateManager.GetButtonState("SwitchPowerUp").IsUp)
     {
-      GameManager.instance.powerUpManager.ApplyNextInventoryPowerUpItem();
+      _gameManager.powerUpManager.ApplyNextInventoryPowerUpItem();
     }
 
     base.Update();

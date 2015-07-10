@@ -4,6 +4,8 @@ using System;
 
 public class BaseControlHandler : IDisposable
 {
+  protected GameManager _gameManager;
+
   protected float? _overrideEndTime;
   protected CharacterPhysicsManager _characterPhysicsManager;
 
@@ -39,6 +41,7 @@ public class BaseControlHandler : IDisposable
     : this(characterPhysicsManager, -1) { }
   public BaseControlHandler(CharacterPhysicsManager characterPhysicsManager, float duration)
   {
+    _gameManager = GameManager.instance;
     _characterPhysicsManager = characterPhysicsManager;
     _overrideEndTime = duration >= 0f ? (float?)(Time.time + duration) : null;
   }

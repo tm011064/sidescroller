@@ -35,7 +35,7 @@ public class PlayerControlHandler : BaseControlHandler
     }
     else if (_playerController.characterPhysicsManager.isGrounded)
     {
-      float yAxis = Input.GetAxis("Vertical");
+      float yAxis = _gameManager.inputStateManager.GetAxisState("Vertical").value;
 
       float threshold = _playerController.runSettings.walkSpeed * .05f;
       if (yAxis < 0f)
@@ -126,7 +126,7 @@ public class PlayerControlHandler : BaseControlHandler
     // apply gravity before moving
     float value = velocity.y + gravity * Time.deltaTime;
 
-    if (value > 0f && _playerController.inputStateManager["Jump"].IsUp)
+    if (value > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
     {
       // if we are still going up we want to reduce force so we "smoothly" finish the jump in mid air
       value *= _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
@@ -152,7 +152,7 @@ public class PlayerControlHandler : BaseControlHandler
     if (_playerController.characterPhysicsManager.isGrounded)
       value = 0f;
 
-    if (_playerController.inputStateManager["Jump"].IsDown)
+    if (_gameManager.inputStateManager.GetButtonState("Jump").IsDown)
     {
       if (this.CanJump())
       {
@@ -164,14 +164,14 @@ public class PlayerControlHandler : BaseControlHandler
     return value;
   }
 
-  protected float GetNormalizedHorizontalSpeed(float hAxis)
+  protected float GetNormalizedHorizontalSpeed(AxisState hAxis)
   {
     float normalizedHorizontalSpeed;
-    if (hAxis > 0f)
+    if (hAxis.value > 0f && hAxis.value >= hAxis.lastValue)
     {
       normalizedHorizontalSpeed = 1;
     }
-    else if (hAxis < 0f)
+    else if (hAxis.value < 0f && hAxis.value <= hAxis.lastValue)
     {
       normalizedHorizontalSpeed = -1;
     }
@@ -182,10 +182,17 @@ public class PlayerControlHandler : BaseControlHandler
     return normalizedHorizontalSpeed;
   }
 
+  /// <summary>
+  /// Gets the horizontal velocity with damping.
+  /// </summary>
+  /// <param name="velocity">The velocity.</param>
+  /// <param name="hAxis">The h axis.</param>
+  /// <param name="normalizedHorizontalSpeed">The normalized horizontal speed.</param>
+  /// <returns></returns>
   protected float GetHorizontalVelocityWithDamping(Vector3 velocity, float hAxis, float normalizedHorizontalSpeed)
   {
     float speed = _playerController.runSettings.walkSpeed;
-    if (_playerController.inputStateManager["Dash"].IsPressed)
+    if (_gameManager.inputStateManager.GetButtonState("Dash").IsPressed)
     {
       if (                                                            // allow dash speed if
                 _characterPhysicsManager.isGrounded                   // either the player is grounded
@@ -223,10 +230,10 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float GetDefaultHorizontalVelocity(Vector3 velocity)
   {
-    float hAxis = Input.GetAxis("Horizontal");
-    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(hAxis);
+    AxisState axisState = _gameManager.inputStateManager.GetAxisState("Horizontal");
+    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(axisState);
 
-    return GetHorizontalVelocityWithDamping(velocity, hAxis, normalizedHorizontalSpeed);
+    return GetHorizontalVelocityWithDamping(velocity, axisState.value, normalizedHorizontalSpeed);
   }
 
   protected virtual bool CanJump()
@@ -243,7 +250,7 @@ public class PlayerControlHandler : BaseControlHandler
   protected void CheckOneWayPlatformFallThrough()
   {
     if (_characterPhysicsManager.isGrounded
-      && _playerController.inputStateManager["Fall"].IsDown
+      && _gameManager.inputStateManager.GetButtonState("Fall").IsDown
       && _playerController.currentPlatform != null
       && _playerController.currentPlatform.layer == LayerMask.NameToLayer("OneWayPlatform"))
     {

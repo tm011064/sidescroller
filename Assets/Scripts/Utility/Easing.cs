@@ -41,6 +41,43 @@ public class Easing
 
   private const float PI_HALF = (float)((float)Math.PI / 2d);
 
+  public float GetValue(EasingType easingType, float currentTime, float duration)
+  {
+    switch (easingType)
+    {
+      case EasingType.EaseInQuad: return EaseInQuad(currentTime, duration);
+      case EasingType.EaseOutQuad: return EaseOutQuad(currentTime, duration);
+      case EasingType.EaseInOutQuad: return EaseInOutQuad(currentTime, duration);
+      case EasingType.EaseInCubic: return EaseInCubic(currentTime, duration);
+      case EasingType.EaseOutCubic: return EaseOutCubic(currentTime, duration);
+      case EasingType.EaseInOutCubic: return EaseInOutCubic(currentTime, duration);
+      case EasingType.EaseInQuart: return EaseInQuart(currentTime, duration);
+      case EasingType.EaseOutQuart: return EaseOutQuart(currentTime, duration);
+      case EasingType.EaseInOutQuart: return EaseInOutQuart(currentTime, duration);
+      case EasingType.EaseInQuint: return EaseInQuint(currentTime, duration);
+      case EasingType.EaseOutQuint: return EaseOutQuint(currentTime, duration);
+      case EasingType.EaseInOutQuint: return EaseInOutQuint(currentTime, duration);
+      case EasingType.EaseInSine: return EaseInSine(currentTime, duration);
+      case EasingType.EaseOutSine: return EaseOutSine(currentTime, duration);
+      case EasingType.EaseInOutSine: return EaseInOutSine(currentTime, duration);
+      case EasingType.EaseInExpo: return EaseInExpo(currentTime, duration);
+      case EasingType.EaseOutExpo: return EaseOutExpo(currentTime, duration);
+      case EasingType.EaseInOutExpo: return EaseInOutExpo(currentTime, duration);
+      case EasingType.EaseInCirc: return EaseInCirc(currentTime, duration);
+      case EasingType.EaseOutCirc: return EaseOutCirc(currentTime, duration);
+      case EasingType.EaseInOutCirc: return EaseInOutCirc(currentTime, duration);
+      case EasingType.EaseInBack: return EaseInBack(currentTime, duration);
+      case EasingType.EaseOutBack: return EaseOutBack(currentTime, duration);
+      case EasingType.EaseInOutBack: return EaseInOutBack(currentTime, duration);
+      case EasingType.EaseInBounce: return EaseInBounce(currentTime, duration);
+      case EasingType.EaseOutBounce: return EaseOutBounce(currentTime, duration);
+      case EasingType.EaseInOutBounce: return EaseInOutBounce(currentTime, duration);
+
+      case EasingType.Linear:
+      default: return Linear(currentTime, duration);
+    }
+  }
+
   public float Linear(float currentTime, float duration)
   {
     return currentTime / duration;

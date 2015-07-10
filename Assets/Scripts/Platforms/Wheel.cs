@@ -22,7 +22,6 @@ public partial class Wheel : BaseMonoBehaviour
 
   public int platformWidth = 128;
   public int platformHeight = 16;
-  private float _visibilityCheckRadiusMultiplier = 4f;
   private List<GameObjectContainer> _platforms;
   private bool _isPlayerAttached;
   private BoxCollider2D _visibilityCollider;

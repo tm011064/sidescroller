@@ -34,38 +34,7 @@ public class EasedSlopeBuildScript : MonoBehaviour
     for (float i = 0; i < totalSteps; i++)
     {
       float yPosMultiplier = 1f;
-      switch (easingType)
-      {
-        case EasingType.Linear: yPosMultiplier = easing.Linear(i, totalSteps); break;
-        case EasingType.EaseInQuad: yPosMultiplier = easing.EaseInQuad(i, totalSteps); break;
-        case EasingType.EaseOutQuad: yPosMultiplier = easing.EaseOutQuad(i, totalSteps); break;
-        case EasingType.EaseInOutQuad: yPosMultiplier = easing.EaseInOutQuad(i, totalSteps); break;
-        case EasingType.EaseInCubic: yPosMultiplier = easing.EaseInCubic(i, totalSteps); break;
-        case EasingType.EaseOutCubic: yPosMultiplier = easing.EaseOutCubic(i, totalSteps); break;
-        case EasingType.EaseInOutCubic: yPosMultiplier = easing.EaseInOutCubic(i, totalSteps); break;
-        case EasingType.EaseInQuart: yPosMultiplier = easing.EaseInQuart(i, totalSteps); break;
-        case EasingType.EaseOutQuart: yPosMultiplier = easing.EaseOutQuart(i, totalSteps); break;
-        case EasingType.EaseInOutQuart: yPosMultiplier = easing.EaseInOutQuart(i, totalSteps); break;
-        case EasingType.EaseInQuint: yPosMultiplier = easing.EaseInQuint(i, totalSteps); break;
-        case EasingType.EaseOutQuint: yPosMultiplier = easing.EaseOutQuint(i, totalSteps); break;
-        case EasingType.EaseInOutQuint: yPosMultiplier = easing.EaseInOutQuint(i, totalSteps); break;
-        case EasingType.EaseInSine: yPosMultiplier = easing.EaseInSine(i, totalSteps); break;
-        case EasingType.EaseOutSine: yPosMultiplier = easing.EaseOutSine(i, totalSteps); break;
-        case EasingType.EaseInOutSine: yPosMultiplier = easing.EaseInOutSine(i, totalSteps); break;
-        case EasingType.EaseInExpo: yPosMultiplier = easing.EaseInExpo(i, totalSteps); break;
-        case EasingType.EaseOutExpo: yPosMultiplier = easing.EaseOutExpo(i, totalSteps); break;
-        case EasingType.EaseInOutExpo: yPosMultiplier = easing.EaseInOutExpo(i, totalSteps); break;
-        case EasingType.EaseInCirc: yPosMultiplier = easing.EaseInCirc(i, totalSteps); break;
-        case EasingType.EaseOutCirc: yPosMultiplier = easing.EaseOutCirc(i, totalSteps); break;
-        case EasingType.EaseInOutCirc: yPosMultiplier = easing.EaseInOutCirc(i, totalSteps); break;
-        case EasingType.EaseInBack: yPosMultiplier = easing.EaseInBack(i, totalSteps); break;
-        case EasingType.EaseOutBack: yPosMultiplier = easing.EaseOutBack(i, totalSteps); break;
-        case EasingType.EaseInOutBack: yPosMultiplier = easing.EaseInOutBack(i, totalSteps); break;
-        case EasingType.EaseInBounce: yPosMultiplier = easing.EaseInBounce(i, totalSteps); break;
-        case EasingType.EaseOutBounce: yPosMultiplier = easing.EaseOutBounce(i, totalSteps); break;
-        case EasingType.EaseInOutBounce: yPosMultiplier = easing.EaseInOutBounce(i, totalSteps); break;
-      }
-
+      yPosMultiplier = easing.GetValue(easingType, i, totalSteps);
       Vector2 vector = new Vector2(width * i / (float)totalSteps, height * yPosMultiplier);
       vectors.Add(vector);
     }

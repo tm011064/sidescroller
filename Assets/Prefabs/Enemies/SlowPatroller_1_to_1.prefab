@@ -106,6 +106,8 @@ MonoBehaviour:
   totalHorizontalRays: 8
   totalVerticalRays: 4
   triggerHelperBoxColliderScale: .949999988
+  performFullyGroundedChecks: 1
+  performIsOnWallChecks: 0
 --- !u!114 &11473534
 MonoBehaviour:
   m_ObjectHideFlags: 1

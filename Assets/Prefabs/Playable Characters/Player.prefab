@@ -120,6 +120,8 @@ MonoBehaviour:
   totalHorizontalRays: 8
   totalVerticalRays: 4
   triggerHelperBoxColliderScale: .949999988
+  performFullyGroundedChecks: 0
+  performIsOnWallChecks: 1
 --- !u!114 &11463698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -160,6 +162,7 @@ MonoBehaviour:
   spawnLocation: {x: 0, y: 0, z: 0}
   currentPlatform: {fileID: 0}
   isInvincible: 0
+  isTakingDamage: 0
 --- !u!114 &11491702
 MonoBehaviour:
   m_ObjectHideFlags: 1

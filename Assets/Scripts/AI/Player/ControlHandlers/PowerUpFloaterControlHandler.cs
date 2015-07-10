@@ -52,18 +52,18 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
       if (velocity.y < 0)
       { // player is moving down, so check floating logic
 
-        if (_playerController.inputStateManager["Jump"].IsUp)
+        if (_gameManager.inputStateManager.GetButtonState("Jump").IsUp)
         {
           // player released jump button on way down, this means he can't float any more for this in air session
           _floatStatus &= ~FloatStatus.CanFloat;
         }
-        if (((_floatStatus & FloatStatus.CanFloat) != 0) && _playerController.inputStateManager["Jump"].IsDown)
+        if (((_floatStatus & FloatStatus.CanFloat) != 0) && _gameManager.inputStateManager.GetButtonState("Jump").IsDown)
         {
           // player is on his way down,can float and pressed the jump button, so he starts floating
           velocity.y *= _powerUpSettings.startFloatingDuringFallVelocityMultiplier;
           _floatStatus |= FloatStatus.IsFloating;
         }
-        if (_playerController.inputStateManager["Jump"].IsPressed)
+        if (_gameManager.inputStateManager.GetButtonState("Jump").IsPressed)
         {
           // player is on his way down and has the jump button pressed, so set the floating field
           _floatStatus |= FloatStatus.IsFloating;

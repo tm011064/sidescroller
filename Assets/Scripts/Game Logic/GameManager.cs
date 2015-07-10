@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
   public GameSettings gameSettings;
   [HideInInspector]
   public PowerUpManager powerUpManager;
+  [HideInInspector]
+  public InputStateManager inputStateManager;
 
   private int _totalCoins = 0;
 
@@ -36,12 +38,17 @@ public class GameManager : MonoBehaviour
     }
 
     powerUpManager = new PowerUpManager(this);
+    inputStateManager = new InputStateManager();
+    inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp");
+    inputStateManager.InitializeAxes("Horizontal", "Vertical");
 
     DontDestroyOnLoad(gameObject);
   }
 
   void Update()
   {
+    inputStateManager.Update();
+
     if (Input.GetKey("escape"))
     {
       Logger.Info("quit");

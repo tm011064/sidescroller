@@ -1,29 +1,53 @@
-﻿using UnityEngine;
+﻿using System.Collections;
+using System.Threading;
+using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
+  #region nested
+  class ZoomTimer : UpdateTimer
+  {
+    private float _startSize;
+    private float _targetSize;
+    private EasingType _easingType;
+    private Easing _easing;
+
+    protected override void DoUpdate(float currentTime)
+    {
+      float value = _easing.GetValue(_easingType, currentTime, _duration);
+      Camera.main.orthographicSize = _startSize + (_targetSize - _startSize) * value;
+    }
+
+    public ZoomTimer(float duration, float startSize, float targetSize, EasingType easingType)
+      : base(duration)
+    {
+      _startSize = startSize;
+      _targetSize = targetSize;
+      _easingType = easingType;
+      _easing = new Easing();
+    }
+  }
+  #endregion
+
+  #region inspector fields
   public Transform target;
   public float smoothDampTime = 0.2f;
-
-  [HideInInspector]
-  public new Transform transform;
-
   public Vector3 cameraOffset;
   public bool useFixedUpdate = false;
   public float maxPixelHeight = 1080f;
-  
+  #endregion
+
+  #region members
   private CharacterPhysicsManager _characterPhysicsManager;
   private Vector3 _smoothDampVelocity;
 
   private CameraMovementSettings _cameraMovementSettings;
+  private UpdateTimer _zoomTimer;
+  #endregion
 
-#if UNITY_EDITOR
-  public float? YPosLock
-  {
-    get { return _cameraMovementSettings.YPosLock; }
-  }
-#endif
-
+  [HideInInspector]
+  public new Transform transform;
+  
   void Reset()
   {
     Logger.Info("Resetting camera movement settings.");
@@ -42,22 +66,31 @@ public class CameraController : MonoBehaviour
     // TODO (Roman): this should come from game manager
     // TODO (Roman): don't hardcode tags
     GameObject checkpoint = GameObject.FindGameObjectWithTag("Checkpoint 1");
-    
+
     PlayerController playerController = Instantiate(GameManager.instance.player, checkpoint.transform.position, Quaternion.identity) as PlayerController;
 
     playerController.spawnLocation = checkpoint.transform.position;
 
     // we set the target of the camera to our player through code
     target = playerController.transform;
-    
+
     _characterPhysicsManager = target.GetComponent<CharacterPhysicsManager>();
 
     Logger.Info("Window size: " + Screen.width + " x " + Screen.height);
-    Logger.Info("Camera size: " + Camera.main.orthographicSize);
 
     Reset();
   }
 
+  void Update()
+  {
+    if (_zoomTimer != null)
+    {
+      _zoomTimer.Update();
+
+      if (_zoomTimer.HasEnded)
+        _zoomTimer = null;
+    }
+  }
 
   void LateUpdate()
   {
@@ -74,7 +107,16 @@ public class CameraController : MonoBehaviour
   public void SetCameraMovementSettings(CameraMovementSettings cameraMovementSettings)
   {
     _cameraMovementSettings = cameraMovementSettings;
+
+    float targetOrthographicSize = (maxPixelHeight * .5f) / _cameraMovementSettings.ZoomPercentage;
+    if (!Mathf.Approximately(Camera.main.orthographicSize, targetOrthographicSize))
+    {
+      _zoomTimer = new ZoomTimer(_cameraMovementSettings.ZoomTime, Camera.main.orthographicSize, targetOrthographicSize, _cameraMovementSettings.ZoomEasingType);
+      _zoomTimer.Start();
+    }
+
     Logger.Info("Camera movement set to: " + cameraMovementSettings.ToString());
+    Logger.Info("Camera size; current: " + Camera.main.orthographicSize + ", target: " + targetOrthographicSize);
   }
 
   void updateCameraPosition()

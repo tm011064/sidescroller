@@ -4,9 +4,38 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public class InputState
+public class AxisState
 {
-  private const string TRACE_TAG = "InputState";
+  private string _axisName;
+
+  public float value;
+  public float lastValue;
+
+  public void Update()
+  {
+    lastValue = value;
+    value = Input.GetAxis(_axisName);
+  }
+
+  public AxisState Clone()
+  {
+    return (AxisState)this.MemberwiseClone();
+  }
+
+  public AxisState(float value)
+  {
+    this.value = value;
+  }
+
+  public AxisState(string axisName)
+  {
+    _axisName = axisName;
+  }
+}
+
+public class ButtonsState
+{
+  private const string TRACE_TAG = "ButtonsState";
 
   private string _buttonName;
   private float _pressStarted;
@@ -44,7 +73,7 @@ public class InputState
     return Time.time - _pressStarted;
   }
 
-  public InputState(string buttonName)
+  public ButtonsState(string buttonName)
   {
     _buttonName = buttonName;
   }
@@ -52,32 +81,49 @@ public class InputState
 
 public class InputStateManager
 {
-  private Dictionary<string, InputState> _inputStates;
+  private Dictionary<string, ButtonsState> _buttonStates;
+  private Dictionary<string, AxisState> _axisStates;
 
-  public InputState this[string buttonName]
+  public ButtonsState GetButtonState(string buttonName)
   {
-    get
-    {
-      return _inputStates[buttonName];
-    }
+    return _buttonStates[buttonName];
+  }
+  public AxisState GetAxisState(string axisName)
+  {
+    return _axisStates[axisName];
   }
 
   public void Update()
   {
-    foreach (var value in _inputStates.Values)
+    foreach (var value in _buttonStates.Values)
+    {
+      value.Update();
+    }
+    foreach (var value in _axisStates.Values)
     {
       value.Update();
     }
   }
 
-  public InputStateManager(params string[] buttonNames)
+  public void InitializeButtons(params string[] buttonNames)
   {
-    _inputStates = new Dictionary<string, InputState>();
-
     for (int i = 0; i < buttonNames.Length; i++)
     {
-      _inputStates[buttonNames[i]] = new InputState(buttonNames[i]);
+      _buttonStates[buttonNames[i]] = new ButtonsState(buttonNames[i]);
     }
+  }
+  public void InitializeAxes(params string[] azisNames)
+  {
+    for (int i = 0; i < azisNames.Length; i++)
+    {
+      _axisStates[azisNames[i]] = new AxisState(azisNames[i]);
+    }
+  }
+
+  public InputStateManager()
+  {
+    _buttonStates = new Dictionary<string, ButtonsState>();
+    _axisStates = new Dictionary<string, AxisState>();
   }
 }
 

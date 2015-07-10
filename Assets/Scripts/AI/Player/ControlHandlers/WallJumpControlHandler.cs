@@ -67,14 +67,20 @@ public class WallJumpControlHandler : PlayerControlHandler
       return false; // we can exit as wall jump is not allowed any more after the player accelerated downward beyond threshold
     }
 
+    if ((_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.NotOnWall) != 0)
+    {
+      Logger.Info("Popped wall jump because character is not on wall any more.");
+      return false;
+    }
+
     if (velocity.y < 0f)
-      _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity;
+      _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity; // going down, use wall stick gravity
     else
-      _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
+      _playerController.adjustedGravity = _playerController.jumpSettings.gravity; // still going up, use normal gravity
 
     bool isWallJump = false;
     if (!_hasJumpedFromWall
-        && (_playerController.inputStateManager["Jump"].IsDown))
+        && (_gameManager.inputStateManager.GetButtonState("Jump").IsDown))
     {
       // set flag for later calcs outside this scope
       isWallJump = true;
@@ -91,15 +97,15 @@ public class WallJumpControlHandler : PlayerControlHandler
       Logger.Info("Wall Jump executed. Velocity y: " + velocity.y);
     }
 
-    float hAxis;
+    AxisState hAxis;
     if (_hasJumpedFromWall)
-      hAxis = _wallJumpDirectionMultiplier;
+      hAxis = new AxisState(_wallJumpDirectionMultiplier);
     else
     {
-      hAxis = Input.GetAxis("Horizontal");
+      hAxis = _gameManager.inputStateManager.GetAxisState("Horizontal").Clone();
       // TODO (Roman): we want to stick to wall
-      if ((_isWallRight && hAxis < 0f)
-        || (!_isWallRight && hAxis > 0f))
+      if ((_isWallRight && hAxis.value < 0f)
+        || (!_isWallRight && hAxis.value > 0f))
       {// player presses opposite direction...
         if (_oppositeDirectionPressedTime < 0)
         {
@@ -113,7 +119,7 @@ public class WallJumpControlHandler : PlayerControlHandler
         }
 
         // we set to zero because we want to stick until the threshold is surpassed. Then we pop the handler...
-        hAxis = 0f;
+        hAxis.value = 0f;
       }
       else
       {
@@ -130,14 +136,12 @@ public class WallJumpControlHandler : PlayerControlHandler
     }
     else
     {
-      velocity.x = GetHorizontalVelocityWithDamping(velocity, hAxis, normalizedHorizontalSpeed);
+      velocity.x = GetHorizontalVelocityWithDamping(velocity, hAxis.value, normalizedHorizontalSpeed);
     }
 
     velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
-
-    // TODO (Roman): we always need to check whether we are still on a wall (whole height is on wall...)
 
     return true;
   }

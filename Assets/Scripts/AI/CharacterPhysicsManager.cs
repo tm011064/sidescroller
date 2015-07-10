@@ -3,6 +3,15 @@ using UnityEngine;
 using System;
 using System.Collections.Generic;
 
+[Flags]
+public enum CharacterWallState
+{
+  NotOnWall = 1,
+  OnLeftWall = 2,
+  OnRightWall = 4,
+  OnWall = OnLeftWall | OnRightWall
+}
+
 public class CharacterCollisionState2D
 {
   public bool right;
@@ -12,7 +21,7 @@ public class CharacterCollisionState2D
   public bool becameGroundedThisFrame;
   public bool movingDownSlope;
   public float slopeAngle;
-  public bool isOnWall;
+  public CharacterWallState characterWallState;
   public bool isFullyGrounded; // indicates whether the player is standing on an edge
 
   public bool wasGroundedLastFrame;
@@ -25,14 +34,15 @@ public class CharacterCollisionState2D
 
   public void reset()
   {
-    right = left = above = below = becameGroundedThisFrame = movingDownSlope = isOnWall = isFullyGrounded = false;
+    characterWallState = CharacterWallState.NotOnWall;
+    right = left = above = below = becameGroundedThisFrame = movingDownSlope = isFullyGrounded = false;
     slopeAngle = 0f;
   }
 
   public override string ToString()
   {
-    return string.Format("[CharacterCollisionState2D] r: {0}, l: {1}, a: {2}, b: {3}, movingDownSlope: {4}, angle: {5}, wasGroundedLastFrame: {6}, becameGroundedThisFrame: {7}",
-                         right, left, above, below, movingDownSlope, slopeAngle, wasGroundedLastFrame, becameGroundedThisFrame);
+    return string.Format("[CharacterCollisionState2D] r: {0}, l: {1}, a: {2}, b: {3}, movingDownSlope: {4}, angle: {5}, wasGroundedLastFrame: {6}, becameGroundedThisFrame: {7}, onWallState: {8}",
+                         right, left, above, below, movingDownSlope, slopeAngle, wasGroundedLastFrame, becameGroundedThisFrame, characterWallState);
   }
 }
 
@@ -139,6 +149,10 @@ public class CharacterPhysicsManager : MonoBehaviour
   [Range(0.8f, 0.999f)]
   public float triggerHelperBoxColliderScale = 0.95f;
 
+  [Tooltip("If true, each move call checks whether the character is fully grounded. Fully grounded means he is not standing over an edge.")]
+  public bool performFullyGroundedChecks = true;
+  [Tooltip("If true, each move call checks whether the character is next to a wall. This is useful for wall jumps.")]
+  public bool performIsOnWallChecks = true;
 
   [HideInInspector]
   [NonSerialized]
@@ -277,13 +291,26 @@ public class CharacterPhysicsManager : MonoBehaviour
     // first, we check for a slope below us before moving
     // only check slopes if we are going down and grounded
     if (moveCalculationResult.deltaMovement.y < 0 && moveCalculationResult.collisionState.wasGroundedLastFrame)
+    {
       HandleVerticalSlope(moveCalculationResult);
-    Logger.Trace(TRACE_TAG, "After handleVerticalSlope. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
+      Logger.Trace(TRACE_TAG, "After handleVerticalSlope. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
+    }
+    else
+    {
+      Logger.Trace(TRACE_TAG, "HandleVerticalSlope method not called.");
+    }
 
     // now we check movement in the horizontal dir
     if (moveCalculationResult.deltaMovement.x != 0)
+    {
       MoveHorizontally(moveCalculationResult);
-    Logger.Trace(TRACE_TAG, "After moveHorizontally. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
+      Logger.Trace(TRACE_TAG, "After moveHorizontally. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
+    }
+    else
+    {
+      moveCalculationResult.collisionState.characterWallState = GetOnWallState();
+      Logger.Trace(TRACE_TAG, "MoveHorizontally method not called.");
+    }
 
     // next, check movement in the vertical dir
     if (moveCalculationResult.deltaMovement.y != 0)
@@ -296,12 +323,16 @@ public class CharacterPhysicsManager : MonoBehaviour
       {
         MoveVertically(moveCalculationResult);
       }
+
+      Logger.Trace(TRACE_TAG, "After moveVertically. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
+    }
+    else
+    {
+      Logger.Trace(TRACE_TAG, "MoveVertically method not called.");
     }
 
-    if (moveCalculationResult.deltaMovement.y <= kSkinWidthFloatFudgeFactor)
+    if (performFullyGroundedChecks && moveCalculationResult.deltaMovement.y <= kSkinWidthFloatFudgeFactor)
       moveCalculationResult.collisionState.isFullyGrounded = IsFullyGrounded(moveCalculationResult);
-
-    Logger.Trace(TRACE_TAG, "After moveVertically. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
 
     return moveCalculationResult;
   }
@@ -410,6 +441,47 @@ public class CharacterPhysicsManager : MonoBehaviour
   }
 
 
+  private bool IsFullyGrounded(MoveCalculationResult moveCalculationResult)
+  {
+    var rayDirection = -Vector2.up;
+    var rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y) + _skinWidth + kSkinWidthFloatFudgeFactor;
+
+    return Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), rayDirection, rayDistance, platformMask)
+      && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.bottomRight.y), rayDirection, rayDistance, platformMask);
+  }
+
+  private CharacterWallState GetOnWallState()
+  {
+    CharacterWallState characterWallState = CharacterWallState.NotOnWall;
+    var rayDistance = _skinWidth + kSkinWidthFloatFudgeFactor;
+
+    // if we are moving up, we should ignore the layers in oneWayPlatformMask
+    var mask = platformMask;
+    mask &= ~oneWayPlatformMask;
+
+    // check left
+    if (
+            Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), -Vector2.right, rayDistance, mask)
+        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.topLeft.y), -Vector2.right, rayDistance, mask)
+      )
+    {
+      characterWallState &= ~CharacterWallState.NotOnWall;
+      characterWallState |= CharacterWallState.OnLeftWall;
+    }
+
+    // check right
+    if (
+           Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.bottomRight.y), Vector2.right, rayDistance, mask)
+        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.topLeft.y), Vector2.right, rayDistance, mask)
+      )
+    {
+      characterWallState &= ~CharacterWallState.NotOnWall;
+      characterWallState |= CharacterWallState.OnRightWall;
+    }
+
+    return characterWallState;
+  }
+
 
   /// <summary>
   /// we have to use a bit of trickery in this one. The rays must be cast from a small distance inside of our
@@ -509,7 +581,8 @@ public class CharacterPhysicsManager : MonoBehaviour
 
             if (raycastHit && Mathf.RoundToInt(Vector2.Angle(raycastHit.normal, Vector2.up)) == 90)
             {
-              moveCalculationResult.collisionState.isOnWall = true;
+              moveCalculationResult.collisionState.characterWallState &= ~CharacterWallState.NotOnWall;
+              moveCalculationResult.collisionState.characterWallState |= (isGoingRight ? CharacterWallState.OnRightWall : CharacterWallState.OnLeftWall);
             }
           }
 
@@ -704,15 +777,6 @@ public class CharacterPhysicsManager : MonoBehaviour
           break;
       }
     }
-  }
-
-  private bool IsFullyGrounded(MoveCalculationResult moveCalculationResult)
-  {
-    var rayDirection = -Vector2.up;
-    var rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y) + _skinWidth + kSkinWidthFloatFudgeFactor;
-
-    return Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), rayDirection, rayDistance, platformMask)
-      && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.bottomRight.y), rayDirection, rayDistance, platformMask);
   }
 
   private void MoveVertically(MoveCalculationResult moveCalculationResult)

@@ -18,6 +18,10 @@ public class CameraModifier : MonoBehaviour
   public float offsetX;
   public float offsetY;
 
+  public float zoomPercentage = 1f;
+  public float zoomTime;
+  public EasingType zoomEasingType;
+
   public Color gizmoColor = Color.magenta;
 
   void OnDrawGizmos()
@@ -31,19 +35,19 @@ public class CameraModifier : MonoBehaviour
 
   void OnTriggerEnter2D(Collider2D col)
   {
-    if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
-    {
-      var cameraController = Camera.main.GetComponent<CameraController>();
-      
-      cameraController.SetCameraMovementSettings(new CameraMovementSettings(
-        useXPosLock ? (float?)xPosLock : null
-        , useYPosLock ? (float?)yPosLock : null
-        , allowTopExtension
-        , allowBottomExtension
-        , allowLeftExtension
-        , allowRightExtension
-        , offsetX
-        , offsetY));
-    }
+    var cameraController = Camera.main.GetComponent<CameraController>();
+
+    cameraController.SetCameraMovementSettings(new CameraMovementSettings(
+      useXPosLock ? (float?)xPosLock : null
+      , useYPosLock ? (float?)yPosLock : null
+      , allowTopExtension
+      , allowBottomExtension
+      , allowLeftExtension
+      , allowRightExtension
+      , offsetX
+      , offsetY
+      , zoomPercentage
+      , zoomTime
+      , zoomEasingType));
   }
 }
