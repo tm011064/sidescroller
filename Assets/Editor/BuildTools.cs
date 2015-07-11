@@ -50,11 +50,18 @@ public class BuildTools
       // Make sure the paths exist before building.
       try
       {
-        Directory.CreateDirectory(output);
+        string directoryName = output.Substring(0, output.LastIndexOf('\\'));
+        Debug.Log("Checking whether directory " + directoryName + " exists...");
+        DirectoryInfo directoryInfo = new DirectoryInfo(directoryName);
+        if (!directoryInfo.Exists)
+        {
+          Debug.Log("Create directory " + directoryName);
+          directoryInfo.Create();
+        }
       }
       catch
       {
-        Debug.LogError("Failed to create directories: " + output);
+        Debug.LogError("Failed to create directories: " + new DirectoryInfo(output).FullName);
       }
 
       string results = BuildPipeline.BuildPlayer(level_list, output, target, BuildOptions.None);

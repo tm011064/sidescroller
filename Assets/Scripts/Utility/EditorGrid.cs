@@ -24,7 +24,11 @@ public class EditorGrid : MonoBehaviour
   {
     if (visible)
     {
-      Queue<Color> colors = new Queue<Color>(new List<Color>() { Color.gray, Color.white, Color.green });
+      Color white = Color.white;
+      white.a = .4f;
+      Color gray = Color.white;
+      gray.a = .2f;
+      Queue<Color> colors = new Queue<Color>(new List<Color>() { gray, white, Color.green });
 
       for (int i = 0; i < gridLineSettings.Count; i++)
       {
@@ -42,25 +46,15 @@ public class EditorGrid : MonoBehaviour
         int bottomY = Mathf.RoundToInt(center.y - size.y * .5f);
         int topY = Mathf.RoundToInt(center.y + size.y * .5f);
 
-        for (int y = 0; y < size.y * .5f; y += (int)gridLineSettings[i].height)
+        for (int y = bottomY; y < topY; y += (int)gridLineSettings[i].height)
         {
           Gizmos.DrawLine(new Vector3(leftX, y),
                           new Vector3(rightX, y));
-          if (y != 0)
-          {
-            Gizmos.DrawLine(new Vector3(leftX, -y),
-                            new Vector3(rightX, -y));
-          }
         }
-        for (int x = 0; x < size.x * .5f; x += (int)gridLineSettings[i].width)
+        for (int x = leftX; x < rightX; x += (int)gridLineSettings[i].width)
         {
           Gizmos.DrawLine(new Vector3(x, bottomY),
                           new Vector3(x, topY));
-          if (x != 0)
-          {
-            Gizmos.DrawLine(new Vector3(-x, bottomY),
-                            new Vector3(-x, topY));
-          }
         }
       }
     }

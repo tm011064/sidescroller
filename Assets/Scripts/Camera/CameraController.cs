@@ -31,7 +31,8 @@ public class CameraController : MonoBehaviour
 
   #region inspector fields
   public Transform target;
-  public float smoothDampTime = 0.2f;
+  public float horizontalSmoothDampTime = 0.2f;
+  public float verticalSmoothDampTime = 0.2f;
   public Vector3 cameraOffset;
   public bool useFixedUpdate = false;
   public float maxPixelHeight = 1080f;
@@ -39,7 +40,9 @@ public class CameraController : MonoBehaviour
 
   #region members
   private CharacterPhysicsManager _characterPhysicsManager;
-  private Vector3 _smoothDampVelocity;
+
+  private float _horizontalSmoothDampVelocity;
+  private float _verticalSmoothDampVelocity;
 
   private CameraMovementSettings _cameraMovementSettings;
   private UpdateTimer _zoomTimer;
@@ -155,14 +158,23 @@ public class CameraController : MonoBehaviour
     Vector3 hvec = new Vector3(xPos, yPos, target.position.z);
 
     if (_characterPhysicsManager.velocity.x > 0)
-    {
-      transform.position = Vector3.SmoothDamp(transform.position, hvec - cameraOffset, ref _smoothDampVelocity, smoothDampTime);
+    {      
+      Vector3 targetPositon = hvec - cameraOffset;
+      transform.position = new Vector3(
+        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, horizontalSmoothDampTime)
+        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
+        , targetPositon.z);
     }
     else
     {
       var leftOffset = cameraOffset;
       leftOffset.x *= -1;
-      transform.position = Vector3.SmoothDamp(transform.position, hvec - leftOffset, ref _smoothDampVelocity, smoothDampTime);
+
+      Vector3 targetPositon = hvec - leftOffset;
+      transform.position = new Vector3(
+        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, horizontalSmoothDampTime)
+        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
+        , targetPositon.z);
     }
   }
 

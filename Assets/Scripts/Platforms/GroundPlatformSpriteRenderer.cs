@@ -104,6 +104,12 @@ public partial class GroundPlatformSpriteRenderer : BasePlatform
     _visibilityCollider.size = new Vector2(width + Screen.width / 2, height + Screen.height / 2); // add some padding
   }
 
+
+  public void BuildObject()
+  {
+
+  }
+
   void CreatePlane(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
   {
     var mesh = new Mesh();

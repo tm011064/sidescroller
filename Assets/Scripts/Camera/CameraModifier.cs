@@ -7,8 +7,8 @@ public class CameraModifier : MonoBehaviour
   public bool useYPosLock = false;
   public float yPosLock;
 
-  public bool useXPosLock = false;
-  public float xPosLock;
+  public bool lockHorizontalCameraMovement = false;
+  //public float xPosLock;
 
   public bool allowTopExtension;
   public bool allowBottomExtension;
@@ -38,7 +38,7 @@ public class CameraModifier : MonoBehaviour
     var cameraController = Camera.main.GetComponent<CameraController>();
 
     cameraController.SetCameraMovementSettings(new CameraMovementSettings(
-      useXPosLock ? (float?)xPosLock : null
+      lockHorizontalCameraMovement ? (float?)this.transform.position.x : null
       , useYPosLock ? (float?)yPosLock : null
       , allowTopExtension
       , allowBottomExtension

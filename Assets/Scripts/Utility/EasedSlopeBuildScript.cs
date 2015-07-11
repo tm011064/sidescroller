@@ -2,6 +2,18 @@
 using System.Collections;
 using System.Collections.Generic;
 
+public enum MeshBuilderFillType
+{
+  NoFill,
+  Horizontal,
+  Vertical
+}
+public enum MeshBuilderFillDistanceType
+{
+  Absolute,
+  Relative
+}
+
 public class EasedSlopeBuildScript : MonoBehaviour
 {
   public int totalSteps = 32;
@@ -9,8 +21,9 @@ public class EasedSlopeBuildScript : MonoBehaviour
   public Vector2 toPosition = Vector2.zero;
   public EasingType easingType = EasingType.EaseInOutSine;
 
-  public bool fillToYPos = true;
-  public float yPosToFill = 0f;
+  public MeshBuilderFillType meshBuilderFillType = MeshBuilderFillType.NoFill;
+  public MeshBuilderFillDistanceType meshBuilderFillDistanceType = MeshBuilderFillDistanceType.Relative;
+  public float fillDistance = 0f;
 
   private EdgeCollider2D _edgeCollider;
 
@@ -40,20 +53,9 @@ public class EasedSlopeBuildScript : MonoBehaviour
     }
     vectors.Add(toPosition);
 
-
-    LineRenderer lineRenderer = this.GetComponent<LineRenderer>();
-    if (lineRenderer != null)
-    {
-      lineRenderer.SetVertexCount(vectors.Count);
-      for (int i = 0; i < vectors.Count; i++)
-      {
-        lineRenderer.SetPosition(i, new Vector3(vectors[i].x, vectors[i].y));
-      }
-    }
-
     _edgeCollider.points = vectors.ToArray();
 
-    if (fillToYPos)
+    if (meshBuilderFillType != MeshBuilderFillType.NoFill)
     {
       CreateMesh();
     }
@@ -76,13 +78,48 @@ public class EasedSlopeBuildScript : MonoBehaviour
 
       var index = 0;
 
-      float fillHeight = yPosToFill - this.transform.position.y;
+      float fillTo = meshBuilderFillDistanceType == MeshBuilderFillDistanceType.Relative 
+        ? fillDistance
+        : meshBuilderFillType == MeshBuilderFillType.Horizontal
+          ? (fillDistance - this.transform.position.x)
+          : (fillDistance - this.transform.position.y);
+
       for (int i = 1; i < _edgeCollider.points.Length; i++)
       {
-        vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, _edgeCollider.points[i - 1].y, 0)); //top-left
-        vertices.Add(new Vector3(_edgeCollider.points[i].x, _edgeCollider.points[i].y, 0)); //top-right
-        vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, fillHeight, 0)); //bottom-left
-        vertices.Add(new Vector3(_edgeCollider.points[i].x, fillHeight, 0)); //bottom-right
+        if (meshBuilderFillType == MeshBuilderFillType.Vertical)
+        {
+          if (fillTo <= 0f)
+          {
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, _edgeCollider.points[i - 1].y, 0)); //top-left
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, _edgeCollider.points[i].y, 0)); //top-right
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, fillTo, 0)); //bottom-left
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, fillTo, 0)); //bottom-right
+          }
+          else
+          {
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, fillTo, 0)); //top-left
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, fillTo, 0)); //top-right
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, _edgeCollider.points[i - 1].y, 0)); //bottom-left
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, _edgeCollider.points[i].y, 0)); //bottom-right
+          }
+        }
+        else
+        {
+          if (fillTo <= 0f)
+          {
+            vertices.Add(new Vector3(fillTo, _edgeCollider.points[i].y, 0)); //top-left
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, _edgeCollider.points[i].y, 0)); //top-right
+            vertices.Add(new Vector3(fillTo, _edgeCollider.points[i - 1].y, 0)); //bottom-left
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, _edgeCollider.points[i - 1].y, 0)); //bottom-right
+          }
+          else
+          {
+            vertices.Add(new Vector3(_edgeCollider.points[i].x, _edgeCollider.points[i].y, 0)); //top-left
+            vertices.Add(new Vector3(fillTo, _edgeCollider.points[i].y, 0)); //top-right
+            vertices.Add(new Vector3(_edgeCollider.points[i - 1].x, _edgeCollider.points[i - 1].y, 0)); //bottom-left
+            vertices.Add(new Vector3(fillTo, _edgeCollider.points[i - 1].y, 0)); //bottom-right
+          }
+        }
 
         triangles.Add(index);
         triangles.Add(index + 1);
