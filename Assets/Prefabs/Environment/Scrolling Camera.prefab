@@ -43,7 +43,7 @@ Camera:
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
-  m_BackGroundColor: {r: .764705896, g: .764705896, b: .764705896, a: .0196078438}
+  m_BackGroundColor: {r: .823529422, g: .948884428, b: 1, a: .0196078438}
   m_NormalizedViewPortRect:
     serializedVersion: 2
     x: 0
@@ -102,8 +102,8 @@ MonoBehaviour:
     height: 368
     visible: 1
   visible: 0
-  size: {x: 2048, y: 2048}
-  center: {x: 0, y: 0}
+  size: {x: 4096, y: 1080}
+  center: {x: -2048, y: 540}
 --- !u!114 &11433236
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -121,8 +121,7 @@ MonoBehaviour:
       floaterGravity: -500
       startFloatingDuringFallVelocityMultiplier: .100000001
     playerMetricSettings:
-      dashMultiplier: 2
-      jumpReleaseUpVelocityMultiplier: .5
+      jumpReleaseUpVelocityMultiplier: .400000006
     pooledObjects:
       basicPowerUpPrefab:
         prefab: {fileID: 166798, guid: 4bd4b6c05980bf9458a9f748bd42daee, type: 2}
@@ -138,8 +137,14 @@ MonoBehaviour:
       - _CharacterPhysicsManager
       - PlayerController
       - WallJumpControlHandler
+      - _PlayerControlHandler
+      - InputState
+      - _PlayerMetricsDebug
       enableAllTraceTags: 0
       addTraceTagToMessage: 1
+    playerDamageControlHandlerSettings:
+      duration: 3
+      suspendPhysicsTime: 1
 --- !u!114 &11492740
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -151,12 +156,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6afd1a2782a2cca438d5e85abe2032c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 0}
-  smoothDampTime: .0500000007
-  transform: {fileID: 0}
   cameraOffset: {x: 0, y: 0, z: 10}
   useFixedUpdate: 0
   maxPixelHeight: 1080
+  target: {fileID: 0}
+  transform: {fileID: 0}
 --- !u!124 &12498726
 Behaviour:
   m_ObjectHideFlags: 1

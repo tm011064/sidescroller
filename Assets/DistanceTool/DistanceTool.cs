@@ -6,7 +6,6 @@ using UnityEngine;
 using System.Collections.Generic;
 
 [ExecuteInEditMode]
-
 public class DistanceTool : MonoBehaviour
 {
   public string distanceToolName = "";

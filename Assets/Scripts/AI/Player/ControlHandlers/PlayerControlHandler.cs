@@ -124,15 +124,14 @@ public class PlayerControlHandler : BaseControlHandler
   protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity)
   {
     // apply gravity before moving
-    float value = velocity.y + gravity * Time.deltaTime;
-
-    if (value > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
+    if (velocity.y > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
     {
-      // if we are still going up we want to reduce force so we "smoothly" finish the jump in mid air
-      value *= _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
+        return (velocity.y + gravity * Time.deltaTime) * _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
     }
-
-    return value;
+    else
+    {
+      return velocity.y + gravity * Time.deltaTime;
+    }
   }
 
   protected float CalculateJumpHeight(Vector2 velocity)
@@ -157,6 +156,7 @@ public class PlayerControlHandler : BaseControlHandler
       if (this.CanJump())
       {
         value = CalculateJumpHeight(velocity);
+        
         Logger.Info("Ground Jump executed. Velocity y: " + value);
       }
     }
@@ -196,7 +196,8 @@ public class PlayerControlHandler : BaseControlHandler
     {
       if (                                                            // allow dash speed if
                 _characterPhysicsManager.isGrounded                   // either the player is grounded
-            || velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velociuty is higher than the walkspeed, meaning that the player jumped while running
+            || velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velocity is higher than the walkspeed, meaning that the player jumped while running
+            || velocity.x < -_playerController.runSettings.walkSpeed
         )
       {
         speed = _playerController.runSettings.runSpeed;
@@ -239,7 +240,9 @@ public class PlayerControlHandler : BaseControlHandler
   protected virtual bool CanJump()
   {
     if (!_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
+    {
       return false;
+    }
 
     return (
           _playerController.characterPhysicsManager.isGrounded

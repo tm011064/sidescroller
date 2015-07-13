@@ -22,6 +22,9 @@ public class CameraModifier : MonoBehaviour
   public float zoomTime;
   public EasingType zoomEasingType;
 
+  public float horizontalSmoothDampTime;
+  public float verticalSmoothDampTime;
+
   public Color gizmoColor = Color.magenta;
 
   void OnDrawGizmos()
@@ -48,6 +51,9 @@ public class CameraModifier : MonoBehaviour
       , offsetY
       , zoomPercentage
       , zoomTime
-      , zoomEasingType));
+      , zoomEasingType
+      , horizontalSmoothDampTime
+      , verticalSmoothDampTime
+      ));
   }
 }

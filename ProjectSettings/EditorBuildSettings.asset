@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes/TestMenuScene.unity
   - enabled: 1
+    path: Assets/Scenes/TestArena/JumpArena.unity
+  - enabled: 0
     path: Assets/Scenes/Prototype/Proto World 1-1.unity

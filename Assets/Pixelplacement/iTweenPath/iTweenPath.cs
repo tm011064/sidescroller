@@ -21,6 +21,7 @@
 
 using UnityEngine;
 using System.Collections.Generic;
+using System;
 
 [AddComponentMenu("Pixelplacement/iTweenPath")]
 public class iTweenPath : MonoBehaviour
@@ -29,34 +30,28 @@ public class iTweenPath : MonoBehaviour
   public Color pathColor = Color.cyan;
   public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
   public int nodeCount;
-  public static Dictionary<string, iTweenPath> paths = new Dictionary<string, iTweenPath>();
+  public static Dictionary<string, iTweenPath> paths = new Dictionary<string, iTweenPath>(StringComparer.InvariantCultureIgnoreCase);
   public bool initialized = false;
   public string initialName = "";
   public bool pathVisible = true;
 
   public void SetPathName(string newPathName)
   {
-    if (paths.ContainsKey(this.pathName))
-      paths.Remove(this.pathName);
-
     this.pathName = newPathName;
-    if (!paths.ContainsKey(pathName))
-    {
-      paths.Add(pathName.ToLower(), this);
-    }
+    paths[pathName] = this;
   }
 
   void OnEnable()
   {
     if (!paths.ContainsKey(pathName))
     {
-      paths.Add(pathName.ToLower(), this);
+      paths.Add(pathName, this);
     }
   }
 
   void OnDisable()
   {
-    paths.Remove(pathName.ToLower());
+    paths.Remove(pathName);
   }
 
   void OnDrawGizmosSelected()
@@ -81,7 +76,6 @@ public class iTweenPath : MonoBehaviour
   /// </returns>
   public static Vector3[] GetPath(string requestedName)
   {
-    requestedName = requestedName.ToLower();
     if (paths.ContainsKey(requestedName))
     {
       return paths[requestedName].nodes.ToArray();
@@ -104,7 +98,6 @@ public class iTweenPath : MonoBehaviour
   /// </returns>
   public static Vector3[] GetPathReversed(string requestedName)
   {
-    requestedName = requestedName.ToLower();
     if (paths.ContainsKey(requestedName))
     {
       List<Vector3> revNodes = paths[requestedName].nodes.GetRange(0, paths[requestedName].nodes.Count);

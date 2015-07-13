@@ -12,7 +12,7 @@ public enum CharacterWallState
   OnWall = OnLeftWall | OnRightWall
 }
 
-public class CharacterCollisionState2D
+public struct CharacterCollisionState2D
 {
   public bool right;
   public bool left;
@@ -46,11 +46,11 @@ public class CharacterCollisionState2D
   }
 }
 
-public class MoveCalculationResult
+public struct MoveCalculationResult
 {
-  public CharacterCollisionState2D collisionState = new CharacterCollisionState2D();
-  public Vector3 deltaMovement = Vector3.zero;
-  public bool isGoingUpSlope = false;
+  public CharacterCollisionState2D collisionState;
+  public Vector3 deltaMovement;
+  public bool isGoingUpSlope;
 }
 
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
@@ -107,6 +107,8 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// </summary>
   [SerializeField]
   private LayerMask oneWayPlatformMask = 0;
+
+  private LayerMask _platformMaskWithoutOneWay = 0;
 
   /// <summary>
   /// mask with all layers that trigger events should fire when intersected
@@ -218,6 +220,9 @@ public class CharacterPhysicsManager : MonoBehaviour
         Physics2D.IgnoreLayerCollision(gameObject.layer, i);
       }
     }
+
+    _platformMaskWithoutOneWay = platformMask;
+    _platformMaskWithoutOneWay &= ~oneWayPlatformMask;
   }
 
 
@@ -263,7 +268,7 @@ public class CharacterPhysicsManager : MonoBehaviour
 
       DrawRay(ray, Vector2.up * verticalRayDistance, Color.red);
 
-      if (Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, platformMask))
+      if (Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay))
         return false;
     }
 
@@ -275,6 +280,8 @@ public class CharacterPhysicsManager : MonoBehaviour
     Logger.Trace(TRACE_TAG, "Start move calculation method. Current Position: " + this.transform.position + ", Delta Movement: " + deltaMovement + ", New Position: " + (this.transform.position + deltaMovement));
 
     MoveCalculationResult moveCalculationResult = new MoveCalculationResult();
+    moveCalculationResult.collisionState = new CharacterCollisionState2D();
+    moveCalculationResult.collisionState.characterWallState = CharacterWallState.NotOnWall;
 
     // save off our current grounded state which we will use for wasGroundedLastFrame and becameGroundedThisFrame
     moveCalculationResult.collisionState.wasGroundedLastFrame = lastMoveCalculationResult.collisionState.below;
@@ -292,7 +299,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     // only check slopes if we are going down and grounded
     if (moveCalculationResult.deltaMovement.y < 0 && moveCalculationResult.collisionState.wasGroundedLastFrame)
     {
-      HandleVerticalSlope(moveCalculationResult);
+      HandleVerticalSlope(ref moveCalculationResult);
       Logger.Trace(TRACE_TAG, "After handleVerticalSlope. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
     }
     else
@@ -303,7 +310,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     // now we check movement in the horizontal dir
     if (moveCalculationResult.deltaMovement.x != 0)
     {
-      MoveHorizontally(moveCalculationResult);
+      MoveHorizontally(ref moveCalculationResult);
       Logger.Trace(TRACE_TAG, "After moveHorizontally. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
     }
     else
@@ -317,11 +324,11 @@ public class CharacterPhysicsManager : MonoBehaviour
     {
       if (moveCalculationResult.isGoingUpSlope)
       {
-        MoveVerticallyOnSlope(moveCalculationResult);
+        MoveVerticallyOnSlope(ref moveCalculationResult);
       }
       else
       {
-        MoveVertically(moveCalculationResult);
+        MoveVertically(ref moveCalculationResult);
       }
 
       Logger.Trace(TRACE_TAG, "After moveVertically. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
@@ -454,15 +461,11 @@ public class CharacterPhysicsManager : MonoBehaviour
   {
     CharacterWallState characterWallState = CharacterWallState.NotOnWall;
     var rayDistance = _skinWidth + kSkinWidthFloatFudgeFactor;
-
-    // if we are moving up, we should ignore the layers in oneWayPlatformMask
-    var mask = platformMask;
-    mask &= ~oneWayPlatformMask;
-
+    
     // check left
     if (
-            Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), -Vector2.right, rayDistance, mask)
-        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.topLeft.y), -Vector2.right, rayDistance, mask)
+            Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), -Vector2.right, rayDistance, _platformMaskWithoutOneWay)
+        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.topLeft.y), -Vector2.right, rayDistance, _platformMaskWithoutOneWay)
       )
     {
       characterWallState &= ~CharacterWallState.NotOnWall;
@@ -471,8 +474,8 @@ public class CharacterPhysicsManager : MonoBehaviour
 
     // check right
     if (
-           Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.bottomRight.y), Vector2.right, rayDistance, mask)
-        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.topLeft.y), Vector2.right, rayDistance, mask)
+           Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.bottomRight.y), Vector2.right, rayDistance, _platformMaskWithoutOneWay)
+        && Physics2D.Raycast(new Vector2(_raycastOrigins.bottomRight.x, _raycastOrigins.topLeft.y), Vector2.right, rayDistance, _platformMaskWithoutOneWay)
       )
     {
       characterWallState &= ~CharacterWallState.NotOnWall;
@@ -489,7 +492,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// we have to increase the ray distance skinWidth then remember to remove skinWidth from deltaMovement before
   /// actually moving the player
   /// </summary>
-  private void MoveHorizontally(MoveCalculationResult moveCalculationResult)
+  private void MoveHorizontally(ref MoveCalculationResult moveCalculationResult)
   {
     var isGoingRight = moveCalculationResult.deltaMovement.x > 0;
     var rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.x) + _skinWidth;
@@ -514,7 +517,7 @@ public class CharacterPhysicsManager : MonoBehaviour
       if (i == 0 && moveCalculationResult.collisionState.wasGroundedLastFrame)
         raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, platformMask);
       else
-        raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, platformMask & ~oneWayPlatformMask);
+        raycastHit = Physics2D.Raycast(ray, rayDirection, rayDistance, _platformMaskWithoutOneWay);
 
       if (raycastHit)
       {
@@ -523,7 +526,7 @@ public class CharacterPhysicsManager : MonoBehaviour
           Logger.Trace(TRACE_TAG, "moveHorizontally -> Raycast hit on first ray, initiate slope test...");
           // the bottom ray can hit slopes but no other ray can so we have special handling for those cases
           // Note (Roman): I'm passing in the current raycast hit point as reference point for the slope raycasts
-          if (HandleHorizontalSlope(moveCalculationResult, Vector2.Angle(raycastHit.normal, Vector2.up), raycastHit.point))
+          if (HandleHorizontalSlope(ref moveCalculationResult, Vector2.Angle(raycastHit.normal, Vector2.up), raycastHit.point))
           {
             _raycastHitsThisFrame.Add(raycastHit);
             Logger.Trace(TRACE_TAG, "moveHorizontally -> We are on horizontal slope.");
@@ -577,7 +580,7 @@ public class CharacterPhysicsManager : MonoBehaviour
             if (i == 0 && moveCalculationResult.collisionState.wasGroundedLastFrame)
               raycastHit = Physics2D.Raycast(ray, rayDirection, _skinWidth + kSkinWidthFloatFudgeFactor, platformMask);
             else
-              raycastHit = Physics2D.Raycast(ray, rayDirection, _skinWidth + kSkinWidthFloatFudgeFactor, platformMask & ~oneWayPlatformMask);
+              raycastHit = Physics2D.Raycast(ray, rayDirection, _skinWidth + kSkinWidthFloatFudgeFactor, _platformMaskWithoutOneWay);
 
             if (raycastHit && Mathf.RoundToInt(Vector2.Angle(raycastHit.normal, Vector2.up)) == 90)
             {
@@ -599,7 +602,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// <returns><c>true</c>, if horizontal slope was handled, <c>false</c> otherwise.</returns>
   /// <param name="deltaMovement">Delta movement.</param>
   /// <param name="angle">Angle.</param>
-  private bool HandleHorizontalSlope(MoveCalculationResult moveCalculationResult, float angle, Vector2 horizontalRaycastHit)
+  private bool HandleHorizontalSlope(ref MoveCalculationResult moveCalculationResult, float angle, Vector2 horizontalRaycastHit)
   {
     // disregard 90 degree angles (walls)
     if (Mathf.RoundToInt(angle) == 90)
@@ -651,7 +654,7 @@ public class CharacterPhysicsManager : MonoBehaviour
           if (moveCalculationResult.collisionState.wasGroundedLastFrame)
             raycastHit = Physics2D.Raycast(rayOrigin, targetDelta.normalized, targetDelta.magnitude, platformMask);
           else
-            raycastHit = Physics2D.Raycast(rayOrigin, targetDelta.normalized, targetDelta.magnitude, platformMask & ~oneWayPlatformMask);
+            raycastHit = Physics2D.Raycast(rayOrigin, targetDelta.normalized, targetDelta.magnitude, _platformMaskWithoutOneWay);
 
           if (raycastHit)
           {//we crossed an edge when using Pythagoras calculation, so we set the actual delta movement to the ray hit location
@@ -716,7 +719,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     return true;
   }
 
-  private void MoveVerticallyOnSlope(MoveCalculationResult moveCalculationResult)
+  private void MoveVerticallyOnSlope(ref MoveCalculationResult moveCalculationResult)
   {
     Logger.Trace(TRACE_TAG, "moveVerticallyOnSlope -> start vert move check");
 
@@ -726,9 +729,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     var initialRayOrigin = _raycastOrigins.topLeft;
 
     // if we are moving up, we should ignore the layers in oneWayPlatformMask
-    var mask = platformMask;
-    if (!moveCalculationResult.collisionState.wasGroundedLastFrame)
-      mask &= ~oneWayPlatformMask;
+    var mask = moveCalculationResult.collisionState.wasGroundedLastFrame ? platformMask : _platformMaskWithoutOneWay;
 
     RaycastHit2D raycastHit;
     for (var i = 0; i < totalVerticalRays; i++)
@@ -779,7 +780,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     }
   }
 
-  private void MoveVertically(MoveCalculationResult moveCalculationResult)
+  private void MoveVertically(ref MoveCalculationResult moveCalculationResult)
   {
     Logger.Trace(TRACE_TAG, "moveVertically -> start vert move check");
 
@@ -792,9 +793,9 @@ public class CharacterPhysicsManager : MonoBehaviour
     initialRayOrigin.x += moveCalculationResult.deltaMovement.x;
 
     // if we are moving up, we should ignore the layers in oneWayPlatformMask
-    var mask = platformMask;
-    if (isGoingUp && !moveCalculationResult.collisionState.wasGroundedLastFrame)
-      mask &= ~oneWayPlatformMask;
+    // TODO (Roman): do we really need "!moveCalculationResult.collisionState.wasGroundedLastFrame"???
+    //var mask = isGoingUp && !moveCalculationResult.collisionState.wasGroundedLastFrame ? _platformMaskWithoutOneWay : platformMask;
+    var mask = isGoingUp ? _platformMaskWithoutOneWay : platformMask;
 
     RaycastHit2D raycastHit;
     for (var i = 0; i < totalVerticalRays; i++)
@@ -858,7 +859,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// the player stays grounded and the slopeSpeedModifier is taken into account to speed up movement.
   /// </summary>
   /// <param name="deltaMovement">Delta movement.</param>
-  private void HandleVerticalSlope(MoveCalculationResult moveCalculationResult)
+  private void HandleVerticalSlope(ref MoveCalculationResult moveCalculationResult)
   {
     // slope check from the center of our collider
     var centerOfCollider = (_raycastOrigins.bottomLeft.x + _raycastOrigins.bottomRight.x) * 0.5f;

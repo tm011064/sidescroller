@@ -4,13 +4,64 @@ using UnityEngine;
 
 public class BaseCharacterController : BaseMonoBehaviour
 {
-  [HideInInspector]
+  #region public fields
+  [HideInInspector] 
   public CharacterPhysicsManager characterPhysicsManager;
+  #endregion
+
+  #region private members
   private CustomStack<BaseControlHandler> _controlHandlers = new CustomStack<BaseControlHandler>();
-
   private BaseControlHandler _currentBaseControlHandler = null;
-  protected BaseControlHandler CurrentControlHandler { get { return _currentBaseControlHandler; } }
+  #endregion
 
+  #region properties
+  protected BaseControlHandler CurrentControlHandler { get { return _currentBaseControlHandler; } }
+  #endregion
+
+  #region methods
+
+  #region private
+  private void TryActivateCurrentControlHandler(BaseControlHandler previousControlHandler)
+  {
+    _currentBaseControlHandler = _controlHandlers.Peek();
+
+    while (_currentBaseControlHandler != null
+      && !_currentBaseControlHandler.TryActivate(previousControlHandler))
+    {
+      previousControlHandler = _controlHandlers.Pop();
+      Logger.Info("Popped handler: " + previousControlHandler.ToString());
+      previousControlHandler.Dispose();
+
+      _currentBaseControlHandler = _controlHandlers.Peek();
+    }
+  }
+
+  protected virtual void Update()
+  {
+    try
+    {
+      while (!_currentBaseControlHandler.Update())
+      {
+        BaseControlHandler poppedHandler = _controlHandlers.Pop();
+        poppedHandler.Dispose();
+
+        Logger.Info("Popped handler: " + poppedHandler.ToString());
+        TryActivateCurrentControlHandler(poppedHandler);
+      }
+    }
+    catch (Exception err)
+    {
+      Logger.Error("Game object " + this.name + " misses default control handler.", err);
+      throw;
+    }
+  }
+  #endregion
+
+  #region control handlers
+  /// <summary>
+  /// Resets the control handlers.
+  /// </summary>
+  /// <param name="controlHandler">The control handler.</param>
   public void ResetControlHandlers(BaseControlHandler controlHandler)
   {
     Logger.Info("Resetting character control handlers.");
@@ -21,51 +72,77 @@ public class BaseCharacterController : BaseMonoBehaviour
       _controlHandlers.RemoveAt(i);
     }
 
+    _currentBaseControlHandler = null;
     PushControlHandler(controlHandler);
   }
+  /// <summary>
+  /// Pushes the control handler.
+  /// </summary>
+  /// <param name="controlHandlers">The control handlers.</param>
+  public void PushControlHandler(params BaseControlHandler[] controlHandlers)
+  {
+    for (int i = 0; i < controlHandlers.Length; i++)
+    {
+      Logger.Info("Pushing (chained) handler: " + controlHandlers[i].ToString());
+      _controlHandlers.Push(controlHandlers[i]);
+    }
+
+    TryActivateCurrentControlHandler(_currentBaseControlHandler);
+  }
+  /// <summary>
+  /// Pushes the control handler.
+  /// </summary>
+  /// <param name="controlHandler">The control handler.</param>
   public void PushControlHandler(BaseControlHandler controlHandler)
   {
     Logger.Info("Pushing handler: " + controlHandler.ToString());
-    _controlHandlers.Push(controlHandler);
 
-    _currentBaseControlHandler = controlHandler;
+    _controlHandlers.Push(controlHandler);
+    TryActivateCurrentControlHandler(_currentBaseControlHandler);
   }
+  /// <summary>
+  /// Removes the control handler.
+  /// </summary>
+  /// <param name="controlHandler">The control handler.</param>
   public void RemoveControlHandler(BaseControlHandler controlHandler)
   {
     Logger.Info("Removing handler: " + controlHandler.ToString());
-    _controlHandlers.Remove(controlHandler);
-    controlHandler.Dispose();
 
-    _currentBaseControlHandler = _controlHandlers.Peek();
+    if (controlHandler == _currentBaseControlHandler)
+    {
+      BaseControlHandler poppedHandler = _controlHandlers.Pop();
+      poppedHandler.Dispose();
+
+      TryActivateCurrentControlHandler(poppedHandler);
+    }
+    else
+    {
+      _controlHandlers.Remove(controlHandler);
+      controlHandler.Dispose();
+    }
   }
+  /// <summary>
+  /// Exchanges the control handler.
+  /// </summary>
+  /// <param name="index">The index.</param>
+  /// <param name="controlHandler">The control handler.</param>
   public void ExchangeControlHandler(int index, BaseControlHandler controlHandler)
   {
     Logger.Info("Exchanging handler " + _controlHandlers[index].ToString() + " (index: " + index + ") with " + controlHandler.ToString());
-    _controlHandlers.Exchange(index, controlHandler);
 
-    _currentBaseControlHandler = _controlHandlers.Peek();
-  }
-
-  protected virtual void Update()
-  {
-    BaseControlHandler handler = _controlHandlers.Peek();
-    try
+    if (_controlHandlers[index] == _currentBaseControlHandler)
     {
-      while (!handler.Update())
-      {
-        BaseControlHandler poppedHandler = _controlHandlers.Pop();
+      BaseControlHandler poppedHandler = _controlHandlers.Exchange(index, controlHandler);
+      poppedHandler.Dispose();
 
-        Logger.Info("Popped handler: " + poppedHandler.ToString());
-        poppedHandler.Dispose();
-
-        handler = _controlHandlers.Peek();
-        _currentBaseControlHandler = handler;
-      }
+      TryActivateCurrentControlHandler(poppedHandler);
     }
-    catch (Exception err)
+    else
     {
-      Logger.Error("Game object " + this.name + " misses default control handler.", err);
-      throw;
+      _controlHandlers.Exchange(index, controlHandler);
     }
   }
+  #endregion
+
+  #endregion
 }

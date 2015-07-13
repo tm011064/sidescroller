@@ -27,7 +27,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 143148}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 18048, y: 1488, z: 0}
+  m_LocalPosition: {x: 18432, y: 1264, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -71,7 +71,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64709f4cfbbb7844a3c1e28ac841e93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skinWidth: .200000003
+  _skinWidth: 2
   platformMask:
     serializedVersion: 2
     m_Bits: 4096
@@ -125,7 +125,7 @@ MonoBehaviour:
   allowJumpFromTopThresholdInSeconds: .100000001
   allowedTopCollisionAngleFrom: -38
   allowedTopCollisionAngleTo: -142
-  speed: 50
+  speed: 200
   gravity: -3960
 --- !u!212 &21267002
 SpriteRenderer:

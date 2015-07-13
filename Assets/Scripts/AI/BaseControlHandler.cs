@@ -18,6 +18,19 @@ public class BaseControlHandler : IDisposable
   public virtual void Dispose() { /* can be overridden */}
 
   /// <summary>
+  /// This method is called from the BaseCharacterController control handler stack in order to evaluate whether the
+  /// top stack element can be activated or not. By default this method always returns true but can be overridden
+  /// for special purposes or chained control handlers.
+  /// </summary>
+  /// <param name="previousControlHandler">The last active control handler.</param>
+  /// <returns>true if activation was successful; false if not.</returns>
+  public virtual bool TryActivate(BaseControlHandler previousControlHandler)
+  {
+    Logger.Trace("Activated control handler: " + this.ToString());
+    return true;
+  }
+
+  /// <summary>
   /// Updates this instance.
   /// </summary>
   /// <returns>true if update succeeded, false if handler should be removed...</returns>
@@ -31,7 +44,7 @@ public class BaseControlHandler : IDisposable
     bool doUpdate = DoUpdate();
 
     OnAfterUpdate();
-    
+
     return doUpdate;
   }
 

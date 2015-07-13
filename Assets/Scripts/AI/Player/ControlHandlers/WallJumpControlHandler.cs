@@ -10,20 +10,26 @@ public class WallJumpControlHandler : PlayerControlHandler
 
   private bool _hasJumpedFromWall;
   private float _wallJumpDirectionMultiplier;
-  private bool _isWallRight = false;
-
-  private float _oppositeDirectionPressedTime = -1f;
+  private Direction _wallDirection;
 
   private WallJumpSettings _wallJumpSettings;
+  private AxisState _axisOverride;
 
-  public void Reset(float duration, bool isWallRight, WallJumpSettings wallJumpSettings)
+  private bool _hasLevitationStarted = false;
+  private float _remainingWallAttachedInitialLevitationDuration = -1f;
+
+  public void Reset(float duration, Direction wallDirection, WallJumpSettings wallJumpSettings)
   {
     this._overrideEndTime = Time.time + duration;
     this._hasJumpedFromWall = false;
-    this._oppositeDirectionPressedTime = -1f;
-    this._isWallRight = isWallRight;
-    this._wallJumpDirectionMultiplier = isWallRight ? -1f : 1f;
+    this._wallDirection = wallDirection;
     this._wallJumpSettings = wallJumpSettings;
+
+    this._remainingWallAttachedInitialLevitationDuration = wallJumpSettings.wallAttachedInitialLevitationDuration;
+    this._hasLevitationStarted = false;
+
+    this._wallJumpDirectionMultiplier = wallDirection == Direction.Right ? -1f : 1f;
+    _axisOverride = new AxisState(-this._wallJumpDirectionMultiplier);
   }
 
   public override void Dispose()
@@ -31,15 +37,28 @@ public class WallJumpControlHandler : PlayerControlHandler
     _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
   }
 
-  public WallJumpControlHandler(PlayerController playerController, float duration, bool isWallRight, WallJumpSettings wallJumpSettings)
-    : base(playerController, duration)
+  public WallJumpControlHandler(PlayerController playerController)
+    : base(playerController)
   {
-    this._isWallRight = isWallRight;
-    this._wallJumpDirectionMultiplier = isWallRight ? -1f : 1f;
-    this._wallJumpSettings = wallJumpSettings;
-
     base.doDrawDebugBoundingBox = true;
     base.debugBoundingBoxColor = Color.cyan;
+  }
+
+  public override bool TryActivate(BaseControlHandler previousControlHandler)
+  {
+    WallJumpEvaluationControlHandler wallJumpEvaluationControlHandler = previousControlHandler as WallJumpEvaluationControlHandler;
+    if (wallJumpEvaluationControlHandler == null)
+    {
+      Logger.Info("Wall Jump Control Handler can not be activated because previous control handler is null.");
+      return false;
+    }
+    else if (wallJumpEvaluationControlHandler.HasDetached)
+    {
+      Logger.Info("Wall Jump Control Handler can not be activated because wall jump evaluation control handler has detached.");
+      return false;
+    }
+
+    return base.TryActivate(previousControlHandler);
   }
 
   public override string ToString()
@@ -67,14 +86,36 @@ public class WallJumpControlHandler : PlayerControlHandler
       return false; // we can exit as wall jump is not allowed any more after the player accelerated downward beyond threshold
     }
 
-    if ((_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.NotOnWall) != 0)
+    if (!_hasJumpedFromWall
+      && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.NotOnWall) != 0)
     {
       Logger.Info("Popped wall jump because character is not on wall any more.");
       return false;
     }
 
-    if (velocity.y < 0f)
+    if (velocity.y <= 0f)
+    {
       _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity; // going down, use wall stick gravity
+
+
+      if (velocity.y >= -10f)
+      {
+        _hasLevitationStarted = true;
+      }
+      if (!_hasLevitationStarted)
+      {
+        velocity.y = Mathf.Lerp(velocity.y, 0f, Time.deltaTime * _wallJumpSettings.slideToLevitationDamping); // set the y speed to 0 in order to start levitation
+      }
+      else
+      {
+        _remainingWallAttachedInitialLevitationDuration -= Time.deltaTime;
+        if (_remainingWallAttachedInitialLevitationDuration > 0f)
+        {// we have to check whether we actually want to levitate. If the initial value is set to less than zero we don't want to levitate at all
+          velocity.y = 0f;
+        }
+      }
+      
+    }
     else
       _playerController.adjustedGravity = _playerController.jumpSettings.gravity; // still going up, use normal gravity
 
@@ -93,41 +134,12 @@ public class WallJumpControlHandler : PlayerControlHandler
 
       // disable jump
       _hasJumpedFromWall = true;
+      _axisOverride = new AxisState(_wallJumpDirectionMultiplier);
 
       Logger.Info("Wall Jump executed. Velocity y: " + velocity.y);
     }
 
-    AxisState hAxis;
-    if (_hasJumpedFromWall)
-      hAxis = new AxisState(_wallJumpDirectionMultiplier);
-    else
-    {
-      hAxis = _gameManager.inputStateManager.GetAxisState("Horizontal").Clone();
-      // TODO (Roman): we want to stick to wall
-      if ((_isWallRight && hAxis.value < 0f)
-        || (!_isWallRight && hAxis.value > 0f))
-      {// player presses opposite direction...
-        if (_oppositeDirectionPressedTime < 0)
-        {
-          _oppositeDirectionPressedTime = Time.time;
-        }
-        else if (Time.time - _wallJumpSettings.wallStickTime > _oppositeDirectionPressedTime)
-        {
-          // leave wall...
-          Logger.Info("Popped wall jump because player pressed opposite direction for more than " + _wallJumpSettings.wallStickTime + " seconds.");
-          return false;
-        }
-
-        // we set to zero because we want to stick until the threshold is surpassed. Then we pop the handler...
-        hAxis.value = 0f;
-      }
-      else
-      {
-        _oppositeDirectionPressedTime = -1;
-      }
-    }
-
-    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(hAxis);
+    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(_axisOverride);
 
     if (isWallJump)
     {
@@ -136,10 +148,19 @@ public class WallJumpControlHandler : PlayerControlHandler
     }
     else
     {
-      velocity.x = GetHorizontalVelocityWithDamping(velocity, hAxis.value, normalizedHorizontalSpeed);
+      velocity.x = GetHorizontalVelocityWithDamping(velocity, _axisOverride.value, normalizedHorizontalSpeed);
     }
 
-    velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
+    // we need to check whether we have to adjust the vertical velocity. If levitation is on, we want to defy the law of physics
+    if (
+          velocity.y > 0f                                      // either we go up
+      || _remainingWallAttachedInitialLevitationDuration < 0f  // or we stopped levitating
+      )
+    {
+      velocity.y = Mathf.Max(
+        GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+        , _playerController.wallJumpSettings.maxWallDownwardSpeed);
+    }
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
 

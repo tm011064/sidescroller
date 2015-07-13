@@ -36,6 +36,10 @@ public partial class RectangleMeshBuildScript : BasePlatform
   public float visibilityCheckInterval = .2f;
   public int width = 16;
   public int height = 16;
+  public bool createTiles = false;
+  public int tileWidth = 64;
+  public int tileHeight = 64;
+
   [EnumFlag]
   public Direction colliderSides = Direction.Left | Direction.Top | Direction.Right | Direction.Bottom;
 
@@ -48,19 +52,21 @@ public partial class RectangleMeshBuildScript : BasePlatform
     if (_edgeCollidersToDestroy != null)
     {
       Debug.Log("Rectangle Mesh Builder: Deleting old edge colliders...");
-      foreach (var collider in _edgeCollidersToDestroy)
-        DestroyImmediate(collider);
+      for (int i = _edgeCollidersToDestroy.Length - 1; i >= 0; i--)
+        DestroyImmediate(_edgeCollidersToDestroy[i]);
 
       _edgeCollidersToDestroy = null;
     }
     if (_boxCollider2DToDestroy != null)
     {
       Debug.Log("Rectangle Mesh Builder: Deleting old box colliders...");
-      foreach (var collider in _boxCollider2DToDestroy)
-        DestroyImmediate(collider);
+      for (int i = _boxCollider2DToDestroy.Length - 1; i >= 0; i--)
+        DestroyImmediate(_boxCollider2DToDestroy[i]);
 
       _boxCollider2DToDestroy = null;
     }
+
+    UnityEditor.SceneView.RepaintAll();
   }
 
   private void SetColliders()
@@ -74,18 +80,15 @@ public partial class RectangleMeshBuildScript : BasePlatform
     foreach (var collider in _boxCollider2DToDestroy)
       collider.hideFlags = HideFlags.HideInInspector;
 
-    //foreach (var collider in this.gameObject.GetComponents<EdgeCollider2D>())
-    //  DestroyImmediate(collider);
-    //foreach (var collider in this.gameObject.GetComponents<BoxCollider2D>())
-    //  DestroyImmediate(collider);
-    
     if (colliderSides == (Direction.Left | Direction.Top | Direction.Right | Direction.Bottom))
     {
       Debug.Log("Rectangle Mesh Builder: Creating box collider.");
 
       BoxCollider2D boxCollider2D = this.gameObject.AddComponent<BoxCollider2D>();
+
       boxCollider2D.hideFlags = HideFlags.NotEditable;
       boxCollider2D.size = new Vector2(width, height);
+      boxCollider2D.offset = new Vector2(width / 2, height / 2);
       Debug.Log("Rectangle Mesh Builder: Setting box collider size to " + boxCollider2D.size);
     }
     else if (colliderSides == 0)
@@ -183,6 +186,18 @@ public partial class RectangleMeshBuildScript : BasePlatform
   {
     SetColliders();
 
+    if (createTiles)
+    {
+      CreateTiles(tileWidth, tileHeight, width / tileWidth, height / tileHeight);
+    }
+    else
+    {
+      CreatePlane();
+    }
+  }
+
+  void CreatePlane()
+  {
     var mesh = new Mesh();
     var meshFilter = this.gameObject.GetComponent<MeshFilter>();
     meshFilter.mesh = mesh;
@@ -223,6 +238,75 @@ public partial class RectangleMeshBuildScript : BasePlatform
     mesh.triangles = triangles.ToArray();
     mesh.uv = uvs.ToArray();
     mesh.RecalculateNormals();
+  }
+
+  void CreateTiles(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
+  {
+    var mesh = new Mesh();
+    var meshFilter = this.gameObject.GetComponent<MeshFilter>();
+    meshFilter.mesh = mesh;
+
+    var tileSizeX = 1.0f;
+    var tileSizeY = 1.0f;
+
+    var vertices = new List<Vector3>();
+    var triangles = new List<int>();
+    var normals = new List<Vector3>();
+    var uvs = new List<Vector2>();
+
+    var index = 0;
+    for (var x = 0; x < gridWidth; x++)
+    {
+      for (var y = 0; y < gridHeight; y++)
+      {
+        AddVertices(tileHeight, tileWidth, y, x, vertices);
+        index = AddTriangles(index, triangles);
+        AddNormals(normals);
+        AddUvs(0, tileSizeY, tileSizeX, uvs, 0);
+      }
+    }
+
+    mesh.vertices = vertices.ToArray();
+    mesh.normals = normals.ToArray();
+    mesh.triangles = triangles.ToArray();
+    mesh.uv = uvs.ToArray();
+    mesh.RecalculateNormals();
+  }
+
+  private static void AddVertices(int tileHeight, int tileWidth, int y, int x, ICollection<Vector3> vertices)
+  {
+    vertices.Add(new Vector3((x * tileWidth), (y * tileHeight), 0));
+    vertices.Add(new Vector3((x * tileWidth) + tileWidth, (y * tileHeight), 0));
+    vertices.Add(new Vector3((x * tileWidth) + tileWidth, (y * tileHeight) + tileHeight, 0));
+    vertices.Add(new Vector3((x * tileWidth), (y * tileHeight) + tileHeight, 0));
+  }
+
+  private static int AddTriangles(int index, ICollection<int> triangles)
+  {
+    triangles.Add(index + 2);
+    triangles.Add(index + 1);
+    triangles.Add(index);
+    triangles.Add(index);
+    triangles.Add(index + 3);
+    triangles.Add(index + 2);
+    index += 4;
+    return index;
+  }
+
+  private static void AddNormals(ICollection<Vector3> normals)
+  {
+    normals.Add(Vector3.forward);
+    normals.Add(Vector3.forward);
+    normals.Add(Vector3.forward);
+    normals.Add(Vector3.forward);
+  }
+
+  private static void AddUvs(int tileRow, float tileSizeY, float tileSizeX, ICollection<Vector2> uvs, int tileColumn)
+  {
+    uvs.Add(new Vector2(tileColumn * tileSizeX, tileRow * tileSizeY));
+    uvs.Add(new Vector2((tileColumn + 1) * tileSizeX, tileRow * tileSizeY));
+    uvs.Add(new Vector2((tileColumn + 1) * tileSizeX, (tileRow + 1) * tileSizeY));
+    uvs.Add(new Vector2(tileColumn * tileSizeX, (tileRow + 1) * tileSizeY));
   }
 #endif
 }

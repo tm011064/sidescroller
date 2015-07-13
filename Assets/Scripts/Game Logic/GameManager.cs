@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
 {
@@ -20,6 +21,35 @@ public class GameManager : MonoBehaviour
   public void AddCoin()
   {
     _totalCoins++;
+  }
+
+  private List<Checkpoint> _orderedSceneCheckpoints;
+  private int _currentCheckpointIndex = 0;
+
+  public void LoadScene()
+  {
+    GameObject checkpoint = null;
+    switch (Application.loadedLevelName)
+    {
+      case "JumpArena":
+        _orderedSceneCheckpoints = new List<Checkpoint>(GameObject.FindObjectsOfType<Checkpoint>());
+        _orderedSceneCheckpoints.Sort((a, b) => a.index > b.index ? -1 : 1);
+
+        _currentCheckpointIndex = 0;
+        checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
+        break;
+
+      default:
+        // TODO (Roman): don't hardcode tags
+        checkpoint = GameObject.FindGameObjectWithTag("Checkpoint 1");
+        break;
+    }
+
+    PlayerController playerController = Instantiate(GameManager.instance.player, checkpoint.transform.position, Quaternion.identity) as PlayerController;
+
+    playerController.spawnLocation = checkpoint.transform.position;
+
+    this.player = playerController;
   }
 
   void Awake()
@@ -49,11 +79,25 @@ public class GameManager : MonoBehaviour
   {
     inputStateManager.Update();
 
+#if !FINAL
+
+    if (Input.GetKeyUp("n"))
+    {
+      _currentCheckpointIndex++;
+      if (_currentCheckpointIndex >= _orderedSceneCheckpoints.Count)
+        _currentCheckpointIndex = 0;
+      GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
+      this.player.spawnLocation = checkpoint.gameObject.transform.position;
+      this.player.Respawn();
+    }
+
     if (Input.GetKey("escape"))
     {
       Logger.Info("quit");
       Application.Quit();
     }
+
+#endif
 
     UpdateFPS();
   }
@@ -62,7 +106,7 @@ public class GameManager : MonoBehaviour
   {
     Logger.Destroy();
   }
-  
+
   #region fps draws
 #if !FINAL
   private float FPS;
@@ -116,8 +160,36 @@ public class GameManager : MonoBehaviour
 #if !FINAL
     // Display on screen the current Frames Per Second.
     string fps_string = string.Format("FPS: {0:d2}", (int)FPS);
-    GUI.Label(new Rect(10, 10, 600, 30), fps_string);
+    GUIDrawRect(new Rect(0, 0, 60, 22), Color.red);
+    GUI.Label(new Rect(4, 0, 60, 22), fps_string);
 #endif
   }
+
+#if !FINAL
+  private static Texture2D _staticRectTexture;
+  private static GUIStyle _staticRectStyle;
+
+  // Note that this function is only meant to be called from OnGUI() functions.
+  public static void GUIDrawRect(Rect position, Color color)
+  {
+    if (_staticRectTexture == null)
+    {
+      _staticRectTexture = new Texture2D(1, 1);
+    }
+
+    if (_staticRectStyle == null)
+    {
+      _staticRectStyle = new GUIStyle();
+    }
+
+    _staticRectTexture.SetPixel(0, 0, color);
+    _staticRectTexture.Apply();
+
+    _staticRectStyle.normal.background = _staticRectTexture;
+
+    GUI.Box(position, GUIContent.none, _staticRectStyle);
+  }
+#endif
+
   #endregion
 }

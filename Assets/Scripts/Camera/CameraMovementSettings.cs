@@ -22,6 +22,9 @@ public struct CameraMovementSettings
   public float ZoomTime;
   public EasingType ZoomEasingType;
 
+  public float HorizontalSmoothDampTime;
+  public float VerticalSmoothDampTime;
+
   public override string ToString()
   {
     return string.Format("Pos Locks: ({0}, {1}), Extensions (l = {2}, t = {3}, r = {4}, b = {5}, ox = {6}, oy = {7}), Zoom: {8} "
@@ -41,7 +44,8 @@ public struct CameraMovementSettings
 
   public CameraMovementSettings(float? xPosLock, float? yPosLock, bool allowTopExtension = false, bool allowBottomExtension = false
     , bool allowLeftExtension = false, bool allowRightExtension = false, float offsetX = 0f, float offsetY = 0f
-    , float zoomPercentage = 1f, float zoomTime = 1f, EasingType zoomEasingType = EasingType.EaseInOutSine)
+    , float zoomPercentage = 1f, float zoomTime = 1f, EasingType zoomEasingType = EasingType.EaseInOutSine
+    , float horizontalSmoothDampTime = .2f, float verticalSmoothDampTime = .2f)
   {
     this.XPosLock = xPosLock;
     this.YPosLock = yPosLock;
@@ -62,5 +66,8 @@ public struct CameraMovementSettings
     this.ZoomPercentage = zoomPercentage;
     this.ZoomTime = zoomTime;
     this.ZoomEasingType = zoomEasingType;
+
+    this.HorizontalSmoothDampTime = horizontalSmoothDampTime;
+    this.VerticalSmoothDampTime = verticalSmoothDampTime;
   }
 }

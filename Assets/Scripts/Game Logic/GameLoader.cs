@@ -12,7 +12,6 @@ public class PowerUpSettings
 [Serializable]
 public class PlayerMetricSettings
 {
-  public float dashMultiplier = 2f;
   public float jumpReleaseUpVelocityMultiplier = .5f;
 }
 [Serializable]
@@ -75,5 +74,7 @@ public class GameLoader : MonoBehaviour
 
     //if (SoundManager.instance == null)
     //  Instantiate(soundManager);
+
+    GameManager.instance.LoadScene(); // it is important to call that here as it instanciates the player controller which needs to have the game settings set.
   }
 }

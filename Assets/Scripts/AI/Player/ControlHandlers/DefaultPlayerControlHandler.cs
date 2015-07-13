@@ -16,7 +16,7 @@ public class DefaultPlayerControlHandler : PlayerControlHandler
   {
 
   }
-  
+
   protected override bool DoUpdate()
   {
     CheckOneWayPlatformFallThrough();
@@ -24,12 +24,16 @@ public class DefaultPlayerControlHandler : PlayerControlHandler
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
 
     velocity.y = GetJumpVerticalVelocity(velocity);
-    velocity.y = GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity);
+    velocity.y = Mathf.Max(
+      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+      , _playerController.jumpSettings.maxDownwardSpeed);
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);
-    
+
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
-    
+
+    Logger.Trace("PlayerMetricsDebug", "Position: " + _playerController.transform.position + ", Velocity: " + velocity);
+
     return true;
   }
 

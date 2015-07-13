@@ -8,22 +8,19 @@ public class AttachToFloatingPlatform : MonoBehaviour
   void OnEnable()
   {
     PlayerController playerController = GameManager.instance.player;
-    if (playerController != null && playerController.characterPhysicsManager != null)
-    {
-      playerController.characterPhysicsManager.onControllerBecameGrounded += characterPhysicsManager_onControllerBecameGrounded;
-      playerController.characterPhysicsManager.onControllerLostGround += characterPhysicsManager_onControllerLostGround;
-    }
+
+    playerController.characterPhysicsManager.onControllerBecameGrounded += characterPhysicsManager_onControllerBecameGrounded;
+    playerController.characterPhysicsManager.onControllerLostGround += characterPhysicsManager_onControllerLostGround;
+
     _isPlayerAttached = false;
   }
 
   void OnDisable()
   {
     PlayerController playerController = GameManager.instance.player;
-    if (playerController != null && playerController.characterPhysicsManager != null)
-    {
-      playerController.characterPhysicsManager.onControllerBecameGrounded -= characterPhysicsManager_onControllerBecameGrounded;
-      playerController.characterPhysicsManager.onControllerLostGround -= characterPhysicsManager_onControllerLostGround;
-    }
+
+    playerController.characterPhysicsManager.onControllerBecameGrounded -= characterPhysicsManager_onControllerBecameGrounded;
+    playerController.characterPhysicsManager.onControllerLostGround -= characterPhysicsManager_onControllerLostGround;
   }
 
   void characterPhysicsManager_onControllerLostGround()

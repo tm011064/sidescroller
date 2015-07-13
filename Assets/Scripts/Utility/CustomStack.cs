@@ -33,13 +33,18 @@ public class CustomStack<T> : List<T>
   }
 
 
-  public void Exchange(int index, T item)
+  public T Exchange(int index, T item)
   {
     if (index < this.Count)
     {
+      T removedItem = this[index];
+
       this.Insert(index, item);
       this.RemoveAt(index + 1);
+
+      return removedItem;
     }
+    return default(T);
   }
 
 }

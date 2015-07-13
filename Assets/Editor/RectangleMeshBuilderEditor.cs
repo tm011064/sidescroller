@@ -11,7 +11,7 @@ public class RectangleMeshBuilderEditor : Editor
 
     RectangleMeshBuildScript myScript = (RectangleMeshBuildScript)target;
     myScript.SafeDeleteColliders();
-
+    
     if (GUILayout.Button("Build Object"))
     {
       myScript.BuildObject();

@@ -137,16 +137,20 @@ MonoBehaviour:
   wallJumpSettings:
     wallJumpEnabledTime: 10000
     wallVelocityDownThreshold: -100000
-    wallJumpPushOffAxisOverrideTime: .300000012
-    wallStickTime: .200000003
-    wallStickGravity: -2000
+    wallJumpPushOffAxisOverrideTime: .119999997
+    wallStickGravity: -3960
+    wallJumpWallEvaluationDuration: .100000001
+    wallAttachedInitialLevitationDuration: .0399999991
+    maxWallDownwardSpeed: -600
+    slideToLevitationDamping: 18
   jumpSettings:
     gravity: -3960
-    walkJumpHeight: 380
-    runJumpHeight: 400
+    walkJumpHeight: 450
+    runJumpHeight: 498
     runJumpHeightSpeedTrigger: 620
     inAirDamping: 2.5
-    allowJumpAfterGroundLostThreashold: .0500000007
+    allowJumpAfterGroundLostThreashold: .100000001
+    maxDownwardSpeed: -1800
   runSettings:
     walkSpeed: 600
     runSpeed: 900
@@ -203,7 +207,7 @@ SpriteRenderer:
   m_AutoUVMaxDistance: .5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
+  m_SortingLayerID: -752253655
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 29689edf152f76a40916850ad149b4a2, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

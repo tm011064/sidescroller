@@ -30,9 +30,6 @@ public class CameraController : MonoBehaviour
   #endregion
 
   #region inspector fields
-  public Transform target;
-  public float horizontalSmoothDampTime = 0.2f;
-  public float verticalSmoothDampTime = 0.2f;
   public Vector3 cameraOffset;
   public bool useFixedUpdate = false;
   public float maxPixelHeight = 1080f;
@@ -46,10 +43,12 @@ public class CameraController : MonoBehaviour
 
   private CameraMovementSettings _cameraMovementSettings;
   private UpdateTimer _zoomTimer;
-  #endregion
 
   [HideInInspector]
+  public Transform target;
+  [HideInInspector]
   public new Transform transform;
+  #endregion
   
   void Reset()
   {
@@ -65,17 +64,9 @@ public class CameraController : MonoBehaviour
   void Start()
   {
     transform = gameObject.transform;
-
-    // TODO (Roman): this should come from game manager
-    // TODO (Roman): don't hardcode tags
-    GameObject checkpoint = GameObject.FindGameObjectWithTag("Checkpoint 1");
-
-    PlayerController playerController = Instantiate(GameManager.instance.player, checkpoint.transform.position, Quaternion.identity) as PlayerController;
-
-    playerController.spawnLocation = checkpoint.transform.position;
-
+    
     // we set the target of the camera to our player through code
-    target = playerController.transform;
+    target = GameManager.instance.player.transform;
 
     _characterPhysicsManager = target.GetComponent<CharacterPhysicsManager>();
 
@@ -128,7 +119,6 @@ public class CameraController : MonoBehaviour
 
     if (_cameraMovementSettings.YPosLock.HasValue)
     {
-
       if (_cameraMovementSettings.AllowTopExtension && target.position.y > _cameraMovementSettings.TopBoundary)
         yPos = target.position.y + _cameraMovementSettings.OffsetY;
       else if (_cameraMovementSettings.AllowBottomExtension && target.position.y < _cameraMovementSettings.BottomBoundary)
@@ -143,9 +133,11 @@ public class CameraController : MonoBehaviour
 
     if (_cameraMovementSettings.XPosLock.HasValue)
     {
-      if (_cameraMovementSettings.AllowLeftExtension && target.position.x < _cameraMovementSettings.LeftBoundary)
+      float posX = _cameraMovementSettings.XPosLock.Value + _cameraMovementSettings.OffsetX;
+
+      if (_cameraMovementSettings.AllowLeftExtension && target.position.x < posX)
         xPos = target.position.x + _cameraMovementSettings.OffsetX;
-      else if (_cameraMovementSettings.AllowRightExtension && target.position.x > _cameraMovementSettings.RightBoundary)
+      else if (_cameraMovementSettings.AllowRightExtension && target.position.x > posX)
         xPos = target.position.x + _cameraMovementSettings.OffsetX;
       else
         xPos = _cameraMovementSettings.XPosLock.Value + _cameraMovementSettings.OffsetX;
@@ -161,8 +153,8 @@ public class CameraController : MonoBehaviour
     {      
       Vector3 targetPositon = hvec - cameraOffset;
       transform.position = new Vector3(
-        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, horizontalSmoothDampTime)
-        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
+        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, _cameraMovementSettings.HorizontalSmoothDampTime)
+        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, _cameraMovementSettings.VerticalSmoothDampTime)
         , targetPositon.z);
     }
     else
@@ -172,8 +164,8 @@ public class CameraController : MonoBehaviour
 
       Vector3 targetPositon = hvec - leftOffset;
       transform.position = new Vector3(
-        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, horizontalSmoothDampTime)
-        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
+        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, _cameraMovementSettings.HorizontalSmoothDampTime)
+        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, _cameraMovementSettings.VerticalSmoothDampTime)
         , targetPositon.z);
     }
   }

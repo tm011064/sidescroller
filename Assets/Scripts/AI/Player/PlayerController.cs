@@ -7,8 +7,12 @@ public class WallJumpSettings
   public float wallJumpEnabledTime = .5f;
   public float wallVelocityDownThreshold = -200f;
   public float wallJumpPushOffAxisOverrideTime = .2f;
-  public float wallStickTime = .2f;
   public float wallStickGravity = -100f;
+  public float wallJumpWallEvaluationDuration = .1f;
+  [Tooltip("Set to -1 in order to disable levitation")]
+  public float wallAttachedInitialLevitationDuration = 0.12f;
+  public float maxWallDownwardSpeed = -1000f;
+  public float slideToLevitationDamping = 18f;
 }
 
 [Serializable]
@@ -29,13 +33,14 @@ public class JumpSettings
   public float runJumpHeightSpeedTrigger = 800f;
   public float inAirDamping = 2.5f;
   public float allowJumpAfterGroundLostThreashold = .05f;
+  public float maxDownwardSpeed = -1800f;
 }
 
 
 public partial class PlayerController : BaseCharacterController
 {
   private const string TRACE_TAG = "PlayerController";
-  
+
   public WallJumpSettings wallJumpSettings = new WallJumpSettings();
   public JumpSettings jumpSettings = new JumpSettings();
   public RunSettings runSettings = new RunSettings();
@@ -44,9 +49,9 @@ public partial class PlayerController : BaseCharacterController
   public Vector2 boxColliderSizeCrouched = Vector2.zero;
 
   [HideInInspector]
-  public Vector2 boxColliderOffsetDefault= Vector2.zero;
+  public Vector2 boxColliderOffsetDefault = Vector2.zero;
   [HideInInspector]
-  public Vector2 boxColliderSizeDefault = Vector2.zero;  
+  public Vector2 boxColliderSizeDefault = Vector2.zero;
   [HideInInspector]
   public float adjustedGravity;
   [HideInInspector]
@@ -65,18 +70,18 @@ public partial class PlayerController : BaseCharacterController
 
   private RaycastHit2D _lastControllerColliderHit;
   private Vector3 _velocity;
-  private float _currentJumpVelocity;
-  private float _currentJumpVelocityMultiplier;
-  private WallJumpControlHandler _reusableWallJumpControlHandler;  
+
+  private WallJumpControlHandler _reusableWallJumpControlHandler;
+  private WallJumpEvaluationControlHandler _reusableWallJumpEvaluationControlHandler;
   private Vector3 _lastLostGroundPos = Vector3.zero;
+
   private GameManager _gameManager;
-    
+
   void Awake()
   {
     // register with game context so this game object can be accessed everywhere
     _gameManager = GameManager.instance;
 
-    _gameManager.player = this;
     Logger.Info("Playercontroller awoke and added to game context instance.");
 
     boxCollider = GetComponent<BoxCollider2D>();
@@ -91,8 +96,9 @@ public partial class PlayerController : BaseCharacterController
     characterPhysicsManager.onTriggerEnterEvent += onTriggerEnterEvent;
     characterPhysicsManager.onControllerLostGround += characterPhysicsManager_onControllerLostGround;
     characterPhysicsManager.onControllerBecameGrounded += characterPhysicsManager_onControllerBecameGrounded;
-    
-    _reusableWallJumpControlHandler = new WallJumpControlHandler(this, -1f, false, wallJumpSettings);
+
+    _reusableWallJumpControlHandler = new WallJumpControlHandler(this);
+    _reusableWallJumpEvaluationControlHandler = new WallJumpEvaluationControlHandler(this);
 
     PushControlHandler(new GoodHealthPlayerControlHandler(this));
     _gameManager.powerUpManager.PowerMeter = 1;
@@ -148,22 +154,29 @@ public partial class PlayerController : BaseCharacterController
       //  spriteRotation = Quaternion.Euler(0f, 0f, toAngle);
       //}
 
-      if ((characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
+      if (!characterPhysicsManager.isGrounded
+        && (characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
       {
-        if (characterPhysicsManager.lastMoveCalculationResult.collisionState.left && !characterPhysicsManager.isGrounded)
+        // wall jumps work like this: if the player makes contact with a wall, we want to keep track how long he moves towards the
+        // wall (based on input axis). If a certain threshold is reached, we are "attached to the wall" which will result in a slight levitation
+        // period when reaching peak height and a reduced "slide down" gravity. When a player is on a wall, he can not detach by pressing
+        // the opposite direction - the only way to detach is to jump.
+
+        if (this.CurrentControlHandler != this._reusableWallJumpControlHandler
+          && this.CurrentControlHandler != this._reusableWallJumpEvaluationControlHandler)
         {
-          if (this.CurrentControlHandler != _reusableWallJumpControlHandler)
+          // new event, start evaluation
+          if (characterPhysicsManager.lastMoveCalculationResult.collisionState.left)
           {
-            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpEnabledTime, false, wallJumpSettings);
-            PushControlHandler(_reusableWallJumpControlHandler);
+            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration + wallJumpSettings.wallJumpEnabledTime, Direction.Left, wallJumpSettings);
+            _reusableWallJumpEvaluationControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration, Direction.Left, wallJumpSettings);
+            this.PushControlHandler(_reusableWallJumpControlHandler, _reusableWallJumpEvaluationControlHandler);
           }
-        }
-        else if (characterPhysicsManager.lastMoveCalculationResult.collisionState.right && !characterPhysicsManager.isGrounded)
-        {
-          if (this.CurrentControlHandler != _reusableWallJumpControlHandler)
+          else if (characterPhysicsManager.lastMoveCalculationResult.collisionState.right)
           {
-            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpEnabledTime, true, wallJumpSettings);
-            PushControlHandler(_reusableWallJumpControlHandler);
+            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration + wallJumpSettings.wallJumpEnabledTime, Direction.Right, wallJumpSettings);
+            _reusableWallJumpEvaluationControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration, Direction.Right, wallJumpSettings);
+            this.PushControlHandler(_reusableWallJumpControlHandler, _reusableWallJumpEvaluationControlHandler);
           }
         }
       }
@@ -194,7 +207,7 @@ public partial class PlayerController : BaseCharacterController
     }
   }
 #endif
-  
+
   public void Respawn()
   {
     characterPhysicsManager.velocity = Vector3.zero;
