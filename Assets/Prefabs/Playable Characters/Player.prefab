@@ -139,10 +139,8 @@ MonoBehaviour:
     wallVelocityDownThreshold: -100000
     wallJumpPushOffAxisOverrideTime: .119999997
     wallStickGravity: -3960
-    wallJumpWallEvaluationDuration: .100000001
-    wallAttachedInitialLevitationDuration: .0399999991
-    maxWallDownwardSpeed: -600
-    slideToLevitationDamping: 18
+    wallJumpWallEvaluationDuration: .0199999996
+    maxWallDownwardSpeed: -800
   jumpSettings:
     gravity: -3960
     walkJumpHeight: 450
@@ -150,7 +148,7 @@ MonoBehaviour:
     runJumpHeightSpeedTrigger: 620
     inAirDamping: 2.5
     allowJumpAfterGroundLostThreashold: .100000001
-    maxDownwardSpeed: -1800
+    maxDownwardSpeed: -1200
   runSettings:
     walkSpeed: 600
     runSpeed: 900

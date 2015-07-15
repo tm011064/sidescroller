@@ -15,18 +15,12 @@ public class WallJumpControlHandler : PlayerControlHandler
   private WallJumpSettings _wallJumpSettings;
   private AxisState _axisOverride;
 
-  private bool _hasLevitationStarted = false;
-  private float _remainingWallAttachedInitialLevitationDuration = -1f;
-
   public void Reset(float duration, Direction wallDirection, WallJumpSettings wallJumpSettings)
   {
     this._overrideEndTime = Time.time + duration;
     this._hasJumpedFromWall = false;
     this._wallDirection = wallDirection;
     this._wallJumpSettings = wallJumpSettings;
-
-    this._remainingWallAttachedInitialLevitationDuration = wallJumpSettings.wallAttachedInitialLevitationDuration;
-    this._hasLevitationStarted = false;
 
     this._wallJumpDirectionMultiplier = wallDirection == Direction.Right ? -1f : 1f;
     _axisOverride = new AxisState(-this._wallJumpDirectionMultiplier);
@@ -95,30 +89,12 @@ public class WallJumpControlHandler : PlayerControlHandler
 
     if (velocity.y <= 0f)
     {
-      _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity; // going down, use wall stick gravity
-
-
-      if (velocity.y >= -10f)
-      {
-        _hasLevitationStarted = true;
-      }
-      if (!_hasLevitationStarted)
-      {
-        velocity.y = Mathf.Lerp(velocity.y, 0f, Time.deltaTime * _wallJumpSettings.slideToLevitationDamping); // set the y speed to 0 in order to start levitation
-      }
-      else
-      {
-        _remainingWallAttachedInitialLevitationDuration -= Time.deltaTime;
-        if (_remainingWallAttachedInitialLevitationDuration > 0f)
-        {// we have to check whether we actually want to levitate. If the initial value is set to less than zero we don't want to levitate at all
-          velocity.y = 0f;
-        }
-      }
-      
+      _playerController.adjustedGravity = _wallJumpSettings.wallStickGravity; // going down, use wall stick gravity     
     }
     else
+    {
       _playerController.adjustedGravity = _playerController.jumpSettings.gravity; // still going up, use normal gravity
-
+    }
     bool isWallJump = false;
     if (!_hasJumpedFromWall
         && (_gameManager.inputStateManager.GetButtonState("Jump").IsDown))
@@ -152,15 +128,9 @@ public class WallJumpControlHandler : PlayerControlHandler
     }
 
     // we need to check whether we have to adjust the vertical velocity. If levitation is on, we want to defy the law of physics
-    if (
-          velocity.y > 0f                                      // either we go up
-      || _remainingWallAttachedInitialLevitationDuration < 0f  // or we stopped levitating
-      )
-    {
-      velocity.y = Mathf.Max(
-        GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
-        , _playerController.wallJumpSettings.maxWallDownwardSpeed);
-    }
+    velocity.y = Mathf.Max(
+      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+      , _playerController.wallJumpSettings.maxWallDownwardSpeed);
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
 

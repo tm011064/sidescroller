@@ -22,6 +22,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System;
+using System.Linq;
 
 [AddComponentMenu("Pixelplacement/iTweenPath")]
 public class iTweenPath : MonoBehaviour
@@ -60,7 +61,8 @@ public class iTweenPath : MonoBehaviour
     {
       if (nodes.Count > 0)
       {
-        iTween.DrawPath(nodes.ToArray(), pathColor);
+        iTween.DrawPath((from c in nodes
+                         select this.gameObject.transform.TransformPoint(c)).ToArray(), pathColor);
       }
     }
   }
@@ -85,6 +87,19 @@ public class iTweenPath : MonoBehaviour
       Debug.Log("No path with that name (" + requestedName + ") exists! Are you sure you wrote it correctly?");
       return null;
     }
+  }
+  public Vector3 GetFirstNodeInWorldSpace()
+  {
+    return this.gameObject.transform.TransformPoint(nodes[0]);
+  }
+  public Vector3[] GetPathInWorldSpace()
+  {
+    Vector3[] worldNodes = new Vector3[nodes.Count];
+
+    for (int i = 0; i < nodes.Count; i++)
+      worldNodes[i] = this.gameObject.transform.TransformPoint(nodes[i]);
+
+    return worldNodes;
   }
 
   /// <summary>

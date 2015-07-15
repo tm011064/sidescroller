@@ -130,7 +130,8 @@ public class iTweenPathEditor : Editor
         //node handle display:
         for (int i = 0; i < _target.nodes.Count; i++)
         {
-          _target.nodes[i] = Handles.PositionHandle(_target.nodes[i], Quaternion.identity);
+          _target.nodes[i] = _target.gameObject.transform.InverseTransformPoint(
+            Handles.PositionHandle(_target.gameObject.transform.TransformPoint(_target.nodes[i]), Quaternion.identity));
         }
       }
     }

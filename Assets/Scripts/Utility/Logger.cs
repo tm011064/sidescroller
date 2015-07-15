@@ -93,7 +93,7 @@ public class Logger : IDisposable
   }
 
   #region static
-  [Conditional("DEBUG"), Conditional("PROFILE")]
+  [Conditional("DEBUG")]
   public static void Info(string msg)
   {
 #if !FINAL
@@ -108,7 +108,7 @@ public class Logger : IDisposable
 #endif
   }
 
-  [Conditional("DEBUG"), Conditional("PROFILE")]
+  [Conditional("DEBUG")]
   public static void Trace(string tag, string msg, params object[] args)
   {
 #if !FINAL
@@ -122,7 +122,7 @@ public class Logger : IDisposable
     }
 #endif
   }
-  [Conditional("DEBUG"), Conditional("PROFILE")]
+  [Conditional("DEBUG")]
   public static void Trace(string msg)
   {
 #if !FINAL
@@ -136,7 +136,7 @@ public class Logger : IDisposable
     }
 #endif
   }
-  [Conditional("DEBUG"), Conditional("PROFILE")]
+  [Conditional("DEBUG")]
   public static void Trace(object obj)
   {
 #if !FINAL
@@ -146,7 +146,7 @@ public class Logger : IDisposable
       Trace(obj.ToString());
 #endif
   }
-  [Conditional("DEBUG"), Conditional("PROFILE")]
+  [Conditional("DEBUG")]
   public static void Trace(string tag, object obj)
   {
 #if !FINAL
@@ -170,7 +170,6 @@ public class Logger : IDisposable
 #endif
   }
 
-  [Conditional("DEBUG"), Conditional("PROFILE")]
   public static void Error(Exception err)
   {
 #if !FINAL
@@ -178,7 +177,6 @@ public class Logger : IDisposable
 #endif
   }
 
-  [Conditional("DEBUG"), Conditional("PROFILE")]
   public static void Error(string msg, Exception err)
   {
 #if !FINAL
@@ -186,7 +184,6 @@ public class Logger : IDisposable
 #endif
   }
 
-  [Conditional("DEBUG"), Conditional("PROFILE")]
   public static void Error(string msg)
   {
 #if !FINAL

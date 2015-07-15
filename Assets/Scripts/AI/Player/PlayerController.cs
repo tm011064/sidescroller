@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 [Serializable]
@@ -9,10 +10,7 @@ public class WallJumpSettings
   public float wallJumpPushOffAxisOverrideTime = .2f;
   public float wallStickGravity = -100f;
   public float wallJumpWallEvaluationDuration = .1f;
-  [Tooltip("Set to -1 in order to disable levitation")]
-  public float wallAttachedInitialLevitationDuration = 0.12f;
   public float maxWallDownwardSpeed = -1000f;
-  public float slideToLevitationDamping = 18f;
 }
 
 [Serializable]
@@ -133,35 +131,12 @@ public partial class PlayerController : BaseCharacterController
     // TODO (Roman): these methods should be optimized and put into constant field...
     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Platforms"))
     {
-      //if (this.characterPhysicsManager.isGrounded && hit.collider is CircleCollider2D)
-      //{
-      //  // TODO (Roman):  this is all a quick hack. we should create a new playercontrolhandler which attaches the player to the circle
-      //  //                and let's him move left and right along the circle path without the ground collision detection.
-
-      //  // get angle
-      //  Vector3 dir = transform.position - hit.collider.transform.position;
-      //  float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-
-      //  float toAngle = 0f;
-      //  if (angle >= 0f && angle <= 90f)
-      //    toAngle = 90f - angle;
-      //  else if (angle > 90f && angle <= 180f)
-      //    toAngle = -(angle - 90);
-
-      //  if (this.transform.localScale.x > 0)
-      //    toAngle = -toAngle;
-
-      //  spriteRotation = Quaternion.Euler(0f, 0f, toAngle);
-      //}
-
       if (!characterPhysicsManager.isGrounded
         && (characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
       {
         // wall jumps work like this: if the player makes contact with a wall, we want to keep track how long he moves towards the
-        // wall (based on input axis). If a certain threshold is reached, we are "attached to the wall" which will result in a slight levitation
-        // period when reaching peak height and a reduced "slide down" gravity. When a player is on a wall, he can not detach by pressing
-        // the opposite direction - the only way to detach is to jump.
-
+        // wall (based on input axis). If a certain threshold is reached, we are "attached to the wall" which will result in a reduced "slide down"
+        // gravity. When a player is on a wall, he can not detach by pressing the opposite direction - the only way to detach is to jump.
         if (this.CurrentControlHandler != this._reusableWallJumpControlHandler
           && this.CurrentControlHandler != this._reusableWallJumpEvaluationControlHandler)
         {
@@ -182,7 +157,6 @@ public partial class PlayerController : BaseCharacterController
       }
     }
   }
-
 
   void onTriggerEnterEvent(Collider2D col)
   {
@@ -207,7 +181,7 @@ public partial class PlayerController : BaseCharacterController
     }
   }
 #endif
-
+  
   public void Respawn()
   {
     characterPhysicsManager.velocity = Vector3.zero;
@@ -218,7 +192,7 @@ public partial class PlayerController : BaseCharacterController
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
     _gameManager.powerUpManager.PowerMeter = 1;
   }
-
+  
   protected override void Update()
   {
     if (_gameManager.inputStateManager.GetButtonState("SwitchPowerUp").IsUp)

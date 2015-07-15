@@ -13,6 +13,44 @@ public static class GeometryExtensions
     return GeometryUtility.TestPlanesAABB(planes, collider.bounds);
   }
 
+  public static bool IsPointOnEdge(this Bounds bounds, Vector3 vector)
+  {
+    if (vector.x == bounds.center.x - bounds.extents.x)
+    {
+      if (vector.y >= bounds.center.y - bounds.extents.y
+        && vector.y <= bounds.center.y + bounds.extents.y)
+      {
+        return true;
+      }
+    }
+    else if (vector.x == bounds.center.x + bounds.extents.x)
+    {
+      if (vector.y >= bounds.center.y - bounds.extents.y
+        && vector.y <= bounds.center.y + bounds.extents.y)
+      {
+        return true;
+      }
+    }
+    else if (vector.y == bounds.center.y + bounds.extents.y)
+    {
+      if (vector.x >= bounds.center.x - bounds.extents.x
+        && vector.x <= bounds.center.x + bounds.extents.x)
+      {
+        return true;
+      }
+    }
+    else if (vector.y == bounds.center.y - bounds.extents.y)
+    {
+      if (vector.x >= bounds.center.x - bounds.extents.x
+        && vector.x <= bounds.center.x + bounds.extents.x)
+      {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
   public static Vector3 ToVector3(this Vector2 vector)
   {
     return new Vector3(vector.x, vector.y);

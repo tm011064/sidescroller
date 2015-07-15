@@ -57,6 +57,8 @@ public struct MoveCalculationResult
 public class CharacterPhysicsManager : MonoBehaviour
 {
   private const string TRACE_TAG = "CharacterPhysicsManager";
+  private const float POSITIVE_ZERO_MOVE_FUDGE_FACTOR = .0001f;
+  private const float NEGATIVE_ZERO_MOVE_FUDGE_FACTOR = -.0001f;
 
   #region internal types
 
@@ -268,8 +270,24 @@ public class CharacterPhysicsManager : MonoBehaviour
 
       DrawRay(ray, Vector2.up * verticalRayDistance, Color.red);
 
-      if (Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay))
-        return false;
+      RaycastHit2D raycastHit = Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
+      if (raycastHit)
+      {
+        // we need to check whether the hit point is on the edge of the collider. If not, the ray was sent from within the collider which can happen
+        // on moving platforms        
+        if (raycastHit.distance == 0f)
+        {
+          // if the distance is 0, we are inside a collider since the raycast origin is inside the player (due to skin width logic). This can
+          // happen when a moving platform moves into a non moving player. In such a case we allow the jump to proceed.
+          // in case this distance check doesn't work, we can also use "if (!raycastHit.collider.bounds.IsPointOnEdge(raycastHit.point))"
+          Logger.Trace(TRACE_TAG, "Jump raycast hit [" + i + ", distance: " + raycastHit.distance + "] ignored because we are inside the collider. Ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
+        }
+        else
+        {
+          Logger.Trace(TRACE_TAG, "Can not jump [" + i + ", distance: " + raycastHit.distance + "] because of ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
+          return false;
+        }
+      }
     }
 
     return true;
@@ -277,6 +295,12 @@ public class CharacterPhysicsManager : MonoBehaviour
 
   public MoveCalculationResult CalculateMove(Vector3 deltaMovement)
   {
+    // set small movements to zero
+    if (deltaMovement.x <= POSITIVE_ZERO_MOVE_FUDGE_FACTOR && deltaMovement.x >= NEGATIVE_ZERO_MOVE_FUDGE_FACTOR)
+      deltaMovement.x = 0f;
+    if (deltaMovement.y <= POSITIVE_ZERO_MOVE_FUDGE_FACTOR && deltaMovement.y >= NEGATIVE_ZERO_MOVE_FUDGE_FACTOR)
+      deltaMovement.y = 0f;
+
     Logger.Trace(TRACE_TAG, "Start move calculation method. Current Position: " + this.transform.position + ", Delta Movement: " + deltaMovement + ", New Position: " + (this.transform.position + deltaMovement));
 
     MoveCalculationResult moveCalculationResult = new MoveCalculationResult();
@@ -308,7 +332,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     }
 
     // now we check movement in the horizontal dir
-    if (moveCalculationResult.deltaMovement.x != 0)
+    if (moveCalculationResult.deltaMovement.x != 0f)
     {
       MoveHorizontally(ref moveCalculationResult);
       Logger.Trace(TRACE_TAG, "After moveHorizontally. Delta Movement: " + moveCalculationResult.deltaMovement + ", New Position: " + (this.transform.position + moveCalculationResult.deltaMovement));
@@ -359,7 +383,10 @@ public class CharacterPhysicsManager : MonoBehaviour
       if (onControllerBecameGrounded != null)
       {
         for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
-          onControllerBecameGrounded(_raycastHitsThisFrame[i].collider.gameObject);
+        {
+          if (_raycastHitsThisFrame[i].normal.y == 1f)
+            onControllerBecameGrounded(_raycastHitsThisFrame[i].collider.gameObject);
+        }
       }
     }
 
@@ -461,7 +488,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   {
     CharacterWallState characterWallState = CharacterWallState.NotOnWall;
     var rayDistance = _skinWidth + kSkinWidthFloatFudgeFactor;
-    
+
     // check left
     if (
             Physics2D.Raycast(new Vector2(_raycastOrigins.bottomLeft.x, _raycastOrigins.bottomLeft.y), -Vector2.right, rayDistance, _platformMaskWithoutOneWay)
@@ -484,7 +511,6 @@ public class CharacterPhysicsManager : MonoBehaviour
 
     return characterWallState;
   }
-
 
   /// <summary>
   /// we have to use a bit of trickery in this one. The rays must be cast from a small distance inside of our

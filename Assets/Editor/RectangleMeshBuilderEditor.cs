@@ -16,5 +16,9 @@ public class RectangleMeshBuilderEditor : Editor
     {
       myScript.BuildObject();
     }
+    if (GUILayout.Button("Create Prefab"))
+    {
+      myScript.CreatePrefab();
+    }
   }
 }

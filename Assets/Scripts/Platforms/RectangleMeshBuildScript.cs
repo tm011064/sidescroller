@@ -3,32 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System;
 
-public class EnumFlagsAttribute : PropertyAttribute
-{
-  public EnumFlagsAttribute() { }
-}
-public class EnumFlagAttribute : PropertyAttribute
-{
-  public EnumFlagAttribute() { }
-}
-
-public static class CircularLinkedList
-{
-  public static LinkedListNode<T> NextOrFirst<T>(this LinkedListNode<T> current)
-  {
-    if (current.Next == null)
-      return current.List.First;
-    return current.Next;
-  }
-
-  public static LinkedListNode<T> PreviousOrLast<T>(this LinkedListNode<T> current)
-  {
-    if (current.Previous == null)
-      return current.List.Last;
-    return current.Previous;
-  }
-}
-
 [RequireComponent(typeof(MeshFilter))]
 [RequireComponent(typeof(MeshRenderer))]
 public partial class RectangleMeshBuildScript : BasePlatform
@@ -44,6 +18,9 @@ public partial class RectangleMeshBuildScript : BasePlatform
   public Direction colliderSides = Direction.Left | Direction.Top | Direction.Right | Direction.Bottom;
 
 #if UNITY_EDITOR
+  public string prefabMeshFolder = "Assets/Meshes/";
+  public string prefabObjectFolder = "Assets/Prefabs/TestBlocks/";
+
   private EdgeCollider2D[] _edgeCollidersToDestroy;
   private BoxCollider2D[] _boxCollider2DToDestroy;
 
@@ -182,25 +159,55 @@ public partial class RectangleMeshBuildScript : BasePlatform
     }
   }
 
+  private void ApplyChangesToDependants()
+  {
+    Transform tf = this.transform.FindChild("MovingPlatformCollisionTrigger");
+    if (tf != null)
+    {
+      BoxCollider2D boxCollider = tf.gameObject.GetComponent<BoxCollider2D>();
+      if (boxCollider != null)
+      {
+        boxCollider.offset = new Vector2(width / 2f, height / 2f);
+        boxCollider.size = new Vector2(width + 2f, height + 2f);
+      }
+    }
+  }
+
+  public void CreatePrefab()
+  {
+    Mesh mesh = CreateTiles(tileWidth, tileHeight, width / tileWidth, height / tileHeight);
+
+    UnityEditor.AssetDatabase.CreateAsset(mesh, prefabMeshFolder + this.name + ".obj");
+    UnityEditor.AssetDatabase.SaveAssets();
+    UnityEditor.AssetDatabase.Refresh();
+
+    var meshFilter = this.gameObject.GetComponent<MeshFilter>();
+    meshFilter.mesh = mesh;
+
+    var emptyPrefab = UnityEditor.PrefabUtility.CreateEmptyPrefab("Assets/Prefabs/TestBlocks/" + this.name + ".prefab");
+
+    UnityEditor.PrefabUtility.ReplacePrefab(this.gameObject, emptyPrefab);
+  }
   public void BuildObject()
   {
     SetColliders();
 
+    var meshFilter = this.gameObject.GetComponent<MeshFilter>();
     if (createTiles)
     {
-      CreateTiles(tileWidth, tileHeight, width / tileWidth, height / tileHeight);
+      meshFilter.mesh = CreateTiles(tileWidth, tileHeight, width / tileWidth, height / tileHeight);
     }
     else
     {
       CreatePlane();
     }
+
+    ApplyChangesToDependants(); 
   }
 
-  void CreatePlane()
+  public Mesh CreatePlane()
   {
     var mesh = new Mesh();
-    var meshFilter = this.gameObject.GetComponent<MeshFilter>();
-    meshFilter.mesh = mesh;
 
     var vertices = new List<Vector3>();
     var triangles = new List<int>();
@@ -238,13 +245,13 @@ public partial class RectangleMeshBuildScript : BasePlatform
     mesh.triangles = triangles.ToArray();
     mesh.uv = uvs.ToArray();
     mesh.RecalculateNormals();
+
+    return mesh;
   }
 
-  void CreateTiles(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
+  Mesh CreateTiles(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
   {
     var mesh = new Mesh();
-    var meshFilter = this.gameObject.GetComponent<MeshFilter>();
-    meshFilter.mesh = mesh;
 
     var tileSizeX = 1.0f;
     var tileSizeY = 1.0f;
@@ -271,6 +278,8 @@ public partial class RectangleMeshBuildScript : BasePlatform
     mesh.triangles = triangles.ToArray();
     mesh.uv = uvs.ToArray();
     mesh.RecalculateNormals();
+
+    return mesh;
   }
 
   private static void AddVertices(int tileHeight, int tileWidth, int y, int x, ICollection<Vector3> vertices)

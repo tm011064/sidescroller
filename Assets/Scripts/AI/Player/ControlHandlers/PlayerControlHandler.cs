@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerControlHandler : BaseControlHandler
 {
-  #region members
+  #region members  
   private const string TRACE_TAG = "PlayerControlHandler";
 
   protected PlayerController _playerController;
@@ -246,7 +246,7 @@ public class PlayerControlHandler : BaseControlHandler
 
     return (
           _playerController.characterPhysicsManager.isGrounded
-        || (Time.time - _playerController.characterPhysicsManager.lastTimeGrounded < _playerController.jumpSettings.allowJumpAfterGroundLostThreashold) // give the player some leeway TODO (Roman): hardcoded
+        || (Time.time - _playerController.characterPhysicsManager.lastTimeGrounded < _playerController.jumpSettings.allowJumpAfterGroundLostThreashold)
         );
   }
 
