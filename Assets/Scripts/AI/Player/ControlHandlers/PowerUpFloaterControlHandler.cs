@@ -95,7 +95,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
     _isFloating = isFloating;
 
     velocity.y = Mathf.Max(
-      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity, true)
       , _playerController.jumpSettings.maxDownwardSpeed);
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);

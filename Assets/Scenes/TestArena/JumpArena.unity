@@ -1230,6 +1230,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5e56fab47fba64abaefaec63eb7419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canJump: 0
   platformDownwardDistance: -32
   platformDownwardDuration: .0799999982
   platformDownwardEaseType: 7
@@ -8307,6 +8308,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5e56fab47fba64abaefaec63eb7419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canJump: 0
   platformDownwardDistance: -32
   platformDownwardDuration: .0199999996
   platformDownwardEaseType: 7
@@ -8724,6 +8726,7 @@ GameObject:
   - 33: {fileID: 1534830842}
   - 114: {fileID: 1534830841}
   - 61: {fileID: 1534830840}
+  - 114: {fileID: 1534830845}
   m_Layer: 12
   m_Name: Mesh Run Target Jump Height 3
   m_TagString: Untagged
@@ -8807,6 +8810,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1726636843}
   m_RootOrder: 13
+--- !u!114 &1534830845
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1534830839}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb19ea88402998408681b7d9d7ee206, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1560563922
 Prefab:
   m_ObjectHideFlags: 0
@@ -11455,6 +11469,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df5e56fab47fba64abaefaec63eb7419, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canJump: 1
   platformDownwardDistance: -64
   platformDownwardDuration: .0799999982
   platformDownwardEaseType: 7

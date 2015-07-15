@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerControlHandler : BaseControlHandler
 {
-  #region members  
+  #region members
   private const string TRACE_TAG = "PlayerControlHandler";
 
   protected PlayerController _playerController;
@@ -121,12 +121,12 @@ public class PlayerControlHandler : BaseControlHandler
   }
   #endregion
 
-  protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity)
+  protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity, bool canBreakUpMovement)
   {
     // apply gravity before moving
-    if (velocity.y > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
+    if (canBreakUpMovement && velocity.y > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
     {
-        return (velocity.y + gravity * Time.deltaTime) * _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
+      return (velocity.y + gravity * Time.deltaTime) * _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
     }
     else
     {
@@ -144,24 +144,36 @@ public class PlayerControlHandler : BaseControlHandler
           );
   }
 
-  protected float GetJumpVerticalVelocity(Vector3 velocity)
+  protected float GetJumpVerticalVelocity(Vector3 velocity, bool canJump, out bool hasJumped)
   {
     float value = velocity.y;
+    hasJumped = false;
 
     if (_playerController.characterPhysicsManager.isGrounded)
       value = 0f;
 
-    if (_gameManager.inputStateManager.GetButtonState("Jump").IsDown)
+    if (canJump && _gameManager.inputStateManager.GetButtonState("Jump").IsDown)
     {
       if (this.CanJump())
       {
         value = CalculateJumpHeight(velocity);
-        
+        hasJumped = true;
+
         Logger.Info("Ground Jump executed. Velocity y: " + value);
       }
     }
 
     return value;
+  }
+  protected float GetJumpVerticalVelocity(Vector3 velocity, bool canJump)
+  {
+    bool hasJumped;
+    return GetJumpVerticalVelocity(velocity, canJump, out hasJumped);
+  }
+  protected float GetJumpVerticalVelocity(Vector3 velocity)
+  {
+    bool hasJumped;
+    return GetJumpVerticalVelocity(velocity, true, out hasJumped);
   }
 
   protected float GetNormalizedHorizontalSpeed(AxisState hAxis)

@@ -46,7 +46,7 @@ public class PowerUpDoubleJumpControlHandler : PlayerControlHandler
     }
 
     velocity.y = Mathf.Max(
-      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity, true)
       , _playerController.jumpSettings.maxDownwardSpeed);
 
     velocity.x = GetDefaultHorizontalVelocity(velocity);

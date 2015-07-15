@@ -2,6 +2,8 @@
 
 public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 {
+  public bool canJump = true;
+
   public float platformDownwardDistance = -32f;
   public float platformDownwardDuration = .2f;
   public iTween.EaseType platformDownwardEaseType = iTween.EaseType.easeInOutQuart;
@@ -62,7 +64,8 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
       _isPlayerControllerAttached = false;
       _playerController.transform.parent = null;
 
-      if (_trampolineBounceControlHandler != null)
+      if (_trampolineBounceControlHandler != null
+        && !_trampolineBounceControlHandler.HasJumped) // we check this in case the player has slid off thr trampoline before being able to jump
       {
         _playerController.RemoveControlHandler(_trampolineBounceControlHandler);
         _trampolineBounceControlHandler = null;
@@ -84,7 +87,7 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
       _playerController.transform.parent = this._gameObject.transform;
 
-      _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, jumpHeightMultiplier, onTrampolineSkidDamping);
+      _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, jumpHeightMultiplier, onTrampolineSkidDamping, canJump);
       _playerController.PushControlHandler(_trampolineBounceControlHandler);
 
       iTween.MoveBy(this._gameObject
@@ -121,8 +124,6 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
   void Update()
   {
-    // TODO (Roman): when autobounce, disable bounce controller completely so player can't jump. He also should not be able to break the bounce. We need an override on GetGravityAdjustedVerticalVelocity
-
     if (_isPlayerControllerAttached
       && !_hasBounced
       && (_isGoingUp || _hasUpMoveCompleted)

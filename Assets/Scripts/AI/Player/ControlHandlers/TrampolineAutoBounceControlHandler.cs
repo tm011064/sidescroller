@@ -1,19 +1,27 @@
 ﻿using UnityEngine;
 
-public class TrampolineAutoBounceControlHandler : SingleUpdatePlayerControlHandler
+public class TrampolineAutoBounceControlHandler : PlayerControlHandler
 {
-  protected override void OnSingleUpdate()
+  private bool _isFirstUpdate = true;
+
+  protected override bool DoUpdate()
   {
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
 
-    velocity.y = CalculateJumpHeight(velocity);
-    velocity.y = Mathf.Max(
-      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
-      , _playerController.jumpSettings.maxDownwardSpeed);
+    if (_isFirstUpdate)
+    {
+      velocity.y = CalculateJumpHeight(velocity);
+      _isFirstUpdate = false;
+    }
 
+    velocity.y = Mathf.Max(
+        GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity, false)
+        , _playerController.jumpSettings.maxDownwardSpeed);
     velocity.x = GetDefaultHorizontalVelocity(velocity);
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
+
+    return velocity.y >= 0f; // exit if player falls down
   }
 
   public TrampolineAutoBounceControlHandler(PlayerController playerController, float jumpHeightMultiplier)

@@ -129,7 +129,7 @@ public class WallJumpControlHandler : PlayerControlHandler
 
     // we need to check whether we have to adjust the vertical velocity. If levitation is on, we want to defy the law of physics
     velocity.y = Mathf.Max(
-      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity)
+      GetGravityAdjustedVerticalVelocity(velocity, _playerController.adjustedGravity, true)
       , _playerController.wallJumpSettings.maxWallDownwardSpeed);
 
     _playerController.characterPhysicsManager.Move(velocity * Time.deltaTime);
