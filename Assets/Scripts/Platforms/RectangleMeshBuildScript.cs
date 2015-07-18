@@ -13,6 +13,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   public bool createTiles = false;
   public int tileWidth = 64;
   public int tileHeight = 64;
+  public TextAnchor anchor = TextAnchor.LowerLeft;
 
   [EnumFlag]
   public Direction colliderSides = Direction.Left | Direction.Top | Direction.Right | Direction.Bottom;
@@ -46,6 +47,51 @@ public partial class RectangleMeshBuildScript : BasePlatform
     UnityEditor.SceneView.RepaintAll();
   }
 
+  private Vector2 GetTopLeftVector2()
+  {
+    switch (anchor)
+    {
+      case TextAnchor.LowerLeft: return new Vector2(0, height);
+      case TextAnchor.MiddleCenter: return new Vector2(-width / 2, height / 2);
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
+  }
+  private Vector2 GetTopRightVector2()
+  {
+    switch (anchor)
+    {
+      case TextAnchor.LowerLeft: return new Vector2(width, height);
+      case TextAnchor.MiddleCenter: return new Vector2(width / 2, height / 2);
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
+  }
+  private Vector2 GetBottomLeftVector2()
+  {
+    switch (anchor)
+    {
+      case TextAnchor.LowerLeft: return new Vector2(0, 0);
+      case TextAnchor.MiddleCenter: return new Vector2(-width / 2, -height / 2);
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
+  }
+  private Vector2 GetBottomRightVector2()
+  {
+    switch (anchor)
+    {
+      case TextAnchor.LowerLeft: return new Vector2(width, 0);
+      case TextAnchor.MiddleCenter: return new Vector2(width / 2, -height / 2);
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
+  }
+
   private void SetColliders()
   {
     Debug.Log("Rectangle Mesh Builder: Destroying edge and box colliders.");
@@ -65,7 +111,20 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
       boxCollider2D.hideFlags = HideFlags.NotEditable;
       boxCollider2D.size = new Vector2(width, height);
-      boxCollider2D.offset = new Vector2(width / 2, height / 2);
+
+      switch (anchor)
+      {
+        case TextAnchor.LowerLeft:
+          boxCollider2D.offset = new Vector2(width / 2, height / 2);
+          break;
+
+        case TextAnchor.MiddleCenter:
+          boxCollider2D.offset = new Vector2(0, 0);
+          break;
+
+        default:
+          throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+      }
       Debug.Log("Rectangle Mesh Builder: Setting box collider size to " + boxCollider2D.size);
     }
     else if (colliderSides == 0)
@@ -81,15 +140,15 @@ public partial class RectangleMeshBuildScript : BasePlatform
       {
         Debug.Log("Rectangle Mesh Builder: Creating Left and Right edge colliders.");
         vectors = new List<Vector2>();
-        vectors.Add(new Vector2(0, 0));
-        vectors.Add(new Vector2(0, height));
+        vectors.Add(GetBottomLeftVector2());
+        vectors.Add(GetTopLeftVector2());
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
 
         vectors = new List<Vector2>();
-        vectors.Add(new Vector2(width, 0));
-        vectors.Add(new Vector2(width, height));
+        vectors.Add(GetBottomRightVector2());
+        vectors.Add(GetTopRightVector2());
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
@@ -98,15 +157,15 @@ public partial class RectangleMeshBuildScript : BasePlatform
       {
         Debug.Log("Rectangle Mesh Builder: Creating Top and Bottom edge colliders.");
         vectors = new List<Vector2>();
-        vectors.Add(new Vector2(0, height));
-        vectors.Add(new Vector2(width, height));
+        vectors.Add(GetTopLeftVector2());
+        vectors.Add(GetTopRightVector2());
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
 
         vectors = new List<Vector2>();
-        vectors.Add(new Vector2(0, 0));
-        vectors.Add(new Vector2(width, 0));
+        vectors.Add(GetBottomLeftVector2());
+        vectors.Add(GetBottomRightVector2());
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
@@ -135,20 +194,20 @@ public partial class RectangleMeshBuildScript : BasePlatform
         vectors = new List<Vector2>();
         switch (currentListNode.Value.Value)
         {
-          case Direction.Left: vectors.Add(new Vector2(0, 0)); break;
-          case Direction.Top: vectors.Add(new Vector2(0, height)); break;
-          case Direction.Right: vectors.Add(new Vector2(width, height)); break;
-          case Direction.Bottom: vectors.Add(new Vector2(width, 0)); break;
+          case Direction.Left: vectors.Add(GetBottomLeftVector2()); break;
+          case Direction.Top: vectors.Add(GetTopLeftVector2()); break;
+          case Direction.Right: vectors.Add(GetTopRightVector2()); break;
+          case Direction.Bottom: vectors.Add(GetBottomRightVector2()); break;
         }
 
         while (currentListNode.Value.HasValue)
         {// now go forward to fill points until gap
           switch (currentListNode.Value.Value)
           {
-            case Direction.Left: vectors.Add(new Vector2(0, height)); break;
-            case Direction.Top: vectors.Add(new Vector2(width, height)); break;
-            case Direction.Right: vectors.Add(new Vector2(width, 0)); break;
-            case Direction.Bottom: vectors.Add(new Vector2(0, 0)); break;
+            case Direction.Left: vectors.Add(GetTopLeftVector2()); break;
+            case Direction.Top: vectors.Add(GetTopRightVector2()); break;
+            case Direction.Right: vectors.Add(GetBottomRightVector2()); break;
+            case Direction.Bottom: vectors.Add(GetBottomLeftVector2()); break;
           }
 
           currentListNode = currentListNode.NextOrFirst();
@@ -202,7 +261,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
       CreatePlane();
     }
 
-    ApplyChangesToDependants(); 
+    ApplyChangesToDependants();
   }
 
   public Mesh CreatePlane()
@@ -216,10 +275,25 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
     var index = 0;
 
-    vertices.Add(new Vector3(0, height, 0)); //top-left
-    vertices.Add(new Vector3(width, height, 0)); //top-right
-    vertices.Add(new Vector3(0, 0, 0)); //bottom-left
-    vertices.Add(new Vector3(width, 0, 0)); //bottom-right
+    switch (anchor)
+    {
+      case TextAnchor.LowerLeft:
+        vertices.Add(new Vector3(0, height, 0)); //top-left
+        vertices.Add(new Vector3(width, height, 0)); //top-right
+        vertices.Add(new Vector3(0, 0, 0)); //bottom-left
+        vertices.Add(new Vector3(width, 0, 0)); //bottom-right
+        break;
+
+      case TextAnchor.MiddleCenter:
+        vertices.Add(new Vector3(-width / 2, height / 2, 0)); //top-left
+        vertices.Add(new Vector3(width / 2, height / 2, 0)); //top-right
+        vertices.Add(new Vector3(-width / 2, -height / 2, 0)); //bottom-left
+        vertices.Add(new Vector3(width, -height / 2, 0)); //bottom-right
+        break;
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
 
     triangles.Add(index);
     triangles.Add(index + 1);
@@ -262,9 +336,31 @@ public partial class RectangleMeshBuildScript : BasePlatform
     var uvs = new List<Vector2>();
 
     var index = 0;
-    for (var x = 0; x < gridWidth; x++)
+
+    int xFrom, xTo, yFrom, yTo;
+    switch (anchor)
     {
-      for (var y = 0; y < gridHeight; y++)
+      case TextAnchor.LowerLeft:
+        xFrom = 0;
+        xTo = gridWidth;
+        yFrom = 0;
+        yTo = gridHeight;
+        break;
+
+      case TextAnchor.MiddleCenter:
+        xFrom = -gridWidth / 2;
+        xTo = gridWidth / 2;
+        yFrom = -gridHeight / 2;
+        yTo = gridHeight / 2;
+        break;
+
+      default:
+        throw new ArgumentException("TextAnchor " + anchor + " not supported.");
+    }
+
+    for (var x = xFrom; x < xTo; x++)
+    {
+      for (var y = yFrom; y < yTo; y++)
       {
         AddVertices(tileHeight, tileWidth, y, x, vertices);
         index = AddTriangles(index, triangles);

@@ -149,6 +149,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -287,6 +288,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -383,6 +385,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -464,6 +467,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -545,6 +549,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -641,6 +646,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -994,6 +1000,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -1157,6 +1164,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -1277,7 +1285,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 440896, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 11433236, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: gameSettings.logSettings.enabledTraceTags.Array.data[5]
@@ -1479,6 +1487,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -1724,6 +1733,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -1825,6 +1835,103 @@ MonoBehaviour:
   initialized: 1
   initialName: New Path 1
   pathVisible: 1
+--- !u!1 &302682260
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 302682261}
+  - 23: {fileID: 302682265}
+  - 33: {fileID: 302682264}
+  - 114: {fileID: 302682263}
+  - 68: {fileID: 302682262}
+  m_Layer: 12
+  m_Name: Mesh Ground Floor Full Length
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &302682261
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302682260}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 3
+--- !u!68 &302682262
+EdgeCollider2D:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302682260}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+  - {x: 0, y: 64}
+  - {x: 1920, y: 64}
+--- !u!114 &302682263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302682260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 1920
+  height: 64
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 6
+  colliderSides: 2
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &302682264
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302682260}
+  m_Mesh: {fileID: 1121776944}
+--- !u!23 &302682265
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 302682260}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d5b54b1a89d2cb24f9e4bfef8486077c, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2063158589
+  m_SortingOrder: 0
 --- !u!1 &311744884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1886,6 +1993,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -1982,6 +2090,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2078,6 +2187,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2174,6 +2284,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2270,6 +2381,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2366,6 +2478,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2671,6 +2784,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -2766,6 +2880,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -3323,6 +3438,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -3357,6 +3473,74 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
+--- !u!1 &560973198
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 560973199}
+  - 212: {fileID: 560973201}
+  - 114: {fileID: 560973200}
+  m_Layer: 11
+  m_Name: Checkpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &560973199
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 560973198}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 384, y: 704, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 1396173787}
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 0
+--- !u!114 &560973200
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 560973198}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ab4454e9c6253ab47a2348e06e1ebacf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  index: 9
+--- !u!212 &560973201
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 560973198}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1133856149
+  m_SortingOrder: 1
+  m_Sprite: {fileID: 21300000, guid: dfe387b53a1b4764b994c2ad9e113cf2, type: 3}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &580276210
 GameObject:
   m_ObjectHideFlags: 0
@@ -3419,6 +3603,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -3628,6 +3813,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -3661,6 +3847,102 @@ MeshRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1133856149
+  m_SortingOrder: 0
+--- !u!1 &602587564
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 602587565}
+  - 23: {fileID: 602587570}
+  - 33: {fileID: 602587569}
+  - 114: {fileID: 602587568}
+  - 61: {fileID: 602587566}
+  m_Layer: 12
+  m_Name: Rotating Block 384x384
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &602587565
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 602587564}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1664, y: 256, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 7
+--- !u!61 &602587566
+BoxCollider2D:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 602587564}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  serializedVersion: 2
+  m_Size: {x: 384, y: 384}
+--- !u!114 &602587568
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 602587564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 384
+  height: 384
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 4
+  colliderSides: 15
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &602587569
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 602587564}
+  m_Mesh: {fileID: 4300000, guid: 1834201e8da1d0042954590042a52f9f, type: 2}
+--- !u!23 &602587570
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 602587564}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: c5af18c0b958cfa49b9846d82d097a9a, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2063158589
   m_SortingOrder: 0
 --- !u!43 &610366878
 Mesh:
@@ -3836,6 +4118,48 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 465710, guid: 927c407e0b1ae644e93578bdc1896119, type: 2}
   m_PrefabInternal: {fileID: 620880643}
+--- !u!1 &622270126
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 622270128}
+  - 114: {fileID: 622270127}
+  m_Layer: 0
+  m_Name: Rotating Platform
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &622270127
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 622270126}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270158c688695484fa7d9a74cb8a122c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 12
+  rotatingObject: {fileID: 127752, guid: 6719afaab6963d04bb7b033f7dec1ee3, type: 2}
+  pushPlayerOffSlopeFactor: 286
+--- !u!4 &622270128
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 622270126}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 320, y: 384, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 6
 --- !u!43 &624474449
 Mesh:
   m_ObjectHideFlags: 0
@@ -4025,6 +4349,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4121,6 +4446,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4345,6 +4671,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4597,6 +4924,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4705,6 +5033,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4800,6 +5129,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4847,7 +5177,6 @@ GameObject:
   - 114: {fileID: 886476071}
   - 61: {fileID: 886476070}
   - 114: {fileID: 886476074}
-  - 114: {fileID: 886476075}
   m_Layer: 12
   m_Name: Mesh Run Target Jump Height 2
   m_TagString: Untagged
@@ -4897,6 +5226,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -4932,17 +5262,6 @@ MeshRenderer:
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
 --- !u!114 &886476074
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 886476068}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bbb19ea88402998408681b7d9d7ee206, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
---- !u!114 &886476075
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -5014,6 +5333,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -5238,6 +5558,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -5389,6 +5710,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -5496,6 +5818,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -5708,6 +6031,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -5923,6 +6247,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6125,6 +6450,46 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
   m_PrefabInternal: {fileID: 1025423971}
+--- !u!1 &1028099328
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1028099330}
+  - 114: {fileID: 1028099329}
+  m_Layer: 0
+  m_Name: Note
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1028099329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1028099328}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f54af9d8b7f2b429b7b81514e9f14d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  text: platform goes up
+--- !u!4 &1028099330
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1028099328}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1536, y: 432, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 5
 --- !u!1 &1029541869
 GameObject:
   m_ObjectHideFlags: 0
@@ -6254,6 +6619,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6417,6 +6783,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6513,6 +6880,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6593,6 +6961,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6701,6 +7070,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 32
   tileHeight: 32
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -6925,6 +7295,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -7782,6 +8153,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -7974,6 +8346,88 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 469012, guid: 12d117b5191d017409de82e6ec55d25f, type: 2}
   m_PrefabInternal: {fileID: 1305733919}
+--- !u!1 &1312894032
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1312894033}
+  - 23: {fileID: 1312894036}
+  - 33: {fileID: 1312894035}
+  - 114: {fileID: 1312894034}
+  m_Layer: 12
+  m_Name: Mesh Black Background
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1312894033
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312894032}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 4
+--- !u!114 &1312894034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312894032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 1920
+  height: 1088
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 6
+  colliderSides: 0
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &1312894035
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312894032}
+  m_Mesh: {fileID: 411048513}
+--- !u!23 &1312894036
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1312894032}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: e57516cf7939944459a7ab517a9ed570, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -1133856149
+  m_SortingOrder: 0
 --- !u!1 &1320757655
 GameObject:
   m_ObjectHideFlags: 0
@@ -8023,6 +8477,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8131,6 +8586,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8212,6 +8668,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8309,10 +8766,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   canJump: 0
-  platformDownwardDistance: -32
-  platformDownwardDuration: .0199999996
+  platformDownwardDistance: -48
+  platformDownwardDuration: .0399999991
   platformDownwardEaseType: 7
-  platformUpwardDuration: .0599999987
+  platformUpwardDuration: .100000001
   platformUpwardEaseType: 24
   autoBounceJumpHeightMultiplier: 1.60000002
   jumpHeightMultiplier: 1.60000002
@@ -8370,6 +8827,185 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1998409785}
   m_RootOrder: 16
+--- !u!1001 &1396173786
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 560973199}
+    m_Modifications:
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_RootOrder
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104260, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_Size.x
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 6104260, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: m_Size.y
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: lockHorizontalCameraMovement
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: offsetX
+      value: 576
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: useYPosLock
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: offsetY
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: yPosLock
+      value: -2724
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+  m_IsPrefabParent: 0
+--- !u!4 &1396173787 stripped
+Transform:
+  m_PrefabParentObject: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+  m_PrefabInternal: {fileID: 1396173786}
+--- !u!1 &1417517324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1417517325}
+  - 23: {fileID: 1417517329}
+  - 33: {fileID: 1417517328}
+  - 114: {fileID: 1417517327}
+  - 68: {fileID: 1417517326}
+  m_Layer: 12
+  m_Name: Mesh Right Wall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1417517325
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1417517324}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1856, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 1
+--- !u!68 &1417517326
+EdgeCollider2D:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1417517324}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+  - {x: 0, y: 0}
+  - {x: 0, y: 1088}
+--- !u!114 &1417517327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1417517324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 64
+  height: 1088
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 6
+  colliderSides: 1
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &1417517328
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1417517324}
+  m_Mesh: {fileID: 1093719696}
+--- !u!23 &1417517329
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1417517324}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d5b54b1a89d2cb24f9e4bfef8486077c, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2063158589
+  m_SortingOrder: 0
 --- !u!43 &1420895882
 Mesh:
   m_ObjectHideFlags: 0
@@ -8498,6 +9134,103 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &1433279785
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1433279786}
+  - 23: {fileID: 1433279790}
+  - 33: {fileID: 1433279789}
+  - 114: {fileID: 1433279788}
+  - 68: {fileID: 1433279787}
+  m_Layer: 12
+  m_Name: Mesh Left Wall
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1433279786
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433279785}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 2
+--- !u!68 &1433279787
+EdgeCollider2D:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433279785}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_Offset: {x: 0, y: 0}
+  m_Points:
+  - {x: 64, y: 1088}
+  - {x: 64, y: 0}
+--- !u!114 &1433279788
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433279785}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 64
+  height: 1088
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 6
+  colliderSides: 4
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &1433279789
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433279785}
+  m_Mesh: {fileID: 899848752}
+--- !u!23 &1433279790
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1433279785}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: d5b54b1a89d2cb24f9e4bfef8486077c, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2063158589
+  m_SortingOrder: 0
 --- !u!1 &1459273047
 GameObject:
   m_ObjectHideFlags: 0
@@ -8573,6 +9306,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8680,6 +9414,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8764,6 +9499,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -8918,6 +9654,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -9080,6 +9817,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -9155,6 +9893,48 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   text: 'Test 1: Trampoline should auto bounce when player doesn''t press jump button,
     double jump height if pressedq'
+--- !u!1 &1618090293
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1618090295}
+  - 114: {fileID: 1618090294}
+  m_Layer: 0
+  m_Name: Rotating Platform 2
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1618090294
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1618090293}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270158c688695484fa7d9a74cb8a122c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: 14
+  rotatingObject: {fileID: 127752, guid: 6719afaab6963d04bb7b033f7dec1ee3, type: 2}
+  pushPlayerOffSlopeFactor: 286
+--- !u!4 &1618090295
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1618090293}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 1216, y: 320, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 9
 --- !u!43 &1621380602
 Mesh:
   m_ObjectHideFlags: 0
@@ -9512,6 +10292,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -9608,6 +10389,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -9817,6 +10599,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 0
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -10170,6 +10953,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -10316,6 +11100,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -10412,6 +11197,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -10755,6 +11541,43 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &1843616625
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1843616626}
+  m_Layer: 0
+  m_Name: Floating Platforms 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1843616626
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1843616625}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -3264, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 560973199}
+  - {fileID: 1417517325}
+  - {fileID: 1433279786}
+  - {fileID: 302682261}
+  - {fileID: 1312894033}
+  - {fileID: 1028099330}
+  - {fileID: 622270128}
+  - {fileID: 602587565}
+  - {fileID: 2131685299}
+  - {fileID: 1618090295}
+  m_Father: {fileID: 0}
+  m_RootOrder: 9
 --- !u!1 &1883047145
 GameObject:
   m_ObjectHideFlags: 0
@@ -10818,6 +11641,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 3
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -11261,6 +12085,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 2
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -11356,6 +12181,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -11899,6 +12725,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 1
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -12075,6 +12902,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 4
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -12182,6 +13010,7 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 64
   tileHeight: 64
+  anchor: 6
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/
@@ -12216,3 +13045,45 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
+--- !u!1 &2131685298
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 2131685299}
+  - 114: {fileID: 2131685300}
+  m_Layer: 0
+  m_Name: Rotating Platform 1
+  m_TagString: Untagged
+  m_Icon: {fileID: 2974397684917235467, guid: 0000000000000000d000000000000000, type: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2131685299
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2131685298}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 832, y: 512, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1843616626}
+  m_RootOrder: 8
+--- !u!114 &2131685300
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 2131685298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 270158c688695484fa7d9a74cb8a122c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rotationSpeed: -20
+  rotatingObject: {fileID: 138816, guid: f229e0187e9d6fa47825c52a81de6a9f, type: 2}
+  pushPlayerOffSlopeFactor: 286

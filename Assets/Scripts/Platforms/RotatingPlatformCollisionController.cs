@@ -1,0 +1,87 @@
+﻿using UnityEngine;
+using System.Collections;
+
+/// <summary>
+/// 
+/// </summary>
+public class RotatingPlatformCollisionController : MonoBehaviour
+{
+  private const string TRACE_TAG = "RotatingPlatformCollisionController";
+
+  public float rotationSpeed = 2000f;
+  public GameObject rotatingObject;
+  public float pushPlayerOffSlopeFactor = 286f;
+
+  private GameObject _gameObject;
+
+  private BoxCollider2D _boxCollider;
+  private BoxCollider2D _playerBoxCollider;
+
+  private PlayerController _playerController;
+  private AttachPlayerControllerToObject _attachPlayerControllerToObject;
+
+  private const float FUDGE_FACTOR = .0001f;
+  private float _angle;
+
+  private bool _isGrounded = false;
+  private float _lastAngle = 0f;
+
+  void Awake()
+  {
+    _playerController = GameManager.instance.player;
+  }
+
+  void Start()
+  {
+    ObjectPoolingManager.Instance.RegisterPool(rotatingObject, 1, int.MaxValue);
+
+    _gameObject = ObjectPoolingManager.Instance.GetObject(rotatingObject.name);
+    _gameObject.transform.position = this.transform.position;
+    _gameObject.SetActive(true);
+
+    _playerController = GameManager.instance.player;
+
+    _boxCollider = _gameObject.GetComponent<BoxCollider2D>();
+    _playerBoxCollider = _playerController.boxCollider;
+  }
+
+  void Update()
+  {
+    float angleToRotate = rotationSpeed * Time.deltaTime;
+    _lastAngle = _gameObject.transform.rotation.eulerAngles.z;
+    _gameObject.transform.Rotate(new Vector3(0f, 0f, angleToRotate));
+
+    // this must be called before player controller updates
+    for (int i = 0; i < _playerController.characterPhysicsManager.lastRaycastHits.Count; i++)
+    {
+      if (_playerController.characterPhysicsManager.lastRaycastHits[i].collider.gameObject == this._gameObject)
+      {
+        float rotateToAngle = (_gameObject.transform.rotation.eulerAngles.z - _lastAngle) * Mathf.Deg2Rad;
+
+        float slopeAngle = Vector2.Angle(_playerController.characterPhysicsManager.lastRaycastHits[i].normal, Vector2.up);
+        if (slopeAngle < _playerController.characterPhysicsManager.slopeLimit)
+        {
+
+          Vector3 rotated = new Vector3(
+            Mathf.Cos(rotateToAngle) * (_playerController.transform.position.x - _gameObject.transform.position.x) - Mathf.Sin(rotateToAngle) * (_playerController.transform.position.y - _gameObject.transform.position.y) + _gameObject.transform.position.x
+            , Mathf.Sin(rotateToAngle) * (_playerController.transform.position.x - _gameObject.transform.position.x) + Mathf.Cos(rotateToAngle) * (_playerController.transform.position.y - _gameObject.transform.position.y) + _gameObject.transform.position.y
+            , _gameObject.transform.position.z);
+
+          _playerController.transform.Translate(rotated - _playerController.transform.position, Space.World);
+        }
+        else
+        {// push off
+          if (rotateToAngle < 0)
+          {
+            _playerController.transform.Translate(new Vector3(rotateToAngle * -pushPlayerOffSlopeFactor, rotateToAngle * pushPlayerOffSlopeFactor, 0), Space.World);
+          }
+          else
+          {
+            _playerController.transform.Translate(new Vector3(rotateToAngle * -pushPlayerOffSlopeFactor, rotateToAngle * -pushPlayerOffSlopeFactor, 0), Space.World);
+          }
+        }
+        break;
+      }
+    }
+  }
+}

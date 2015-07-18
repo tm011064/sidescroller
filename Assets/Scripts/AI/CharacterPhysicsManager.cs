@@ -147,7 +147,6 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// this is used to calculate the downward ray that is cast to check for slopes. We use the somewhat arbitrary value 75 degrees
   /// to calculate the length of the ray that checks for slopes.
   /// </summary>
-  //private float _slopeLimitTangent = Mathf.Tan(50f * Mathf.Deg2Rad);
   private float _slopeLimitTangent = Mathf.Tan(50f * Mathf.Deg2Rad);
 
   [Range(0.8f, 0.999f)]
@@ -179,6 +178,8 @@ public class CharacterPhysicsManager : MonoBehaviour
   public float lastTimeGrounded { get { return lastMoveCalculationResult.collisionState.lastTimeGrounded; } }
 
   private const float kSkinWidthFloatFudgeFactor = 0.001f;
+
+  public List<RaycastHit2D> lastRaycastHits = new List<RaycastHit2D>();
 
   #endregion
 
@@ -410,6 +411,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     }
 
     lastMoveCalculationResult = moveCalculationResult;
+    lastRaycastHits = new List<RaycastHit2D>(_raycastHitsThisFrame);
 
     Logger.Trace(TRACE_TAG, "Collision state:" + lastMoveCalculationResult.collisionState.ToString());
   }

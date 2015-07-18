@@ -100,18 +100,23 @@ MonoBehaviour:
   triggerMask:
     serializedVersion: 2
     m_Bits: 33792
-  slopeLimit: 90
+  slopeLimit: 60
   jumpingThreshold: .0500000007
   slopeSpeedMultiplier:
     serializedVersion: 2
     m_Curve:
+    - time: -90
+      value: 1.5
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
     - time: 0
       value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 1
-      value: 1
+    - time: 90
+      value: 0
       inSlope: 0
       outSlope: 0
       tangentMode: 0

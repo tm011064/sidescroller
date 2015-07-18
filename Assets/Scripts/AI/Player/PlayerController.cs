@@ -65,7 +65,7 @@ public partial class PlayerController : BaseCharacterController
   public bool isInvincible = false;
   [HideInInspector]
   public bool isTakingDamage = false;
-
+  
   private RaycastHit2D _lastControllerColliderHit;
   private Vector3 _velocity;
 

@@ -38,7 +38,7 @@ public partial class Wheel : BaseMonoBehaviour
         Vector3 initial = new Vector3(transform.position.x + radius, transform.position.y, transform.position.z);
         Vector3 rotated = new Vector3(
           Mathf.Cos(_platforms[i].Angle) * (initial.x - transform.position.x) - Mathf.Sin(_platforms[i].Angle) * (initial.y - transform.position.y) + transform.position.x
-          , Mathf.Sin(_platforms[i].Angle) * (initial.x - transform.position.x) - Mathf.Cos(_platforms[i].Angle) * (initial.y - transform.position.y) + transform.position.y
+          , Mathf.Sin(_platforms[i].Angle) * (initial.x - transform.position.x) + Mathf.Cos(_platforms[i].Angle) * (initial.y - transform.position.y) + transform.position.y
           , transform.position.z);
 
         _platforms[i].GameObject.transform.position = rotated;

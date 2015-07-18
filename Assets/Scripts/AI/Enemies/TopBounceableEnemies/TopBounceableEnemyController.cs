@@ -25,15 +25,7 @@ public abstract class TopBounceableEnemyController : EnemyController
     if (angle < allowedTopCollisionAngleFrom && angle > allowedTopCollisionAngleTo)
     {
       playerController.PushControlHandler(new TopBounceableControlHandler(playerController, allowJumpFromTopThresholdInSeconds, bounceJumpMultiplier));
-
-      // TODO (Roman): power up drop code
-      //if (dropPowerUpChance >= Random.Range(.0f, 1.0f))
-      //{
-      //  GameObject obj = ObjectPoolingManager.Instance.GetObject(GameManager.instance.gameSettings.pooledObjects.basicPowerUpPrefab.prefab.name);
-      //  obj.transform.position = this.transform.position;
-      //  obj.SetActive(true);
-      //}
-
+      
       // TODO (Roman): run death animation...
       this.gameObject.SetActive(false);
     }
