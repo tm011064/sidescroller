@@ -11,6 +11,7 @@ public class RotatingPlatformCollisionController : MonoBehaviour
   public float rotationSpeed = 2000f;
   public GameObject rotatingObject;
   public float pushPlayerOffSlopeFactor = 286f;
+  public AnimationCurve slopeSpeedMultiplier = new AnimationCurve(new Keyframe(-90, 1f), new Keyframe(0, 1), new Keyframe(90, 0));
 
   private GameObject _gameObject;
 
@@ -21,10 +22,8 @@ public class RotatingPlatformCollisionController : MonoBehaviour
   private AttachPlayerControllerToObject _attachPlayerControllerToObject;
 
   private const float FUDGE_FACTOR = .0001f;
+  
   private float _angle;
-
-  private bool _isGrounded = false;
-  private float _lastAngle = 0f;
 
   void Awake()
   {
@@ -48,20 +47,20 @@ public class RotatingPlatformCollisionController : MonoBehaviour
   void Update()
   {
     float angleToRotate = rotationSpeed * Time.deltaTime;
-    _lastAngle = _gameObject.transform.rotation.eulerAngles.z;
+    float lastAngle = _gameObject.transform.rotation.eulerAngles.z;
     _gameObject.transform.Rotate(new Vector3(0f, 0f, angleToRotate));
 
     // this must be called before player controller updates
+    bool isGrounded = false;
     for (int i = 0; i < _playerController.characterPhysicsManager.lastRaycastHits.Count; i++)
     {
       if (_playerController.characterPhysicsManager.lastRaycastHits[i].collider.gameObject == this._gameObject)
       {
-        float rotateToAngle = (_gameObject.transform.rotation.eulerAngles.z - _lastAngle) * Mathf.Deg2Rad;
+        float rotateToAngle = (_gameObject.transform.rotation.eulerAngles.z - lastAngle) * Mathf.Deg2Rad;
 
         float slopeAngle = Vector2.Angle(_playerController.characterPhysicsManager.lastRaycastHits[i].normal, Vector2.up);
         if (slopeAngle < _playerController.characterPhysicsManager.slopeLimit)
         {
-
           Vector3 rotated = new Vector3(
             Mathf.Cos(rotateToAngle) * (_playerController.transform.position.x - _gameObject.transform.position.x) - Mathf.Sin(rotateToAngle) * (_playerController.transform.position.y - _gameObject.transform.position.y) + _gameObject.transform.position.x
             , Mathf.Sin(rotateToAngle) * (_playerController.transform.position.x - _gameObject.transform.position.x) + Mathf.Cos(rotateToAngle) * (_playerController.transform.position.y - _gameObject.transform.position.y) + _gameObject.transform.position.y
@@ -80,8 +79,19 @@ public class RotatingPlatformCollisionController : MonoBehaviour
             _playerController.transform.Translate(new Vector3(rotateToAngle * -pushPlayerOffSlopeFactor, rotateToAngle * -pushPlayerOffSlopeFactor, 0), Space.World);
           }
         }
+
+        isGrounded = true;
         break;
       }
+    }
+
+    if (isGrounded)
+    {
+      _playerController.characterPhysicsManager.slopeSpeedMultiplierOverride = slopeSpeedMultiplier;
+    }
+    else if (_playerController.characterPhysicsManager.slopeSpeedMultiplierOverride != null)
+    {
+      _playerController.characterPhysicsManager.slopeSpeedMultiplierOverride = null;
     }
   }
 }
