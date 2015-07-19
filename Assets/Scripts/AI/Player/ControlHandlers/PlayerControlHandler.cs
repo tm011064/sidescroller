@@ -206,10 +206,12 @@ public class PlayerControlHandler : BaseControlHandler
     float speed = _playerController.runSettings.walkSpeed;
     if (_gameManager.inputStateManager.GetButtonState("Dash").IsPressed)
     {
-      if (                                                            // allow dash speed if
-                _characterPhysicsManager.isGrounded                   // either the player is grounded
-            || velocity.x > _playerController.runSettings.walkSpeed  // or the current horizontal velocity is higher than the walkspeed, meaning that the player jumped while running
-            || velocity.x < -_playerController.runSettings.walkSpeed
+      if (                                                                // allow dash speed if
+            _playerController.runSettings.enableRunning                   // running is enabled
+            && (_characterPhysicsManager.isGrounded                       // either the player is grounded
+                || velocity.x > _playerController.runSettings.walkSpeed   // or the current horizontal velocity is higher than the walkspeed, meaning that the player jumped while running
+                || velocity.x < -_playerController.runSettings.walkSpeed
+            )
         )
       {
         speed = _playerController.runSettings.runSpeed;

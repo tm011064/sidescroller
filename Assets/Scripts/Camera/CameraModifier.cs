@@ -11,45 +11,63 @@ public enum VerticalCameraFollowMode
 [Serializable]
 public class VerticalLockSettings
 {
+  [Tooltip("If false, all vertical lock settings will be ignored.")]
   public bool enabled = false;
+  
+  [Tooltip("Enables the default vertical lock position. The default position simulates a Super Mario Bros style side scrolling camera which is fixed on the y axis, not reacting to vertical player movement.")]
+  public bool enableDefaultVerticalLockPosition = true;
+  [Tooltip("Default is center of the screen.")]
+  public float defaultVerticalLockPosition = 540f;
+  
+  [Tooltip("If enabled, the camera follows the player upwards until the \"Top Vertical Lock Position\" is reached.")]
+  public bool enableTopVerticalLock = false;
+  [Tooltip("The highest visible location relative to the \"Parent Position Object\" game object space")]
+  public float topVerticalLockPosition = 1080f;
 
-  public bool enableDefaultHorizontalLockPosition = true;
-  public float defaultHorizontalLockPosition = 540f;
-  public float translatedHorizontalLockPosition;
-
-  public bool enableTopHorizontalLock = false;
-  public float topHorizontalLockPosition = 1080f;
-
-  public bool enableBottomHorizontalLock = false;
-  public float bottomHorizontalLockPosition = 0f;
+  [Tooltip("If enabled, the camera follows the player downwards until the \"Bottom Vertical Lock Position\" is reached.")]
+  public bool enableBottomVerticalLock = false;
+  [Tooltip("The lowest visible location relative to the \"Parent Position Object\" game object space")]
+  public float bottomVerticalLockPosition = 0f;
 
   [HideInInspector]
   public float topBoundary;
   [HideInInspector]
   public float bottomBoundary;
+  [HideInInspector]
+  public float translatedVerticalLockPosition;
 
   public override string ToString()
   {
-    return string.Format("enabled: {0}; enableTopHorizontalLock: {1}; topHorizontalLockPosition: {2}; topBoundary: {3}; enableBottomHorizontalLock: {4}; bottomHorizontalLockPosition: {5}; bottomBoundary: {6};"
+    return string.Format(@"enabled: {0}; enableTopVerticalLock: {1}; topVerticalLockPosition: {2}; topBoundary: {3};
+enableBottomVerticalLock: {4}; bottomVerticalLockPosition: {5}; bottomBoundary: {6};
+enableDefaultVerticalLockPosition: {7}; defaultVerticalLockPosition: {8}; translatedVerticalLockPosition: {9}"
       , enabled
-      , enableTopHorizontalLock
-      , topHorizontalLockPosition
+      , enableTopVerticalLock
+      , topVerticalLockPosition
       , topBoundary
-      , enableBottomHorizontalLock
-      , bottomHorizontalLockPosition
+      , enableBottomVerticalLock
+      , bottomVerticalLockPosition
       , bottomBoundary
+      , enableDefaultVerticalLockPosition
+      , defaultVerticalLockPosition
+      , translatedVerticalLockPosition
       );
   }
 }
 [Serializable]
 public class HorizontalLockSettings
 {
+  [Tooltip("If false, all horizontal lock settings will be ignored.")]
   public bool enabled = false;
 
+  [Tooltip("If enabled, the camera follows the player moving right until the \"Right Horizontal Lock Position\" is reached.")]
   public bool enableRightHorizontalLock = true;
+  [Tooltip("The rightmost visible location relative to the \"Parent Position Object\" game object space")]
   public float rightHorizontalLockPosition = 1920f;
 
+  [Tooltip("If enabled, the camera follows the player moving left until the \"Right Horizontal Lock Position\" is reached.")]
   public bool enableLeftHorizontalLock = true;
+  [Tooltip("The leftmost visible location relative to the \"Parent Position Object\" game object space")]
   public float leftHorizontalLockPosition = 0f;
 
   [HideInInspector]
@@ -74,8 +92,11 @@ public class HorizontalLockSettings
 [Serializable]
 public class ZoomSettings
 {
+  [Tooltip("Default is 1, 2 means a reduction of 100%, .5 means a magnification of 100%.")]
   public float zoomPercentage = 1f;
+  [Tooltip("The time it takes to zoom to the desired percentage.")]
   public float zoomTime;
+  [Tooltip("The easing type when zooming in or out to the desired zoom percentage.")]
   public EasingType zoomEasingType;
 
   public override string ToString()
@@ -91,9 +112,13 @@ public class ZoomSettings
 [Serializable]
 public class SmoothDampMoveSettings
 {
+  [Tooltip("Camera smooth damping on horizontal character movement.")]
   public float horizontalSmoothDampTime = .2f;
+  [Tooltip("Camera smooth damping on vertical character movement.")]
   public float verticalSmoothDampTime = .2f;
+  [Tooltip("Camera smooth damping on rapid descents. For example, if the player falls down at high speeds, we want the camera to stay tight so the player doesn't move off screen.")]
   public float verticalRapidDescentSmoothDampTime = .01f;
+  [Tooltip("Camera smooth damping on rapid ascents. For example, if the player travel up at high speed due to being catapulted by a trampoline, we want the camera to stay tight so the player doesn't move off screen.")]
   public float verticalAboveRapidAcsentSmoothDampTime = .2f;
 
   public override string ToString()
@@ -114,12 +139,14 @@ public class CameraModifier : MonoBehaviour
   public ZoomSettings zoomSettings;
   public SmoothDampMoveSettings smoothDampMoveSettings;
 
+  [Tooltip("The (x, y) offset of the camera. This can be used when default vertical locking is disabled and you want the player to be below, above, right or left of the screen center.")]
   public Vector2 offset;
 
   public VerticalCameraFollowMode verticalCameraFollowMode;
 
   public Color gizmoColor = Color.magenta;
 
+  [Tooltip("All lock positions are relative to this object.")]
   public GameObject parentPositionObject;
 
   private CameraController _cameraController;
@@ -141,25 +168,27 @@ public class CameraModifier : MonoBehaviour
   void OnTriggerEnter2D(Collider2D col)
   {
     Vector3 transformPoint = parentPositionObject.transform.TransformPoint(Vector3.zero);
-    //Debug.Log(this.transform.localPosition);
-    Debug.Log(transformPoint);
+
+    if (this.zoomSettings.zoomPercentage == 0f)
+      throw new ArgumentOutOfRangeException("Zoom Percentage must not be 0.");
+
     if (this.verticalLockSettings.enabled)
     {
-      if (this.verticalLockSettings.enableTopHorizontalLock)
-        this.verticalLockSettings.topBoundary = transformPoint.y + this.verticalLockSettings.topHorizontalLockPosition - _cameraController.targetScreenSize.y * .5f;
-      if (this.verticalLockSettings.enableBottomHorizontalLock)
-        this.verticalLockSettings.bottomBoundary = transformPoint.y + this.verticalLockSettings.bottomHorizontalLockPosition + _cameraController.targetScreenSize.y * .5f;
+      if (this.verticalLockSettings.enableTopVerticalLock)
+        this.verticalLockSettings.topBoundary = transformPoint.y + this.verticalLockSettings.topVerticalLockPosition - _cameraController.targetScreenSize.y * .5f / this.zoomSettings.zoomPercentage;
+      if (this.verticalLockSettings.enableBottomVerticalLock)
+        this.verticalLockSettings.bottomBoundary = transformPoint.y + this.verticalLockSettings.bottomVerticalLockPosition + _cameraController.targetScreenSize.y * .5f / this.zoomSettings.zoomPercentage;
     }
 
     if (this.horizontalLockSettings.enabled)
     {
       if (this.horizontalLockSettings.enableLeftHorizontalLock)
-        this.horizontalLockSettings.leftBoundary = transformPoint.x + this.horizontalLockSettings.leftHorizontalLockPosition + _cameraController.targetScreenSize.x * .5f;
+        this.horizontalLockSettings.leftBoundary = transformPoint.x + this.horizontalLockSettings.leftHorizontalLockPosition + _cameraController.targetScreenSize.x * .5f / this.zoomSettings.zoomPercentage;
       if (this.horizontalLockSettings.enableRightHorizontalLock)
-        this.horizontalLockSettings.rightBoundary = transformPoint.x + this.horizontalLockSettings.rightHorizontalLockPosition - _cameraController.targetScreenSize.x * .5f;
+        this.horizontalLockSettings.rightBoundary = transformPoint.x + this.horizontalLockSettings.rightHorizontalLockPosition - _cameraController.targetScreenSize.x * .5f / this.zoomSettings.zoomPercentage;
     }
 
-    this.verticalLockSettings.translatedHorizontalLockPosition = transformPoint.y + this.verticalLockSettings.defaultHorizontalLockPosition;
+    this.verticalLockSettings.translatedVerticalLockPosition = transformPoint.y + this.verticalLockSettings.defaultVerticalLockPosition;
 
     CameraMovementSettings cameraMovementSettings = new CameraMovementSettings(
       verticalLockSettings
@@ -169,7 +198,7 @@ public class CameraModifier : MonoBehaviour
       , offset
       , verticalCameraFollowMode
       );
-    Debug.Log(cameraMovementSettings);
+
     var cameraController = Camera.main.GetComponent<CameraController>();
 
     cameraController.SetCameraMovementSettings(cameraMovementSettings);

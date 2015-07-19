@@ -122,6 +122,11 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
+  slopeSpeedMultiplierOverride:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
   totalHorizontalRays: 8
   totalVerticalRays: 4
   triggerHelperBoxColliderScale: .949999988
@@ -140,6 +145,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   characterPhysicsManager: {fileID: 0}
   wallJumpSettings:
+    enableWallJumps: 1
     wallJumpEnabledTime: 10000
     wallVelocityDownThreshold: -100000
     wallJumpPushOffAxisOverrideTime: .119999997
@@ -156,6 +162,7 @@ MonoBehaviour:
     maxDownwardSpeed: -1200
   runSettings:
     walkSpeed: 600
+    enableRunning: 1
     runSpeed: 900
     accelerationGroundDamping: 6
     decelerationGroundDamping: 8

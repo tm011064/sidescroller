@@ -5,32 +5,53 @@ using UnityEngine;
 [Serializable]
 public class WallJumpSettings
 {
+  [Tooltip("If false, wall jumps are disabled.")]
+  public bool enableWallJumps = true;
+  [Tooltip("Specifies how long wall jumps are enabled after getting attached to a wall. Set to -1 if the player should always be able to jump off a wall once attached.")]
   public float wallJumpEnabledTime = .5f;
+  [Tooltip("Specifies the max downward speed at which a player can jump off a wall when sliding down. If this value is higher than the \"Max Wall Downward Speed\" it won't be used.")]
   public float wallVelocityDownThreshold = -200f;
+  [Tooltip("This is the duration of the period where the player can not move the character horizontally after the wall jump has been performed. This can be used to prevent the player from climbing up a wall by moving the player towards the wall after the jump.")]
   public float wallJumpPushOffAxisOverrideTime = .2f;
+  [Tooltip("This is the gravity used when the player sticks to a wall and slides down.")]
   public float wallStickGravity = -100f;
+  [Tooltip("After the player collided with a wall, the wall jump evaluation time is the duration at which the player can move away from the wall without getting attached. Once attached, the player can't move away except when jumping.")]
   public float wallJumpWallEvaluationDuration = .1f;
+  [Tooltip("The downward max speed when sliding down a wall.")]
   public float maxWallDownwardSpeed = -1000f;
 }
 
 [Serializable]
 public class RunSettings
 {
+  [Tooltip("The normal walk speed")]
   public float walkSpeed = 600f;
+  [Tooltip("If this is enabled, the character can run faster when the player presses the dash button.")]
+  public bool enableRunning = true;
+  [Tooltip("The run/dash speed.")]
   public float runSpeed = 900f;
+  [Tooltip("The ground damping used when accelerating. A higher value means slower acceleration.")]
   public float accelerationGroundDamping = 5f; // how fast do we change direction? higher means faster
+  [Tooltip("The ground damping used when decelerating. A higher value means higher deceleration, a lower value means slower deceleration (skidding).")]
   public float decelerationGroundDamping = 20f; // how fast do we change direction? higher means faster
 }
 
 [Serializable]
 public class JumpSettings
 {
+  [Tooltip("Default gravity")]
   public float gravity = -3960f;
+  [Tooltip("Jump height when walking")]
   public float walkJumpHeight = 380f;
+  [Tooltip("Jump height when running. Player must have exceeded the \"Run Jump Height Speed Trigger\" velocity in order for this height to be used.")]
   public float runJumpHeight = 400f;
+  [Tooltip("Only once the character moves at a speed higher than this value the \"Run Jump Height\" will be applied.")]
   public float runJumpHeightSpeedTrigger = 800f;
+  [Tooltip("This value defines how fast the character can change direction in mid air. Higher value means faster change.")]
   public float inAirDamping = 2.5f;
+  [Tooltip("In order to facilitate jumps while running, this value gives the player some leeway and allows him to jump after falling of a platform. Useful when running at full speed.")]
   public float allowJumpAfterGroundLostThreashold = .05f;
+  [Tooltip("The downward max speed when falling. Normally we don't want the player to accelerate indefinitely as it will make controlling the player very difficult.")]
   public float maxDownwardSpeed = -1800f;
 }
 
@@ -131,7 +152,8 @@ public partial class PlayerController : BaseCharacterController
     // TODO (Roman): these methods should be optimized and put into constant field...
     if (hit.collider.gameObject.layer == LayerMask.NameToLayer("Platforms"))
     {
-      if (!characterPhysicsManager.isGrounded
+      if (wallJumpSettings.enableWallJumps
+        && !characterPhysicsManager.isGrounded
         && (characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
       {
         // wall jumps work like this: if the player makes contact with a wall, we want to keep track how long he moves towards the
@@ -140,16 +162,17 @@ public partial class PlayerController : BaseCharacterController
         if (this.CurrentControlHandler != this._reusableWallJumpControlHandler
           && this.CurrentControlHandler != this._reusableWallJumpEvaluationControlHandler)
         {
+          float wallJumpEnabledTime = wallJumpSettings.wallJumpEnabledTime >= 0f ? wallJumpSettings.wallJumpWallEvaluationDuration + wallJumpSettings.wallJumpEnabledTime : -1f;
           // new event, start evaluation
           if (characterPhysicsManager.lastMoveCalculationResult.collisionState.left)
           {
-            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration + wallJumpSettings.wallJumpEnabledTime, Direction.Left, wallJumpSettings);
+            _reusableWallJumpControlHandler.Reset(wallJumpEnabledTime, Direction.Left, wallJumpSettings);
             _reusableWallJumpEvaluationControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration, Direction.Left, wallJumpSettings);
             this.PushControlHandler(_reusableWallJumpControlHandler, _reusableWallJumpEvaluationControlHandler);
           }
           else if (characterPhysicsManager.lastMoveCalculationResult.collisionState.right)
           {
-            _reusableWallJumpControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration + wallJumpSettings.wallJumpEnabledTime, Direction.Right, wallJumpSettings);
+            _reusableWallJumpControlHandler.Reset(wallJumpEnabledTime, Direction.Right, wallJumpSettings);
             _reusableWallJumpEvaluationControlHandler.Reset(wallJumpSettings.wallJumpWallEvaluationDuration, Direction.Right, wallJumpSettings);
             this.PushControlHandler(_reusableWallJumpControlHandler, _reusableWallJumpEvaluationControlHandler);
           }

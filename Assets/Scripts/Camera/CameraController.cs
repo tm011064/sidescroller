@@ -112,8 +112,16 @@ public class CameraController : MonoBehaviour
     float targetOrthographicSize = (targetScreenSize.y * .5f) / _cameraMovementSettings.zoomSettings.zoomPercentage;
     if (!Mathf.Approximately(Camera.main.orthographicSize, targetOrthographicSize))
     {
-      _zoomTimer = new ZoomTimer(_cameraMovementSettings.zoomSettings.zoomTime, Camera.main.orthographicSize, targetOrthographicSize, _cameraMovementSettings.zoomSettings.zoomEasingType);
-      _zoomTimer.Start();
+      Logger.Info("Start zoom to target size: " + targetOrthographicSize + ", current size: " + Camera.main.orthographicSize);
+      if (_cameraMovementSettings.zoomSettings.zoomTime == 0f)
+      {
+        Camera.main.orthographicSize = targetOrthographicSize;
+      }
+      else
+      {
+        _zoomTimer = new ZoomTimer(_cameraMovementSettings.zoomSettings.zoomTime, Camera.main.orthographicSize, targetOrthographicSize, _cameraMovementSettings.zoomSettings.zoomEasingType);
+        _zoomTimer.Start();
+      }
     }
 
     Logger.Info("Camera movement set to: " + _cameraMovementSettings.ToString());
@@ -139,7 +147,7 @@ public class CameraController : MonoBehaviour
           _isAboveJumpHeightLocked = false; // if we reached the peak we unlock
         }
 
-        if (_isAboveJumpHeightLocked && (_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary))
+        if (_isAboveJumpHeightLocked && (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary))
         {
           // we were locked but character has exceeded the top boundary. In that case we set the y pos and smooth damp
           yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
@@ -150,7 +158,7 @@ public class CameraController : MonoBehaviour
           // we want to adjust the y position on upward movement if:
           if (_isAboveJumpHeightLocked                                                                                                // either we are locked in above jump height lock
               || (
-                    (!_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock                                              // OR (we either have no top boundary or we are beneath the top boundary in which case we can go up)
+                    (!_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock                                              // OR (we either have no top boundary or we are beneath the top boundary in which case we can go up)
                       || target.position.y <= _cameraMovementSettings.verticalLockSettings.topBoundary)                                   //    AND
                     && (target.position.y > transform.position.y + this.cameraOffset.y + _playerController.jumpSettings.runJumpHeight  //    (the character has exceeded the jump height which means he has been artifically catapulted upwards)
                         && _characterPhysicsManager.velocity.y > 0f                                                                  //    AND we go up
@@ -172,12 +180,12 @@ public class CameraController : MonoBehaviour
             {
               if (_cameraMovementSettings.verticalLockSettings.enabled)
               {
-                if (_cameraMovementSettings.verticalLockSettings.enableDefaultHorizontalLockPosition)
-                  yPos = _cameraMovementSettings.verticalLockSettings.defaultHorizontalLockPosition;
+                if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
+                  yPos = _cameraMovementSettings.verticalLockSettings.defaultVerticalLockPosition;
                 else
                   yPos = target.position.y;
 
-                if (_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock
+                if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
                   && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
                 {
                   yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
@@ -185,7 +193,7 @@ public class CameraController : MonoBehaviour
                   // we might have been shot up, so use smooth damp override
                   doSmoothDamp = true;
                 }
-                else if (_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock
+                else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
                   && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
                 {
                   yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
@@ -215,12 +223,12 @@ public class CameraController : MonoBehaviour
         #region vertical locking
         if (_cameraMovementSettings.verticalLockSettings.enabled)
         {
-          if (_cameraMovementSettings.verticalLockSettings.enableDefaultHorizontalLockPosition)
-            yPos = _cameraMovementSettings.verticalLockSettings.translatedHorizontalLockPosition;
+          if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
+            yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
           else
             yPos = target.position.y;
 
-          if (_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock
+          if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
             && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
           {
             yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
@@ -228,7 +236,7 @@ public class CameraController : MonoBehaviour
             // we might have been shot up, so use smooth damp override
             doSmoothDamp = true;
           }
-          else if (_cameraMovementSettings.verticalLockSettings.enableTopHorizontalLock
+          else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
             && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
           {
             yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;

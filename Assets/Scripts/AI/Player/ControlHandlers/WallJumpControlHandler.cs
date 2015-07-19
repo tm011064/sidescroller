@@ -17,7 +17,7 @@ public class WallJumpControlHandler : PlayerControlHandler
 
   public void Reset(float duration, Direction wallDirection, WallJumpSettings wallJumpSettings)
   {
-    this._overrideEndTime = Time.time + duration;
+    this._overrideEndTime = duration < 0f ? null : (float?)(Time.time + duration);
     this._hasJumpedFromWall = false;
     this._wallDirection = wallDirection;
     this._wallJumpSettings = wallJumpSettings;
