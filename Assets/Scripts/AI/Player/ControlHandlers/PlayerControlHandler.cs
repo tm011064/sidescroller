@@ -24,7 +24,7 @@ public class PlayerControlHandler : BaseControlHandler
        , _playerController.boxCollider.bounds.extents, debugBoundingBoxColor);
     }
   }
-
+  
   protected override void OnAfterUpdate()
   {
     Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
@@ -32,6 +32,24 @@ public class PlayerControlHandler : BaseControlHandler
     if (_playerController.isTakingDamage)
     {
       _playerController.animator.Play(Animator.StringToHash("PlayerDamageTaken"));
+    }
+    else if (_playerController.isAttachedToWall
+      && _playerController.characterPhysicsManager.velocity.y < 0f
+      && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnRightWall) != 0)
+    {
+      if (_playerController.transform.localScale.x < 1f)
+        _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
+      
+      _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
+    }
+    else if (_playerController.isAttachedToWall
+      && _playerController.characterPhysicsManager.velocity.y < 0f
+      && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnLeftWall) != 0)
+    {
+      if (_playerController.transform.localScale.x > -1f)
+        _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
+
+      _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
     }
     else if (_playerController.characterPhysicsManager.isGrounded)
     {

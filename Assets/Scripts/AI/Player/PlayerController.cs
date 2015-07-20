@@ -58,15 +58,22 @@ public class JumpSettings
 
 public partial class PlayerController : BaseCharacterController
 {
-  private const string TRACE_TAG = "PlayerController";
+  #region fields
 
+  #region const
+  private const string TRACE_TAG = "PlayerController";
+  #endregion
+
+  #region inspector fields
   public WallJumpSettings wallJumpSettings = new WallJumpSettings();
   public JumpSettings jumpSettings = new JumpSettings();
   public RunSettings runSettings = new RunSettings();
 
   public Vector2 boxColliderOffsetCrouched = Vector2.zero;
   public Vector2 boxColliderSizeCrouched = Vector2.zero;
+  #endregion
 
+  #region public fields
   [HideInInspector]
   public Vector2 boxColliderOffsetDefault = Vector2.zero;
   [HideInInspector]
@@ -86,7 +93,11 @@ public partial class PlayerController : BaseCharacterController
   public bool isInvincible = false;
   [HideInInspector]
   public bool isTakingDamage = false;
-  
+  [HideInInspector]
+  public bool isAttachedToWall = false;
+  #endregion
+
+  #region private fields
   private RaycastHit2D _lastControllerColliderHit;
   private Vector3 _velocity;
 
@@ -95,7 +106,11 @@ public partial class PlayerController : BaseCharacterController
   private Vector3 _lastLostGroundPos = Vector3.zero;
 
   private GameManager _gameManager;
+  #endregion
 
+  #endregion
+
+  #region awake/start
   void Awake()
   {
     // register with game context so this game object can be accessed everywhere
@@ -124,6 +139,22 @@ public partial class PlayerController : BaseCharacterController
 
     adjustedGravity = jumpSettings.gravity;
   }
+  #endregion
+
+  #region events
+  public class GroundedPlatformChangedEventArgs : EventArgs
+  {
+    public GameObject previousPlatform;
+    public GameObject currentPlatform;
+
+    public GroundedPlatformChangedEventArgs(GameObject previousPlatform, GameObject currentPlatform)
+    {
+      this.previousPlatform = previousPlatform;
+      this.currentPlatform = currentPlatform;
+    }
+  }
+
+  public event EventHandler<GroundedPlatformChangedEventArgs> OnGroundedPlatformChanged;
 
   void characterPhysicsManager_onControllerBecameGrounded(GameObject obj)
   {
@@ -132,21 +163,45 @@ public partial class PlayerController : BaseCharacterController
 
   void characterPhysicsManager_onControllerLostGround()
   {
-    currentPlatform = null;
+    if (currentPlatform != null)
+    {
+      var handler = OnGroundedPlatformChanged;
+      if (handler != null)
+      {
+        GameObject previousGameObject = currentPlatform;
+        currentPlatform = null;
+        OnGroundedPlatformChanged(this, new GroundedPlatformChangedEventArgs(previousGameObject, currentPlatform));
+      }
+      else
+      {
+        currentPlatform = null;
+      }
+    }
 
 #if UNITY_EDITOR
     _lastLostGroundPos = this.transform.position;
 #endif
   }
 
-  #region Event Listeners
-
   void onControllerCollider(RaycastHit2D hit)
   {
     // bail out on plain old ground hits cause they arent very interesting
     if (hit.normal.y == 1f)
     {
-      this.currentPlatform = hit.collider.gameObject;
+      if (currentPlatform != hit.collider.gameObject)
+      {
+        var handler = OnGroundedPlatformChanged;
+        if (handler != null)
+        {
+          GameObject previousGameObject = currentPlatform;
+          currentPlatform = hit.collider.gameObject;
+          OnGroundedPlatformChanged(this, new GroundedPlatformChangedEventArgs(previousGameObject, currentPlatform));
+        }
+        else
+        {
+          currentPlatform = hit.collider.gameObject;
+        }
+      }
       return;
     }
     // TODO (Roman): these methods should be optimized and put into constant field...
@@ -195,6 +250,7 @@ public partial class PlayerController : BaseCharacterController
 
   #endregion
 
+  #region gizmos
 #if UNITY_EDITOR
   void OnDrawGizmos()
   {
@@ -204,16 +260,19 @@ public partial class PlayerController : BaseCharacterController
     }
   }
 #endif
-  
+  #endregion
+
   public void Respawn()
   {
-    characterPhysicsManager.velocity = Vector3.zero;
-    characterPhysicsManager.transform.position = spawnLocation;
+    characterPhysicsManager.Reset(spawnLocation);
 
     adjustedGravity = jumpSettings.gravity;
 
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
+
     _gameManager.powerUpManager.PowerMeter = 1;
+
+    this.transform.parent = null; // just in case we were still attached
   }
   
   protected override void Update()

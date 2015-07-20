@@ -32,7 +32,6 @@ public class CircleGroundPlatformMesh : BasePlatform
   {
     var mesh = new Mesh();
     var mf = GetComponent<MeshFilter>();
-    var renderer = mf.GetComponent<Renderer>();
 
     mf.mesh = mesh;
 

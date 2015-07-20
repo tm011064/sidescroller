@@ -76,7 +76,7 @@ public partial class Wheel : BaseMonoBehaviour
     Logger.Info("Wheel " + this.name + " got hidden");
     for (int i = 0; i < _platforms.Count; i++)
     {
-      _platforms[i].GameObject.SetActive(false);
+      ObjectPoolingManager.Instance.Deactivate(_platforms[i].GameObject);
     }
     _platforms = null;
   }

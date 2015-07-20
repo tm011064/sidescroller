@@ -10,6 +10,6 @@ public class PowerUpItem : MonoBehaviour
     // we know from the layer mask arrangement that this trigger can only be called by the player object
     GameManager.instance.powerUpManager.ApplyPowerUpItem(powerUpType);
 
-    this.gameObject.SetActive(false);
+    ObjectPoolingManager.Instance.Deactivate(this.gameObject);
   }
 }

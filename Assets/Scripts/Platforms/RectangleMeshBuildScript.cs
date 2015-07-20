@@ -14,6 +14,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   public int tileWidth = 64;
   public int tileHeight = 64;
   public TextAnchor anchor = TextAnchor.LowerLeft;
+  public bool isTrigger = false;
 
   [EnumFlag]
   public Direction colliderSides = Direction.Left | Direction.Top | Direction.Right | Direction.Bottom;
@@ -111,6 +112,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
       boxCollider2D.hideFlags = HideFlags.NotEditable;
       boxCollider2D.size = new Vector2(width, height);
+      boxCollider2D.isTrigger = isTrigger;
 
       switch (anchor)
       {
@@ -145,6 +147,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
+        collider.isTrigger = isTrigger;
 
         vectors = new List<Vector2>();
         vectors.Add(GetBottomRightVector2());
@@ -152,6 +155,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
+        collider.isTrigger = isTrigger;
       }
       else if (colliderSides == (Direction.Top | Direction.Bottom))
       {
@@ -162,6 +166,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
+        collider.isTrigger = isTrigger;
 
         vectors = new List<Vector2>();
         vectors.Add(GetBottomLeftVector2());
@@ -169,6 +174,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
         collider = this.gameObject.AddComponent<EdgeCollider2D>();
         collider.hideFlags = HideFlags.NotEditable;
         collider.points = vectors.ToArray();
+        collider.isTrigger = isTrigger;
       }
       else
       {
@@ -214,6 +220,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
         }
 
         collider.points = vectors.ToArray();
+        collider.isTrigger = isTrigger;
       }
     }
   }

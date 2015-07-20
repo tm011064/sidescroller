@@ -5,7 +5,6 @@ public class UpdateTimer
   private bool _hasStarted;
   private bool _hasEnded;
   private float _startTime;
-  private float _endTime;
   protected float _duration;
 
   protected virtual void DoUpdate(float currentTime) { }
@@ -26,7 +25,6 @@ public class UpdateTimer
   {
     _hasStarted = true;
     _startTime = Time.time;
-    _endTime = _startTime + _duration;
   }
 
   public bool HasEnded { get { return _hasEnded; } }

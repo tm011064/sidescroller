@@ -10,7 +10,6 @@ public class WallJumpControlHandler : PlayerControlHandler
 
   private bool _hasJumpedFromWall;
   private float _wallJumpDirectionMultiplier;
-  private Direction _wallDirection;
 
   private WallJumpSettings _wallJumpSettings;
   private AxisState _axisOverride;
@@ -19,7 +18,6 @@ public class WallJumpControlHandler : PlayerControlHandler
   {
     this._overrideEndTime = duration < 0f ? null : (float?)(Time.time + duration);
     this._hasJumpedFromWall = false;
-    this._wallDirection = wallDirection;
     this._wallJumpSettings = wallJumpSettings;
 
     this._wallJumpDirectionMultiplier = wallDirection == Direction.Right ? -1f : 1f;
@@ -29,6 +27,7 @@ public class WallJumpControlHandler : PlayerControlHandler
   public override void Dispose()
   {
     _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
+    _playerController.isAttachedToWall = false;
   }
 
   public WallJumpControlHandler(PlayerController playerController)
@@ -51,6 +50,8 @@ public class WallJumpControlHandler : PlayerControlHandler
       Logger.Info("Wall Jump Control Handler can not be activated because wall jump evaluation control handler has detached.");
       return false;
     }
+
+    _playerController.isAttachedToWall = true;
 
     return base.TryActivate(previousControlHandler);
   }

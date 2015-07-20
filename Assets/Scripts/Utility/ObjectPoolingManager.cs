@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ObjectPoolingManager
 {
-
   //the variable is declared to be volatile to ensure that
   //assignment to the instance variable completes before the
   //instance variable can be accessed.
@@ -15,6 +14,9 @@ public class ObjectPoolingManager
 
   //object for locking
   private static object syncRoot = new System.Object();
+
+  public event Action<GameObject> BeforeDeactivated;
+  public event Action<GameObject> AfterDeactivated;
 
   /// <summary>
   /// Constructor for the class.
@@ -63,7 +65,7 @@ public class ObjectPoolingManager
   public bool RegisterPool(GameObject objToPool, int initialPoolSize, int maxPoolSize)
   {
     //Check to see if the pool already exists.
-    if (ObjectPoolingManager.Instance._objectPools.ContainsKey(objToPool.name))
+    if (_objectPools.ContainsKey(objToPool.name))
     {
       //let the caller know it already exists, just use the pool out there.
       return false;
@@ -74,7 +76,7 @@ public class ObjectPoolingManager
       ObjectPool nPool = new ObjectPool(objToPool, initialPoolSize, maxPoolSize);
       //Add the pool to the dictionary of pools to manage
       //using the object name as the key and the pool as the value.
-      ObjectPoolingManager.Instance._objectPools.Add(objToPool.name, nPool);
+      _objectPools.Add(objToPool.name, nPool);
       //We created a new pool!
       return true;
     }
@@ -88,6 +90,23 @@ public class ObjectPoolingManager
   public GameObject GetObject(string objName)
   {
     //Find the right pool and ask it for an object.
-    return ObjectPoolingManager.Instance._objectPools[objName].GetObject();
+    return _objectPools[objName].GetObject();
+  }
+
+  /// <summary>
+  /// Deactivates the specified object.
+  /// </summary>
+  /// <param name="obj">The object.</param>
+  public void Deactivate(GameObject obj)
+  {
+    var handler = BeforeDeactivated;
+    if (handler != null)
+      handler.Invoke(obj);
+
+    obj.SetActive(false);
+
+    var handler2 = AfterDeactivated;
+    if (handler2 != null)
+      handler2.Invoke(obj);
   }
 }

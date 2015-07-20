@@ -47,20 +47,21 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
   void OnEnable()
   {
-    _playerController.characterPhysicsManager.onControllerBecameGrounded += characterPhysicsManager_onControllerBecameGrounded;
-    _playerController.characterPhysicsManager.onControllerLostGround += characterPhysicsManager_onControllerLostGround;
+    _playerController.OnGroundedPlatformChanged += _playerController_OnGroundedPlatformChanged;
   }
 
   void OnDisable()
   {
-    _playerController.characterPhysicsManager.onControllerBecameGrounded -= characterPhysicsManager_onControllerBecameGrounded;
-    _playerController.characterPhysicsManager.onControllerLostGround -= characterPhysicsManager_onControllerLostGround;
+    _playerController.OnGroundedPlatformChanged -= _playerController_OnGroundedPlatformChanged;
   }
 
-  void characterPhysicsManager_onControllerLostGround()
+  void _playerController_OnGroundedPlatformChanged(object sender, PlayerController.GroundedPlatformChangedEventArgs e)
   {
-    if (_playerController.transform.parent == this._gameObject.transform)
+    if ((e.currentPlatform == null && _playerController.transform.parent == this._gameObject.transform) // either player is in air
+      || e.previousPlatform == this._gameObject // or the previous platform was the trampoline
+      )
     {
+      // lost ground
       _isPlayerControllerAttached = false;
       _playerController.transform.parent = null;
 
@@ -73,36 +74,35 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
       Logger.Info("Removed parent (" + this.gameObject.transform + ") relationship from child (" + _playerController.name + ")");
     }
-  }
-
-  void characterPhysicsManager_onControllerBecameGrounded(GameObject obj)
-  {
-    if (obj == this._gameObject && _playerController.transform.parent != this._gameObject.transform)
+    else if (e.currentPlatform == this._gameObject)
     {
-      _isGoingUp = false;
-      _hasBounced = false;
-      _hasUpMoveCompleted = false;
+      if (_playerController.transform.parent != this._gameObject.transform)
+      {
+        _isGoingUp = false;
+        _hasBounced = false;
+        _hasUpMoveCompleted = false;
 
-      _isPlayerControllerAttached = true;
+        _isPlayerControllerAttached = true;
 
-      _playerController.transform.parent = this._gameObject.transform;
+        _playerController.transform.parent = this._gameObject.transform;
 
-      _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, jumpHeightMultiplier, onTrampolineSkidDamping, canJump);
-      _playerController.PushControlHandler(_trampolineBounceControlHandler);
+        _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, jumpHeightMultiplier, onTrampolineSkidDamping, canJump);
+        _playerController.PushControlHandler(_trampolineBounceControlHandler);
 
-      iTween.MoveBy(this._gameObject
-        , iTween.Hash(
-        "y", platformDownwardDistance
-        , "time", platformDownwardDuration
-        , "easetype", platformDownwardEaseType
-        , "oncomplete", "OnDownMoveComplete"
-        , "oncompletetarget", this.gameObject
-        ));
+        iTween.MoveBy(this._gameObject
+          , iTween.Hash(
+          "y", platformDownwardDistance
+          , "time", platformDownwardDuration
+          , "easetype", platformDownwardEaseType
+          , "oncomplete", "OnDownMoveComplete"
+          , "oncompletetarget", this.gameObject
+          ));
 
-      Logger.Info("Added parent (" + this.gameObject.transform + ") relationship to child (" + _playerController.name + ")");
+        Logger.Info("Added parent (" + this.gameObject.transform + ") relationship to child (" + _playerController.name + ")");
+      }
     }
   }
-
+  
   private void OnUpMoveCompleted()
   {
     _hasUpMoveCompleted = true;

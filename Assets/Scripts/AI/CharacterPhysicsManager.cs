@@ -129,7 +129,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// </summary>
   /// <value>The jumping threshold.</value>
   public float jumpingThreshold = 0.07f;
-  
+
   /// <summary>
   /// curve for multiplying speed based on slope (negative = down slope and positive = up slope)
   /// </summary>
@@ -141,8 +141,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   public int totalHorizontalRays = 8;
   [Range(2, 20)]
   public int totalVerticalRays = 4;
-
-
+  
   /// <summary>
   /// this is used to calculate the downward ray that is cast to check for slopes. We use the somewhat arbitrary value 75 degrees
   /// to calculate the length of the ray that checks for slopes.
@@ -182,7 +181,6 @@ public class CharacterPhysicsManager : MonoBehaviour
   public List<RaycastHit2D> lastRaycastHits = new List<RaycastHit2D>();
 
   #endregion
-
 
   /// <summary>
   /// holder for our raycast origin corners (TR, TL, BR, BL)
@@ -228,20 +226,17 @@ public class CharacterPhysicsManager : MonoBehaviour
     _platformMaskWithoutOneWay &= ~oneWayPlatformMask;
   }
 
-
   public void OnTriggerEnter2D(Collider2D col)
   {
     if (onTriggerEnterEvent != null)
       onTriggerEnterEvent(col);
   }
 
-
   public void OnTriggerStay2D(Collider2D col)
   {
     if (onTriggerStayEvent != null)
       onTriggerStayEvent(col);
   }
-
 
   public void OnTriggerExit2D(Collider2D col)
   {
@@ -250,7 +245,6 @@ public class CharacterPhysicsManager : MonoBehaviour
   }
 
   #endregion
-
 
   [System.Diagnostics.Conditional("DEBUG_CC2D_RAYS")]
   private void DrawRay(Vector3 start, Vector3 dir, Color color)
@@ -368,6 +362,7 @@ public class CharacterPhysicsManager : MonoBehaviour
 
     return moveCalculationResult;
   }
+
   public void PerformMove(MoveCalculationResult moveCalculationResult)
   {
     transform.Translate(moveCalculationResult.deltaMovement, Space.World);
@@ -383,10 +378,14 @@ public class CharacterPhysicsManager : MonoBehaviour
 
       if (onControllerBecameGrounded != null)
       {
+        HashSet<GameObject> rayhitGameObjects = new HashSet<GameObject>();
         for (var i = 0; i < _raycastHitsThisFrame.Count; i++)
         {
-          if (_raycastHitsThisFrame[i].normal.y == 1f)
+          if (!rayhitGameObjects.Contains(_raycastHitsThisFrame[i].collider.gameObject))
+          {
             onControllerBecameGrounded(_raycastHitsThisFrame[i].collider.gameObject);
+            rayhitGameObjects.Add(_raycastHitsThisFrame[i].collider.gameObject);
+          }
         }
       }
     }
@@ -436,8 +435,7 @@ public class CharacterPhysicsManager : MonoBehaviour
       Move(new Vector3(0, -1f, 0));
     } while (!isGrounded);
   }
-
-
+  
   /// <summary>
   /// this should be called anytime you have to modify the BoxCollider2D at runtime. It will recalculate the distance between the rays used for collision detection.
   /// It is also used in the skinWidth setter in case it is changed at runtime.
@@ -454,8 +452,15 @@ public class CharacterPhysicsManager : MonoBehaviour
     _horizontalDistanceBetweenRays = colliderUseableWidth / (totalVerticalRays - 1);
   }
 
-  #endregion
+  public void Reset(Vector3 position)
+  {
+    lastMoveCalculationResult = new MoveCalculationResult();
+    velocity = Vector3.zero;
+    this.transform.position = position;
+    _raycastHitsThisFrame.Clear();
+  }
 
+  #endregion
 
   #region Private Movement Methods
 
@@ -668,8 +673,6 @@ public class CharacterPhysicsManager : MonoBehaviour
 
         do
         {
-          bool isGoingRight = targetDelta.x > 0;
-
           // check whether we go through a wall, if so adjust...
           Logger.Trace(TRACE_TAG, "handleHorizontalSlope -> Raycast test; Current Position: {0}, Target Delta: {1}, Target Position: {2}, Current Delta: {3}, Target Move X: {4}, angle: {5}"
             , rayOrigin
@@ -924,7 +927,5 @@ public class CharacterPhysicsManager : MonoBehaviour
   }
 
   #endregion
-
-
 }
 

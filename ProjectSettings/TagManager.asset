@@ -8,6 +8,7 @@ TagManager:
   - Checkpoint 1
   - Checkpoint 2
   - Checkpoint 3
+  - JumpArenaCheckpoint
   layers:
   - Default
   - TransparentFX
@@ -22,7 +23,7 @@ TagManager:
   - Enemy
   - Background
   - Platforms
-  - 
+  - PlatformTriggerMask
   - EnemyMoveMask
   - PlayerTriggerMask
   - Editor

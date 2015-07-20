@@ -76,18 +76,25 @@ public class Logger : IDisposable
   {
     if (_outputStream != null)
     {
-      List<string> messages;
-      lock (_messagesToWrite)
+      try
       {
-        // make a local copy so we don't lock the main thread while writing
-        messages = new List<string>(_messagesToWrite);
-        _messagesToWrite = new List<string>();
-      }
+        List<string> messages;
+        lock (_messagesToWrite)
+        {
+          // make a local copy so we don't lock the main thread while writing
+          messages = new List<string>(_messagesToWrite);
+          _messagesToWrite = new List<string>();
+        }
 
-      for (int i = 0; i < messages.Count; i++)
+        for (int i = 0; i < messages.Count; i++)
+        {
+          _outputStream.WriteLine(messages[i]);
+          _outputStream.Flush();
+        }
+      }
+      catch (Exception err)
       {
-        _outputStream.WriteLine(messages[i]);
-        _outputStream.Flush();
+        UnityEngine.Debug.LogException(err);
       }
     }
   }

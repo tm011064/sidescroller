@@ -14,10 +14,7 @@ public class RotatingPlatformCollisionController : MonoBehaviour
   public AnimationCurve slopeSpeedMultiplier = new AnimationCurve(new Keyframe(-90, 1f), new Keyframe(0, 1), new Keyframe(90, 0));
 
   private GameObject _gameObject;
-
-  private BoxCollider2D _boxCollider;
-  private BoxCollider2D _playerBoxCollider;
-
+  
   private PlayerController _playerController;
   private AttachPlayerControllerToObject _attachPlayerControllerToObject;
 
@@ -39,9 +36,6 @@ public class RotatingPlatformCollisionController : MonoBehaviour
     _gameObject.SetActive(true);
 
     _playerController = GameManager.instance.player;
-
-    _boxCollider = _gameObject.GetComponent<BoxCollider2D>();
-    _playerBoxCollider = _playerController.boxCollider;
   }
 
   void Update()

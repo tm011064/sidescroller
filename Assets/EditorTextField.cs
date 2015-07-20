@@ -8,7 +8,6 @@ public class EditorTextField : MonoBehaviour
 #if UNITY_EDITOR
   void OnDrawGizmos()
   {
-    GUIContent content = new GUIContent(text);    
     UnityEditor.Handles.Label(transform.position, text);
   }
 #endif

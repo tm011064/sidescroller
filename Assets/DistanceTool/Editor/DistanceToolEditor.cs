@@ -78,7 +78,8 @@ public class DistanceToolEditor : Editor
 
   void OnSceneGUI()
   {
-    Undo.SetSnapshotTarget(_target, "distance tool undo");
+    Undo.RecordObject(_target, "distance tool undo");
+    //Undo.SetSnapshotTarget(_target, "distance tool undo");
     //lables and handles:
     float distance = Vector3.Distance(_target.startPoint, _target.endPoint);
     float scalePerPixel = distance * _target.pixelPerUnit;

@@ -86,6 +86,7 @@ public class GameManager : MonoBehaviour
       _currentCheckpointIndex++;
       if (_currentCheckpointIndex >= _orderedSceneCheckpoints.Count)
         _currentCheckpointIndex = 0;
+
       GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
       this.player.spawnLocation = checkpoint.gameObject.transform.position;
       this.player.Respawn();

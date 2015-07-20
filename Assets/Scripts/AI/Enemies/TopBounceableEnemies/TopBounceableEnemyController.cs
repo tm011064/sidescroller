@@ -25,9 +25,9 @@ public abstract class TopBounceableEnemyController : EnemyController
     if (angle < allowedTopCollisionAngleFrom && angle > allowedTopCollisionAngleTo)
     {
       playerController.PushControlHandler(new TopBounceableControlHandler(playerController, allowJumpFromTopThresholdInSeconds, bounceJumpMultiplier));
-      
+
       // TODO (Roman): run death animation...
-      this.gameObject.SetActive(false);
+      ObjectPoolingManager.Instance.Deactivate(this.gameObject);
     }
     else
     {
