@@ -160,7 +160,9 @@ public partial class PlayerController : BaseCharacterController
 
   void characterPhysicsManager_onControllerBecameGrounded(GameObject obj)
   {
+#if UNITY_EDITOR
     Logger.Trace(TRACE_TAG, "Jump distance: " + Mathf.RoundToInt((this.transform.position.x - _lastLostGroundPos.x)) + " px");
+#endif
   }
 
   void characterPhysicsManager_onControllerLostGround()
