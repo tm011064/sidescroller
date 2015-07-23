@@ -1,10 +1,10 @@
 ﻿using UnityEngine;
 
-public class PatrollerEnemyControlHandler : EnemyControlHandler<PatrollerEnemyController>
+public class RunnerEnemyControlHandler : EnemyControlHandler<RunnerEnemyController>
 {
   private float _moveDirectionFactor;
 
-  public PatrollerEnemyControlHandler(PatrollerEnemyController patrollerEnemyController, Direction startDirection)
+  public RunnerEnemyControlHandler(RunnerEnemyController patrollerEnemyController, Direction startDirection)
     : base(patrollerEnemyController, -1f)
   {
     if (startDirection == Direction.Left)
@@ -16,7 +16,7 @@ public class PatrollerEnemyControlHandler : EnemyControlHandler<PatrollerEnemyCo
   protected override bool DoUpdate()
   {
     // first move in patrolling mode
-    MoveHorizontally(ref _moveDirectionFactor, _enemyController.speed, _enemyController.gravity, PlatformEdgeMoveMode.TurnAround);
+    MoveHorizontally(ref _moveDirectionFactor, _enemyController.speed, _enemyController.gravity, PlatformEdgeMoveMode.FallOff);
 
     return true;
   }

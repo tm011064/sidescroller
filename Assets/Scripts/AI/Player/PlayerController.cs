@@ -103,7 +103,9 @@ public partial class PlayerController : BaseCharacterController
 
   private WallJumpControlHandler _reusableWallJumpControlHandler;
   private WallJumpEvaluationControlHandler _reusableWallJumpEvaluationControlHandler;
+#if UNITY_EDITOR
   private Vector3 _lastLostGroundPos = Vector3.zero;
+#endif
 
   private GameManager _gameManager;
   #endregion

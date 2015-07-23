@@ -124,7 +124,7 @@ MonoBehaviour:
   performFullyGroundedChecks: 0
   performIsOnWallChecks: 1
   enableTopEdgeCollisionAdjustment: 1
-  topEdgeCollisionAdjustmentInset: 33
+  topEdgeCollisionAdjustmentInset: 42
   slopeSpeedMultiplierOverride:
     serializedVersion: 2
     m_Curve: []

@@ -1,5 +1,4 @@
-﻿#define DEBUG_CC2D_RAYS
-using UnityEngine;
+﻿using UnityEngine;
 using System;
 using System.Collections.Generic;
 
@@ -604,7 +603,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   #endregion
 
   #region private
-  [System.Diagnostics.Conditional("DEBUG_CC2D_RAYS")]
+  [System.Diagnostics.Conditional("DEBUG")]
   private void DrawRay(Vector3 start, Vector3 dir, Color color)
   {
     Debug.DrawRay(start, dir, color);

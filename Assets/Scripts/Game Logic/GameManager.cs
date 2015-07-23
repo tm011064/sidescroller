@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
   {
     inputStateManager.Update();
 
-#if !FINAL
+//#if !FINAL
 
     if (Input.GetKeyUp("n"))
     {
@@ -103,7 +103,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-#endif
+//#endif
 
     if (Input.GetKey("escape"))
     {

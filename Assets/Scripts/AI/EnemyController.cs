@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+
 public class EnemyController : BaseCharacterController
 {
   public Direction startDirection = Direction.Right;
