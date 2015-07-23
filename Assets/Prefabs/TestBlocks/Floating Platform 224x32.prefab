@@ -27,8 +27,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 135722}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 352, y: -1408, z: 0}
+  m_LocalRotation: {x: 0, y: -.707106829, z: -0, w: .707106829}
+  m_LocalPosition: {x: 1011.97992, y: -4224, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -109,6 +109,8 @@ MonoBehaviour:
   createTiles: 1
   tileWidth: 32
   tileHeight: 32
+  anchor: 6
+  isTrigger: 0
   colliderSides: 15
   prefabMeshFolder: Assets/Meshes/
   prefabObjectFolder: Assets/Prefabs/TestBlocks/

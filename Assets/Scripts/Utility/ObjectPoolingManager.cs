@@ -103,6 +103,7 @@ public class ObjectPoolingManager
     if (handler != null)
       handler.Invoke(obj);
 
+    obj.SendMessage("OnBeforeDisable", SendMessageOptions.DontRequireReceiver);
     obj.SetActive(false);
 
     var handler2 = AfterDeactivated;

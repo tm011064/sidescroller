@@ -26,7 +26,7 @@ public class BallisticTrajectory
   public Vector2 endPosition = Vector2.zero;
 }
 
-public class EnemySpawnManager : BaseMonoBehaviour
+public partial class EnemySpawnManager : BaseMonoBehaviour
 {
   public GameObject enemyToSpawn;
 
@@ -54,15 +54,15 @@ public class EnemySpawnManager : BaseMonoBehaviour
     _enemyController.startDirection = startDirection;
 
     _spawnedEnemy.transform.position = this.transform.position;
-    
+
+    Logger.Trace("SPAWNING at " + _spawnedEnemy.transform.position + ", active: " + _spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(_spawnedEnemy.layer));
+
     if (ballisticTrajectory.isEnabled)
     {
       _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(_enemyController.characterPhysicsManager
         , this.transform.position, new Vector3(ballisticTrajectory.endPosition.x, ballisticTrajectory.endPosition.y, transform.position.z)
-        , ballisticTrajectory.projectileGravity, ballisticTrajectory.angle));      
+        , ballisticTrajectory.projectileGravity, ballisticTrajectory.angle));
     }
-
-    _spawnedEnemy.SetActive(true);
 
     // we need to remove the spawned enemy instance since it might be reused in the pool
     _enemyController.GotDisabled += enemyController_Disabled;
@@ -106,7 +106,7 @@ public class EnemySpawnManager : BaseMonoBehaviour
       yield return new WaitForSeconds(continuousSpawnInterval);
     }
   }
-  
+
   void Start()
   {
     ObjectPoolingManager.Instance.RegisterPool(enemyToSpawn, 1, int.MaxValue);

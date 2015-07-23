@@ -83,6 +83,16 @@ public class GameManager : MonoBehaviour
 
     if (Input.GetKeyUp("n"))
     {
+      _currentCheckpointIndex--;
+      if (_currentCheckpointIndex < 0)
+        _currentCheckpointIndex = _orderedSceneCheckpoints.Count - 1;
+
+      GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
+      this.player.spawnLocation = checkpoint.gameObject.transform.position;
+      this.player.Respawn();
+    }
+    if (Input.GetKeyUp("p"))
+    {
       _currentCheckpointIndex++;
       if (_currentCheckpointIndex >= _orderedSceneCheckpoints.Count)
         _currentCheckpointIndex = 0;
@@ -92,13 +102,14 @@ public class GameManager : MonoBehaviour
       this.player.Respawn();
     }
 
+
+#endif
+
     if (Input.GetKey("escape"))
     {
       Logger.Info("quit");
       Application.Quit();
     }
-
-#endif
 
     UpdateFPS();
   }

@@ -41,7 +41,7 @@ public class WallJumpEvaluationControlHandler : DefaultPlayerControlHandler
   /// <returns></returns>
   protected override bool DoUpdate()
   {
-    if (_playerController.characterPhysicsManager.isGrounded)
+    if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
       _hasDetached = true;
       Logger.Info("Popped wall jump evaluation because player is grounded.");

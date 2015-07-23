@@ -24,7 +24,7 @@ public class PlayerControlHandler : BaseControlHandler
        , _playerController.boxCollider.bounds.extents, debugBoundingBoxColor);
     }
   }
-  
+
   protected override void OnAfterUpdate()
   {
     Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
@@ -39,7 +39,7 @@ public class PlayerControlHandler : BaseControlHandler
     {
       if (_playerController.transform.localScale.x < 1f)
         _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
-      
+
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
     }
     else if (_playerController.isAttachedToWall
@@ -51,15 +51,16 @@ public class PlayerControlHandler : BaseControlHandler
 
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
     }
-    else if (_playerController.characterPhysicsManager.isGrounded)
+    else if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
       float yAxis = _gameManager.inputStateManager.GetAxisState("Vertical").value;
+      float xAxis = _gameManager.inputStateManager.GetAxisState("Horizontal").value;
 
-      float threshold = _playerController.runSettings.walkSpeed * .05f;
+      float threshold = .1f; // TODO (Roman): hardcoded
       if (yAxis < 0f)
       {
-        if (_playerController.characterPhysicsManager.velocity.x > -threshold
-          && _playerController.characterPhysicsManager.velocity.x < threshold)
+        if (xAxis > -threshold
+          && xAxis < threshold)
         {
           _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
         }
@@ -99,8 +100,8 @@ public class PlayerControlHandler : BaseControlHandler
           }
           else
           {
-            if (_playerController.characterPhysicsManager.velocity.x > -threshold
-              && _playerController.characterPhysicsManager.velocity.x < threshold)
+            if (xAxis > -threshold
+              && xAxis < threshold)
             {
               _playerController.animator.Play(Animator.StringToHash("PlayerCrouchIdle"));
             }
@@ -113,8 +114,8 @@ public class PlayerControlHandler : BaseControlHandler
 
         if (!_isCrouching)
         {
-          if (_playerController.characterPhysicsManager.velocity.x > -threshold
-            && _playerController.characterPhysicsManager.velocity.x < threshold)
+          if (xAxis > -threshold
+            && xAxis < threshold)
           {
             _playerController.animator.Play(Animator.StringToHash("PlayerIdle"));
           }
@@ -167,7 +168,7 @@ public class PlayerControlHandler : BaseControlHandler
     float value = velocity.y;
     hasJumped = false;
 
-    if (_playerController.characterPhysicsManager.isGrounded)
+    if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
       value = 0f;
 
     if (canJump && _gameManager.inputStateManager.GetButtonState("Jump").IsDown)
@@ -226,7 +227,7 @@ public class PlayerControlHandler : BaseControlHandler
     {
       if (                                                                // allow dash speed if
             _playerController.runSettings.enableRunning                   // running is enabled
-            && (_characterPhysicsManager.isGrounded                       // either the player is grounded
+            && (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below                       // either the player is grounded
                 || velocity.x > _playerController.runSettings.walkSpeed   // or the current horizontal velocity is higher than the walkspeed, meaning that the player jumped while running
                 || velocity.x < -_playerController.runSettings.walkSpeed
             )
@@ -237,7 +238,7 @@ public class PlayerControlHandler : BaseControlHandler
     }
 
     float smoothedMovementFactor;
-    if (_playerController.characterPhysicsManager.isGrounded)
+    if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
       if (normalizedHorizontalSpeed == 0f)
       {
@@ -255,7 +256,7 @@ public class PlayerControlHandler : BaseControlHandler
       smoothedMovementFactor = _playerController.jumpSettings.inAirDamping;
     }
 
-    float groundedAdjustmentFactor = _playerController.characterPhysicsManager.isGrounded ? Mathf.Abs(hAxis) : 1f;
+    float groundedAdjustmentFactor = _playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below ? Mathf.Abs(hAxis) : 1f;
 
     return Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * speed * groundedAdjustmentFactor
       , Time.deltaTime * smoothedMovementFactor);
@@ -277,22 +278,24 @@ public class PlayerControlHandler : BaseControlHandler
     }
 
     return (
-          _playerController.characterPhysicsManager.isGrounded
-        || (Time.time - _playerController.characterPhysicsManager.lastTimeGrounded < _playerController.jumpSettings.allowJumpAfterGroundLostThreashold)
+          _playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below
+        || (Time.time - _playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.lastTimeGrounded < _playerController.jumpSettings.allowJumpAfterGroundLostThreashold)
         );
   }
 
   protected void CheckOneWayPlatformFallThrough()
   {
-    if (_characterPhysicsManager.isGrounded
+    if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below
       && _gameManager.inputStateManager.GetButtonState("Fall").IsDown
       && _playerController.currentPlatform != null
       && _playerController.currentPlatform.layer == LayerMask.NameToLayer("OneWayPlatform"))
     {
-      OneWayPlatformSpriteRenderer oneWayPlatformSpriteRenderer = _playerController.currentPlatform.GetComponent<OneWayPlatformSpriteRenderer>();
-      if (oneWayPlatformSpriteRenderer != null)
+      OneWayPlatform oneWayPlatform = _playerController.currentPlatform.GetComponent<OneWayPlatform>();
+
+      Logger.Assert(oneWayPlatform != null, "OneWayPlatform " + _playerController.currentPlatform.name + " has no 'OneWayPlatform' script attached. This script is needed in order to allow the player to fall through.");
+      if (oneWayPlatform != null)
       {
-        oneWayPlatformSpriteRenderer.AllowFallThrough();
+        oneWayPlatform.TriggerFall();
       }
     }
   }

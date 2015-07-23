@@ -15,7 +15,7 @@ public class BaseCharacterController : BaseMonoBehaviour
   #endregion
 
   #region properties
-  protected BaseControlHandler CurrentControlHandler { get { return _currentBaseControlHandler; } }
+  public BaseControlHandler CurrentControlHandler { get { return _currentBaseControlHandler; } }
   #endregion
 
   #region methods

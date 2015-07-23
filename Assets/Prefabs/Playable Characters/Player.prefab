@@ -90,17 +90,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c64709f4cfbbb7844a3c1e28ac841e93, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _skinWidth: 6
   platformMask:
     serializedVersion: 2
     m_Bits: 4096
-  oneWayPlatformMask:
-    serializedVersion: 2
-    m_Bits: 512
   triggerMask:
     serializedVersion: 2
     m_Bits: 33792
-  slopeLimit: 60
+  slopeLimit: 90
   jumpingThreshold: .0500000007
   slopeSpeedMultiplier:
     serializedVersion: 2
@@ -122,16 +118,22 @@ MonoBehaviour:
       tangentMode: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
-  slopeSpeedMultiplierOverride:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
   totalHorizontalRays: 8
   totalVerticalRays: 4
   triggerHelperBoxColliderScale: .949999988
   performFullyGroundedChecks: 0
   performIsOnWallChecks: 1
+  enableTopEdgeCollisionAdjustment: 1
+  topEdgeCollisionAdjustmentInset: 33
+  slopeSpeedMultiplierOverride:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+  oneWayPlatformMask:
+    serializedVersion: 2
+    m_Bits: 512
+  _skinWidth: 6
 --- !u!114 &11463698
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -157,7 +159,7 @@ MonoBehaviour:
     walkJumpHeight: 450
     runJumpHeight: 498
     runJumpHeightSpeedTrigger: 620
-    inAirDamping: 2.5
+    inAirDamping: 2
     allowJumpAfterGroundLostThreashold: .100000001
     maxDownwardSpeed: -1200
   runSettings:
@@ -177,6 +179,7 @@ MonoBehaviour:
   currentPlatform: {fileID: 0}
   isInvincible: 0
   isTakingDamage: 0
+  isAttachedToWall: 0
 --- !u!114 &11491702
 MonoBehaviour:
   m_ObjectHideFlags: 1

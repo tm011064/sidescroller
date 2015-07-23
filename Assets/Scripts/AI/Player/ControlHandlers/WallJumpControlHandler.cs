@@ -67,7 +67,7 @@ public class WallJumpControlHandler : PlayerControlHandler
   /// <returns></returns>
   protected override bool DoUpdate()
   {
-    if (_playerController.characterPhysicsManager.isGrounded)
+    if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
       Logger.Info("Popped wall jump because player is grounded.");
       return false; // we only want this handler to be active while the player is in mid air

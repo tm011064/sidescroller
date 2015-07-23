@@ -41,6 +41,11 @@ public class AttachPlayerControllerToObject : MonoBehaviour
   #endregion
 
   #region enable/disable
+  void OnBeforeDisable()
+  {
+    if (_playerController.transform.parent == this.gameObject.transform)
+      _playerController.transform.parent = null;
+  }
   void OnEnable()
   {
     _playerController.OnGroundedPlatformChanged += _playerController_OnGroundedPlatformChanged;

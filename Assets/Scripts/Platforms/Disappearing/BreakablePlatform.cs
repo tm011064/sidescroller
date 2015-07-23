@@ -99,7 +99,6 @@ public partial class BreakablePlatform : MonoBehaviour
 
   #region private fields
   private ObjectPoolingManager _objectPoolingManager;
-  protected PlayerController _playerController;
   private List<SpawnRoutine> _spawnedObjects = new List<SpawnRoutine>();
   private Vector3 _spawnLocation;
   #endregion
@@ -142,7 +141,6 @@ public partial class BreakablePlatform : MonoBehaviour
   void Awake()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    _playerController = GameManager.instance.player;
   }
 
   void Start()

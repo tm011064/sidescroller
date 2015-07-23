@@ -20,37 +20,7 @@ public class MeshTiles : MonoBehaviour
     CreatePlane(tileWidth, tileHeight, tileGridWidth, tileGridHeight);
     UpdateGrid(new Vector2(0, 0), new Vector2(0, 0), tileWidth, tileHeight, tileGridWidth);
   }
-
-  void Update()
-  {
-    //var tileColumn = Random.Range(0, numTilesX);
-    //var tileRow = Random.Range(0, numTilesY);
-
-    //var x = Random.Range(0, tileGridWidth);
-    //var y = Random.Range(0, tileGridHeight);
-
-    //UpdateGrid(new Vector2(x, y), new Vector2(tileColumn, tileRow), tileWidth, tileHeight, tileGridWidth);
-
-  }
-
-  //public void UpdateGrid(Vector2 gridIndex, Vector2 tileIndex, int tileWidth, int tileHeight, int gridWidth)
-  //{
-  //  var mesh = GetComponent<MeshFilter>().mesh;
-  //  var uvs = mesh.uv;
-
-  //  var tileSizeX = 1.0f / numTilesX;
-  //  var tileSizeY = 1.0f / numTilesY;
-
-  //  mesh.uv = uvs;
-
-  //  uvs[(int)(gridWidth * gridIndex.x + gridIndex.y) * 4 + 0] = new Vector2(tileIndex.x * tileSizeX, tileIndex.y * tileSizeY);
-  //  uvs[(int)(gridWidth * gridIndex.x + gridIndex.y) * 4 + 1] = new Vector2((tileIndex.x + 1) * tileSizeX, tileIndex.y * tileSizeY);
-  //  uvs[(int)(gridWidth * gridIndex.x + gridIndex.y) * 4 + 2] = new Vector2((tileIndex.x + 1) * tileSizeX, (tileIndex.y + 1) * tileSizeY);
-  //  uvs[(int)(gridWidth * gridIndex.x + gridIndex.y) * 4 + 3] = new Vector2(tileIndex.x * tileSizeX, (tileIndex.y + 1) * tileSizeY);
-
-  //  mesh.uv = uvs;
-  //}
-
+  
   void CreatePlane(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
   {
     var mesh = new Mesh();

@@ -20,14 +20,14 @@ public class PowerUpDoubleJumpControlHandler : PlayerControlHandler
   {
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
 
-    if (_characterPhysicsManager.isGrounded)
+    if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
       _canDoubleJump = true;
     }
 
     velocity.y = GetJumpVerticalVelocity(velocity);
     
-    if (_playerController.characterPhysicsManager.isGrounded)
+    if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
       velocity.y = 0f;
 
     if (_gameManager.inputStateManager.GetButtonState("Jump").IsDown)

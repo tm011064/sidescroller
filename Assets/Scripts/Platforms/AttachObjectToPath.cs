@@ -23,9 +23,21 @@ public class AttachObjectToPath : BaseMonoBehaviour
 
   private bool _isMoving = false;
 
-  void onPlayerGrounded(GameObject obj)
+  //void onPlayerGrounded(GameObject obj)
+  //{
+  //  if (obj != _gameObject)
+  //    return; // we need to check that the player landed on this platform
+
+  //  if (!_isMoving && movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
+  //  {
+  //    Logger.Info("Player landed on platform, start move...");
+  //    StartMove();
+  //  }
+  //}
+
+  void player_OnGroundedPlatformChanged(object sender, PlayerController.GroundedPlatformChangedEventArgs e)
   {
-    if (obj != _gameObject)
+    if (e.currentPlatform != _gameObject)
       return; // we need to check that the player landed on this platform
 
     if (!_isMoving && movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
@@ -86,7 +98,8 @@ public class AttachObjectToPath : BaseMonoBehaviour
 
     if (movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
     {
-      GameManager.instance.player.characterPhysicsManager.onControllerBecameGrounded += onPlayerGrounded;
+      GameManager.instance.player.OnGroundedPlatformChanged += player_OnGroundedPlatformChanged;
+      //GameManager.instance.player.characterPhysicsManager.onControllerBecameGrounded += onPlayerGrounded;
     }
 
     _iTweenPath = GetComponent<iTweenPath>();
