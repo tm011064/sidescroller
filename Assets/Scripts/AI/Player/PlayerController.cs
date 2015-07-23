@@ -209,6 +209,7 @@ public partial class PlayerController : BaseCharacterController
     {
       if (wallJumpSettings.enableWallJumps
         && !characterPhysicsManager.lastMoveCalculationResult.collisionState.below
+        && characterPhysicsManager.lastMoveCalculationResult.deltaMovement.y < 0f
         && (characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnWall) != 0)
       {
         // wall jumps work like this: if the player makes contact with a wall, we want to keep track how long he moves towards the

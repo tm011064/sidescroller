@@ -257,9 +257,9 @@ PlayerSettings:
   psmSplashimage: {fileID: 0}
   spritePackerPolicy: 
   scriptingDefineSymbols:
-    1: FINAL
-    2: FINAL
-    7: FINAL
+    1: DEBUG
+    2: DEBUG
+    7: DEBUG
   metroPackageName: SideScroller
   metroPackageLogo: 
   metroPackageLogo140: 

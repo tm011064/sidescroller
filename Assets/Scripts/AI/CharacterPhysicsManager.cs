@@ -51,6 +51,7 @@ public struct MoveCalculationResult
 {
   public CharacterCollisionState2D collisionState;
   public Vector3 deltaMovement;
+  public Vector3 originalDeltaMovement;
   public bool isGoingUpSlope;
 }
 #endregion
@@ -322,6 +323,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     moveCalculationResult.collisionState.wasGroundedLastFrame = lastMoveCalculationResult.collisionState.below;
     moveCalculationResult.collisionState.lastTimeGrounded = lastMoveCalculationResult.collisionState.lastTimeGrounded;
     moveCalculationResult.deltaMovement = new Vector3(0f, downwardVelocity, 0f);
+    moveCalculationResult.originalDeltaMovement = moveCalculationResult.deltaMovement;
 
     // clear our state
     moveCalculationResult.collisionState.reset();
@@ -434,6 +436,7 @@ public class CharacterPhysicsManager : MonoBehaviour
     moveCalculationResult.collisionState.wasGroundedLastFrame = lastMoveCalculationResult.collisionState.below;
     moveCalculationResult.collisionState.lastTimeGrounded = lastMoveCalculationResult.collisionState.lastTimeGrounded;
     moveCalculationResult.deltaMovement = deltaMovement;
+    moveCalculationResult.originalDeltaMovement = deltaMovement;
 
     // clear our state
     moveCalculationResult.collisionState.reset();
@@ -494,10 +497,20 @@ public class CharacterPhysicsManager : MonoBehaviour
   public void PerformMove(MoveCalculationResult moveCalculationResult)
   {
     transform.Translate(moveCalculationResult.deltaMovement, Space.World);
-
+    
     // only calculate velocity if we have a non-zero deltaTime
     if (Time.deltaTime > 0)
-      velocity = moveCalculationResult.deltaMovement / Time.deltaTime;
+    {
+      float dx = moveCalculationResult.deltaMovement.x;
+      float dy = moveCalculationResult.deltaMovement.y;
+
+      if (moveCalculationResult.collisionState.left && moveCalculationResult.originalDeltaMovement.x < moveCalculationResult.deltaMovement.x)
+        dx = 0f;
+      if (moveCalculationResult.collisionState.right && moveCalculationResult.originalDeltaMovement.x > moveCalculationResult.deltaMovement.x)
+        dx = 0f;
+      
+      velocity = new Vector2(dx, dy) / Time.deltaTime;
+    }
 
     // set our becameGrounded state based on the previous and current collision state
     if (!moveCalculationResult.collisionState.wasGroundedLastFrame && moveCalculationResult.collisionState.below)
@@ -977,6 +990,8 @@ public class CharacterPhysicsManager : MonoBehaviour
 
     if (isGoingUp && enableTopEdgeCollisionAdjustment)
     {
+      Logger.Trace(TRACE_TAG, "moveVertically -> going up and top edge collision adjustment enabled");
+
       // apply our horizontal deltaMovement here so that we do our raycast from the actual position we would be in if we had moved
       float leftOriginX = _raycastOrigins.topLeft.x + moveCalculationResult.deltaMovement.x;
       float rightOriginX = _raycastOrigins.bottomRight.x + moveCalculationResult.deltaMovement.x;
@@ -1058,13 +1073,13 @@ public class CharacterPhysicsManager : MonoBehaviour
 
       if (hasHit)
       {
-        Logger.Trace(string.Format("hasHit: {0}, hasHitOutsideAdjustmentBoundaries: {1}, hasHitWithinLeftAdjustmentBoundaries: {2}, hasHitWithinRightAdjustmentBoundaries: {3}"
+        Logger.Trace(TRACE_TAG, string.Format("hasHit: {0}, hasHitOutsideAdjustmentBoundaries: {1}, hasHitWithinLeftAdjustmentBoundaries: {2}, hasHitWithinRightAdjustmentBoundaries: {3}"
           , hasHit
           , hasHitOutsideAdjustmentBoundaries
           , hasHitWithinLeftAdjustmentBoundaries
           , hasHitWithinRightAdjustmentBoundaries));
 
-        Logger.Trace(string.Format("leftOriginX: {0}, leftAdjustmentBoundaryPosition: {1}, rightOriginX: {2}, rightAdjustmentBoundaryPosition: {3}, topOriginY: {4}"
+        Logger.Trace(TRACE_TAG, string.Format("leftOriginX: {0}, leftAdjustmentBoundaryPosition: {1}, rightOriginX: {2}, rightAdjustmentBoundaryPosition: {3}, topOriginY: {4}"
           , leftOriginX
           , leftAdjustmentBoundaryPosition
           , rightOriginX
@@ -1084,7 +1099,7 @@ public class CharacterPhysicsManager : MonoBehaviour
           if (!leftAdjustmentRaycastHit
             && !hasHitWithinRightAdjustmentBoundaries)
           {
-            Logger.Trace(null, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
+            Logger.Trace(TRACE_TAG, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
 
             Vector2 raytest = new Vector2(leftOriginX - skinWidth + topEdgeCollisionAdjustmentInset, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
             RaycastHit2D rch = Physics2D.Raycast(raytest, -Vector2.right, topEdgeCollisionAdjustmentInset, mask);
@@ -1092,7 +1107,7 @@ public class CharacterPhysicsManager : MonoBehaviour
             DrawRay(raytest, -Vector2.right * topEdgeCollisionAdjustmentInset, Color.magenta);
             Logger.Assert(rch == true, "This should always hit!!");
 
-            transform.Translate(topEdgeCollisionAdjustmentInset - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR, 0f, 0f, Space.World);            
+            transform.Translate(topEdgeCollisionAdjustmentInset - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR, 0f, 0f, Space.World);
             return;
           }
 
@@ -1105,7 +1120,7 @@ public class CharacterPhysicsManager : MonoBehaviour
           if (!rightAdjustmentRaycastHit
             && !hasHitWithinLeftAdjustmentBoundaries)
           {
-            Logger.Trace(null, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
+            Logger.Trace(TRACE_TAG, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
 
             Vector2 raytest = new Vector2(rightOriginX + skinWidth - topEdgeCollisionAdjustmentInset, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
             RaycastHit2D rch = Physics2D.Raycast(raytest, Vector2.right, topEdgeCollisionAdjustmentInset, mask);
@@ -1121,16 +1136,16 @@ public class CharacterPhysicsManager : MonoBehaviour
         // we reached this line, do normal vert ray checks
         for (int i = 0; i < totalVerticalRays; i++)
         {
-          Logger.Trace(null, _topEdgeCollisionTestContainers[i]);
+          Logger.Trace(TRACE_TAG, _topEdgeCollisionTestContainers[i]);
 
           if (_topEdgeCollisionTestContainers[i].raycastHit2D)
           {
-            Logger.Trace(null, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
+            Logger.Trace(TRACE_TAG, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
 
             // set our new deltaMovement and recalculate the rayDistance taking it into account
             moveCalculationResult.deltaMovement.y = _topEdgeCollisionTestContainers[i].raycastHit2D.point.y - topOriginY;
 
-            Logger.Trace(null, "moveVertically -> ray hit; hit point: {0}, new delta: {1}, new delta target position: {2}"
+            Logger.Trace(TRACE_TAG, "moveVertically -> ray hit; hit point: {0}, new delta: {1}, new delta target position: {2}"
               , _topEdgeCollisionTestContainers[i].raycastHit2D.point
               , moveCalculationResult.deltaMovement
               , this.transform.position + moveCalculationResult.deltaMovement);
@@ -1151,19 +1166,6 @@ public class CharacterPhysicsManager : MonoBehaviour
           }
         }
       }
-
-      /// remember we need to check for direct hit on lowest hit to move to the correct v position
-      //rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y);
-
-      // remember to remove the skinWidth from our deltaMovement    
-      //if (isGoingUp)
-      //{
-      //  moveCalculationResult.deltaMovement.y -= _skinWidth;
-      //  moveCalculationResult.collisionState.above = true;
-      //}   
-
-      // TODO (Roman): add here
-      // _raycastHitsThisFrame.Add(raycastHit);
     }
     else
     {

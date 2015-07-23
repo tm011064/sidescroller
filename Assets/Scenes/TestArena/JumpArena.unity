@@ -900,7 +900,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 82564785}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 128, y: 960, z: 0}
+  m_LocalPosition: {x: 896, y: 128, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 683492945}
@@ -2999,7 +2999,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11433236, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: gameSettings.logSettings.enabledTraceTags.Array.data[0]
-      value: _CharacterPhysicsManager
+      value: CharacterPhysicsManager
       objectReference: {fileID: 0}
     - target: {fileID: 11492740, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: useFixedUpdate
@@ -7992,6 +7992,10 @@ Prefab:
     - target: {fileID: 195444, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_Name
       value: EnemySpawnLocation 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 195444, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
@@ -18745,6 +18749,10 @@ Prefab:
     - target: {fileID: 6196360, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_Size.y
       value: 1088
+      objectReference: {fileID: 0}
+    - target: {fileID: 195444, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
