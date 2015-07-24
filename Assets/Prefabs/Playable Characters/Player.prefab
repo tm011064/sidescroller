@@ -96,13 +96,16 @@ MonoBehaviour:
   triggerMask:
     serializedVersion: 2
     m_Bits: 33792
+  oneWayPlatformMask:
+    serializedVersion: 2
+    m_Bits: 512
   slopeLimit: 90
   jumpingThreshold: .0500000007
   slopeSpeedMultiplier:
     serializedVersion: 2
     m_Curve:
     - time: -90
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -120,19 +123,15 @@ MonoBehaviour:
     m_PostInfinity: 2
   totalHorizontalRays: 8
   totalVerticalRays: 4
-  triggerHelperBoxColliderScale: .949999988
   performFullyGroundedChecks: 0
   performIsOnWallChecks: 1
-  enableTopEdgeCollisionAdjustment: 1
-  topEdgeCollisionAdjustmentInset: 42
+  enableEdgeSlideUpHelp: 1
+  edgeSlideUpCornerWidth: 33
   slopeSpeedMultiplierOverride:
     serializedVersion: 2
     m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
-  oneWayPlatformMask:
-    serializedVersion: 2
-    m_Bits: 512
   _skinWidth: 6
 --- !u!114 &11463698
 MonoBehaviour:

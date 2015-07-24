@@ -95,10 +95,18 @@ public class CharacterPhysicsManager : MonoBehaviour
   /// mask with all layers that the player should interact with
   /// </summary>
   public LayerMask platformMask = 0;
+
   /// <summary>
   /// mask with all layers that trigger events should fire when intersected
   /// </summary>
   public LayerMask triggerMask = 0;
+  /// <summary>
+  /// mask with all layers that should act as one-way platforms. Note that one-way platforms should always be EdgeCollider2Ds. This is private because it does not support being
+  /// updated anytime outside of the inspector for now.
+  /// </summary>
+  [SerializeField]
+  private LayerMask oneWayPlatformMask = 0;
+
   /// <summary>
   /// the max slope angle that the CC2D can climb
   /// </summary>
@@ -122,24 +130,26 @@ public class CharacterPhysicsManager : MonoBehaviour
   public int totalHorizontalRays = 8;
   [Range(2, 20)]
   public int totalVerticalRays = 4;
-  [Range(0.8f, 0.999f)]
-  public float triggerHelperBoxColliderScale = 0.95f;
 
   [Tooltip("If true, each move call checks whether the character is fully grounded. Fully grounded means he is not standing over an edge.")]
   public bool performFullyGroundedChecks = true;
   [Tooltip("If true, each move call checks whether the character is next to a wall. This is useful for wall jumps.")]
   public bool performIsOnWallChecks = true;
 
-  public bool enableTopEdgeCollisionAdjustment;
-  public float topEdgeCollisionAdjustmentInset = 16f;
+  [Tooltip("If true, the player will be able to slide up overhanging edges and only bump his head if the collision is outside the 'Edge Slide Up Corner Width' distance.")]
+  public bool enableEdgeSlideUpHelp;
+  [Tooltip("The width of the corner (left and right) that will cause the player to slide up the wall of a platform on a vertical top collision.")]
+  public float edgeSlideUpCornerWidth = 16f;
   #endregion
 
   [HideInInspector]
   [NonSerialized]
   public new Transform transform;
+
   [HideInInspector]
   [NonSerialized]
   public BoxCollider2D boxCollider;
+
   [HideInInspector]
   [NonSerialized]
   public Rigidbody2D rigidBody2D;
@@ -147,25 +157,19 @@ public class CharacterPhysicsManager : MonoBehaviour
   [HideInInspector]
   [NonSerialized]
   public MoveCalculationResult lastMoveCalculationResult = new MoveCalculationResult();
+
   [HideInInspector]
   [NonSerialized]
   public Vector3 velocity;
 
   [HideInInspector]
   public List<RaycastHit2D> lastRaycastHits = new List<RaycastHit2D>();
+
   [HideInInspector]
   public AnimationCurve slopeSpeedMultiplierOverride = null;
   #endregion
 
-  #region private
-
-  /// <summary>
-  /// mask with all layers that should act as one-way platforms. Note that one-way platforms should always be EdgeCollider2Ds. This is private because it does not support being
-  /// updated anytime outside of the inspector for now.
-  /// </summary>
-  [SerializeField]
-  private LayerMask oneWayPlatformMask = 0;
-
+  #region private  
   private LayerMask _platformMaskWithoutOneWay = 0;
   /// <summary>
   /// this is used to calculate the downward ray that is cast to check for slopes. We use the somewhat arbitrary value 75 degrees
@@ -987,16 +991,17 @@ public class CharacterPhysicsManager : MonoBehaviour
     // if we are moving up, we should ignore the layers in oneWayPlatformMask
     var mask = isGoingUp ? _platformMaskWithoutOneWay : platformMask;
 
-    if (isGoingUp && enableTopEdgeCollisionAdjustment)
+    if (isGoingUp && enableEdgeSlideUpHelp)
     {
+      #region going up && enableEdgeSlideUpHelp
       Logger.Trace(TRACE_TAG, "moveVertically -> going up and top edge collision adjustment enabled");
 
       // apply our horizontal deltaMovement here so that we do our raycast from the actual position we would be in if we had moved
       float leftOriginX = _raycastOrigins.topLeft.x + moveCalculationResult.deltaMovement.x;
       float rightOriginX = _raycastOrigins.bottomRight.x + moveCalculationResult.deltaMovement.x;
       float topOriginY = _raycastOrigins.topLeft.y;
-      float leftAdjustmentBoundaryPosition = leftOriginX - _skinWidth + topEdgeCollisionAdjustmentInset;
-      float rightAdjustmentBoundaryPosition = rightOriginX + _skinWidth - topEdgeCollisionAdjustmentInset;
+      float leftAdjustmentBoundaryPosition = leftOriginX - _skinWidth + edgeSlideUpCornerWidth;
+      float rightAdjustmentBoundaryPosition = rightOriginX + _skinWidth - edgeSlideUpCornerWidth;
 
       bool hasHit = false;
       bool hasHitOutsideAdjustmentBoundaries = false;
@@ -1100,13 +1105,13 @@ public class CharacterPhysicsManager : MonoBehaviour
           {
             Logger.Trace(TRACE_TAG, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
 
-            Vector2 raytest = new Vector2(leftOriginX - skinWidth + topEdgeCollisionAdjustmentInset, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
-            RaycastHit2D rch = Physics2D.Raycast(raytest, -Vector2.right, topEdgeCollisionAdjustmentInset, mask);
+            Vector2 raytest = new Vector2(leftOriginX - skinWidth + edgeSlideUpCornerWidth, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
+            RaycastHit2D rch = Physics2D.Raycast(raytest, -Vector2.right, edgeSlideUpCornerWidth, mask);
 
-            DrawRay(raytest, -Vector2.right * topEdgeCollisionAdjustmentInset, Color.magenta);
+            DrawRay(raytest, -Vector2.right * edgeSlideUpCornerWidth, Color.magenta);
             Logger.Assert(rch == true, "This should always hit!!");
 
-            transform.Translate(topEdgeCollisionAdjustmentInset - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR, 0f, 0f, Space.World);
+            transform.Translate(edgeSlideUpCornerWidth - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR, 0f, 0f, Space.World);
             return;
           }
 
@@ -1121,13 +1126,13 @@ public class CharacterPhysicsManager : MonoBehaviour
           {
             Logger.Trace(TRACE_TAG, "moveVertically -> Vert Ray Hit. isGoingUp: {0}, deltaMovement.y: {1}", isGoingUp, moveCalculationResult.deltaMovement.y);
 
-            Vector2 raytest = new Vector2(rightOriginX + skinWidth - topEdgeCollisionAdjustmentInset, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
-            RaycastHit2D rch = Physics2D.Raycast(raytest, Vector2.right, topEdgeCollisionAdjustmentInset, mask);
+            Vector2 raytest = new Vector2(rightOriginX + skinWidth - edgeSlideUpCornerWidth, topOriginY + skinWidth + moveCalculationResult.deltaMovement.y);
+            RaycastHit2D rch = Physics2D.Raycast(raytest, Vector2.right, edgeSlideUpCornerWidth, mask);
 
-            DrawRay(raytest, -Vector2.right * topEdgeCollisionAdjustmentInset, Color.magenta);
+            DrawRay(raytest, -Vector2.right * edgeSlideUpCornerWidth, Color.magenta);
             Logger.Assert(rch == true, "This should always hit!!");
 
-            transform.Translate(-(topEdgeCollisionAdjustmentInset - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR), 0f, 0f, Space.World);
+            transform.Translate(-(edgeSlideUpCornerWidth - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR), 0f, 0f, Space.World);
             return;
           }
         }
@@ -1149,13 +1154,14 @@ public class CharacterPhysicsManager : MonoBehaviour
               , moveCalculationResult.deltaMovement
               , this.transform.position + moveCalculationResult.deltaMovement);
 
+            rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y);
+
             // remember to remove the skinWidth from our deltaMovement
             moveCalculationResult.deltaMovement.y -= _skinWidth;
             moveCalculationResult.collisionState.above = true;
 
             _raycastHitsThisFrame.Add(_topEdgeCollisionTestContainers[i].raycastHit2D);
 
-            rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y);
             // we add a small fudge factor for the float operations here. if our rayDistance is smaller
             // than the width + fudge bail out because we have a direct impact
             if (rayDistance < _skinWidth + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR)
@@ -1165,6 +1171,7 @@ public class CharacterPhysicsManager : MonoBehaviour
           }
         }
       }
+      #endregion
     }
     else
     {
@@ -1196,6 +1203,8 @@ public class CharacterPhysicsManager : MonoBehaviour
             , moveCalculationResult.deltaMovement
             , this.transform.position + moveCalculationResult.deltaMovement);
 
+          rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y);
+
           // remember to remove the skinWidth from our deltaMovement
           if (isGoingUp)
           {
@@ -1216,7 +1225,6 @@ public class CharacterPhysicsManager : MonoBehaviour
           if (!isGoingUp && moveCalculationResult.deltaMovement.y > 0.00001f)
             moveCalculationResult.isGoingUpSlope = true;
 
-          rayDistance = Mathf.Abs(moveCalculationResult.deltaMovement.y);
           // we add a small fudge factor for the float operations here. if our rayDistance is smaller
           // than the width + fudge bail out because we have a direct impact
           if (rayDistance < _skinWidth + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR)

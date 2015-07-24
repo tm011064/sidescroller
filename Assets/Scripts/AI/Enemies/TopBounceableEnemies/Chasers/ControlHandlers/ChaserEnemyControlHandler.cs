@@ -36,15 +36,25 @@ public class PatrollingChaserEnemyControlHandler : EnemyControlHandler<ChaserEne
     for (float theta = endAngleRad; theta > startAngleRad - step / 2; theta -= step)
     {
       Vector2 vector = new Vector2(_moveDirectionFactor * (float)(_enemyController.scanRayLength * Mathf.Cos(theta)), (float)(_enemyController.scanRayLength * Mathf.Sin(theta)));
-
-      DrawRay(_enemyController.gameObject.transform.position, vector, Color.red);
-
+      
       RaycastHit2D raycastHit2D = Physics2D.Raycast(_enemyController.gameObject.transform.position, vector.normalized, vector.magnitude, _enemyController.scanRayCollisionLayers);
-      if (raycastHit2D && raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+      if (raycastHit2D)
       {
-        _playerInSightDuration += Time.deltaTime;
-        isSeeingPlayer = true;
-        break;
+        if (raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+        {
+          _playerInSightDuration += Time.deltaTime;
+          isSeeingPlayer = true;
+          DrawRay(_enemyController.gameObject.transform.position, raycastHit2D.point.ToVector3() - _enemyController.gameObject.transform.position, Color.red);
+          break;
+        }
+        else
+        {
+          DrawRay(_enemyController.gameObject.transform.position, raycastHit2D.point.ToVector3() - _enemyController.gameObject.transform.position, Color.grey);
+        }
+      }
+      else
+      {
+        DrawRay(_enemyController.gameObject.transform.position, vector, Color.grey);
       }
     }
 

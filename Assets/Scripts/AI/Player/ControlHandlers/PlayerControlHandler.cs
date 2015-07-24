@@ -293,6 +293,7 @@ public class PlayerControlHandler : BaseControlHandler
       OneWayPlatform oneWayPlatform = _playerController.currentPlatform.GetComponent<OneWayPlatform>();
 
       Logger.Assert(oneWayPlatform != null, "OneWayPlatform " + _playerController.currentPlatform.name + " has no 'OneWayPlatform' script attached. This script is needed in order to allow the player to fall through.");
+
       if (oneWayPlatform != null)
       {
         oneWayPlatform.TriggerFall();

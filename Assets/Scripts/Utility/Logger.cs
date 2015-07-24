@@ -219,8 +219,14 @@ public class Logger : IDisposable
     {
       _logger.Write(null, LogLevel.Assert, msg);
 
+
       if (_logger.BreakOnAssert)
+      {
+        // we also log so we can double click in unity
+        UnityEngine.Debug.LogError("Assertion failed. " + msg);
+
         UnityEngine.Debug.Break();
+      }
     }
 #endif
   }
