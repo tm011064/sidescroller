@@ -58,6 +58,8 @@ public class BaseMonoBehaviour : MonoBehaviour
 
   void OnDisable()
   {
+    _isVisible = false; // we have to set this
+
     var handler = this.GotDisabled;
     if (handler != null)
       handler();

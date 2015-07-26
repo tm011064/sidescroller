@@ -286,7 +286,7 @@ public class PlayerControlHandler : BaseControlHandler
   protected void CheckOneWayPlatformFallThrough()
   {
     if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below
-      && _gameManager.inputStateManager.GetButtonState("Fall").IsDown
+      && _gameManager.inputStateManager.GetButtonState("Fall").IsPressed
       && _playerController.currentPlatform != null
       && _playerController.currentPlatform.layer == LayerMask.NameToLayer("OneWayPlatform"))
     {

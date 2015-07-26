@@ -56,7 +56,7 @@ public struct MoveCalculationResult
 #endregion
 
 [RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
-public class CharacterPhysicsManager : MonoBehaviour
+public class CharacterPhysicsManager : BasePhysicsManager
 {
   #region const fields
   private const string TRACE_TAG = "CharacterPhysicsManager";
@@ -1282,3 +1282,7 @@ public class CharacterPhysicsManager : MonoBehaviour
   #endregion
 }
 
+public class BasePhysicsManager : MonoBehaviour
+{
+
+}

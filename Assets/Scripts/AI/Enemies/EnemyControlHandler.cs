@@ -45,19 +45,6 @@ public class EnemyControlHandler<TEnemyController>
         _pauseAtEdgeEndTime = null;
       }
     }
-
-    //if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
-    //{
-    //  velocity.y = 0;
-
-    //  float smoothedMovementFactor = 2.5f; // TODO (Roman): in air damping
-    //  velocity.x = Mathf.Lerp(velocity.x, moveDirectionFactor * speed, Time.deltaTime * smoothedMovementFactor);
-    //}
-    //else
-    //{
-    //  // move with constant speed
-    //  velocity.x = moveDirectionFactor * speed;
-    //}
     
     if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
       velocity.y = 0;

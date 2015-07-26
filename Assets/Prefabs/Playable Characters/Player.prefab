@@ -114,8 +114,8 @@ MonoBehaviour:
       inSlope: 0
       outSlope: 0
       tangentMode: 0
-    - time: 90
-      value: 0
+    - time: 91.4537354
+      value: .96037066
       inSlope: 0
       outSlope: 0
       tangentMode: 0

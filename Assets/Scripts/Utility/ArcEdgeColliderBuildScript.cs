@@ -5,8 +5,10 @@ using System.Collections.Generic;
 public class ArcEdgeColliderBuildScript : MonoBehaviour
 {
   public int totalSegments = 12;
-  public bool fillToYPos = true;
-  public float yPosToFill = 0f;
+
+  public MeshBuilderFillType meshBuilderFillType = MeshBuilderFillType.NoFill;
+  public MeshBuilderFillDistanceType meshBuilderFillDistanceType = MeshBuilderFillDistanceType.Relative;
+  public float fillDistance = 0f;
   public Material fillMaterial;
 
   public void BuildObject()
@@ -34,7 +36,7 @@ public class ArcEdgeColliderBuildScript : MonoBehaviour
 
     GameObject arcObject = new GameObject();
     arcObject.name = "Arc Edge Collider";
-    arcObject.transform.position = u;
+    arcObject.layer = LayerMask.NameToLayer("Platforms");
 
     EdgeCollider2D edgeCollider = arcObject.AddComponent<EdgeCollider2D>();
 
@@ -77,17 +79,24 @@ public class ArcEdgeColliderBuildScript : MonoBehaviour
     Debug.Log(endAngleRad * Mathf.Rad2Deg);
     Debug.Log(r);
 
+    float bottomPosition = float.MaxValue;
     for (float theta = endAngleRad; theta > startAngleRad - step / 2; theta -= step)
     {
       Vector2 vector = new Vector2((float)(r * Mathf.Cos(theta)), (float)(r * Mathf.Sin(theta)));
       vectors.Add(vector);
+      if (vector.y < bottomPosition)
+        bottomPosition = vector.y;
     }
+    for (int i = 0; i < vectors.Count; i++)
+      vectors[i] = new Vector2(vectors[i].x, vectors[i].y - bottomPosition);
+
+    arcObject.transform.position = new Vector2(u.x, u.y + bottomPosition);
 
     edgeCollider.points = vectors.ToArray();
 
     arcObject.transform.parent = this.transform;
 
-    if (fillToYPos)
+    if (meshBuilderFillType != MeshBuilderFillType.NoFill)
     {
       CreateMesh(arcObject, edgeCollider);
     }
@@ -103,6 +112,7 @@ public class ArcEdgeColliderBuildScript : MonoBehaviour
     renderer.useLightProbes = false;
     renderer.reflectionProbeUsage = UnityEngine.Rendering.ReflectionProbeUsage.Off;
     renderer.material = fillMaterial;
+    renderer.sortingLayerName = "Platforms";
 
     var mf = arcObject.AddComponent<MeshFilter>();
 
@@ -117,14 +127,56 @@ public class ArcEdgeColliderBuildScript : MonoBehaviour
 
     var index = 0;
 
-    float fillHeight = yPosToFill - arcObject.transform.position.y;
-    Debug.Log("Fill height: " + fillHeight);
+
+    float fillTo = meshBuilderFillDistanceType == MeshBuilderFillDistanceType.Relative
+      ? fillDistance
+      : meshBuilderFillType == MeshBuilderFillType.Horizontal
+        ? (fillDistance - arcObject.transform.position.x)
+        : (fillDistance - arcObject.transform.position.y);
+
     for (int i = 1; i < edgeCollider.points.Length; i++)
     {
-      vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //top-left
-      vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //top-right
-      vertices.Add(new Vector3(edgeCollider.points[i - 1].x, fillHeight, 0)); //bottom-left
-      vertices.Add(new Vector3(edgeCollider.points[i].x, fillHeight, 0)); //bottom-right
+      //vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //top-left
+      //vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //top-right
+      //vertices.Add(new Vector3(edgeCollider.points[i - 1].x, fillHeight, 0)); //bottom-left
+      //vertices.Add(new Vector3(edgeCollider.points[i].x, fillHeight, 0)); //bottom-right
+
+      if (meshBuilderFillType == MeshBuilderFillType.Vertical)
+      {
+        if (fillTo <= 0f)
+        {
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //top-left
+          vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //top-right
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, fillTo, 0)); //bottom-left
+          vertices.Add(new Vector3(edgeCollider.points[i].x, fillTo, 0)); //bottom-right
+        }
+        else
+        {
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, fillTo, 0)); //top-left
+          vertices.Add(new Vector3(edgeCollider.points[i].x, fillTo, 0)); //top-right
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //bottom-left
+          vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //bottom-right
+        }
+      }
+      else
+      {
+        if (fillTo <= 0f)
+        {
+          vertices.Add(new Vector3(fillTo, edgeCollider.points[i].y, 0)); //top-left
+          vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //top-right
+          vertices.Add(new Vector3(fillTo, edgeCollider.points[i - 1].y, 0)); //bottom-left
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //bottom-right
+        }
+        else
+        {
+          vertices.Add(new Vector3(edgeCollider.points[i].x, edgeCollider.points[i].y, 0)); //top-left
+          vertices.Add(new Vector3(fillTo, edgeCollider.points[i].y, 0)); //top-right
+          vertices.Add(new Vector3(edgeCollider.points[i - 1].x, edgeCollider.points[i - 1].y, 0)); //bottom-left
+          vertices.Add(new Vector3(fillTo, edgeCollider.points[i - 1].y, 0)); //bottom-right
+        }
+      }
+
+
 
       triangles.Add(index);
       triangles.Add(index + 1);

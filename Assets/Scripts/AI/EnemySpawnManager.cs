@@ -16,16 +16,6 @@ public enum SpawnTriggerMode
   OnSceneLoad
 }
 
-[Serializable]
-public class BallisticTrajectory
-{
-  public bool isEnabled = false;
-
-  public float angle = 2f;
-  public float projectileGravity = -9.81f;
-  public Vector2 endPosition = Vector2.zero;
-}
-
 public partial class EnemySpawnManager : BaseMonoBehaviour
 {
   public GameObject enemyToSpawn;
@@ -35,7 +25,7 @@ public partial class EnemySpawnManager : BaseMonoBehaviour
   public float continuousSpawnInterval = 10f;
   public float visibiltyCheckInterval = .1f;
   public Direction startDirection = Direction.Right;
-  public BallisticTrajectory ballisticTrajectory = new BallisticTrajectory();
+  public BallisticTrajectorySettings ballisticTrajectorySettings = new BallisticTrajectorySettings();
 
   [Range(1f / 30.0f, float.MaxValue)]
   public float respawnOnDestroyDelay = .1f;
@@ -45,27 +35,59 @@ public partial class EnemySpawnManager : BaseMonoBehaviour
 
   private void Spawn()
   {
-    _spawnedEnemy = ObjectPoolingManager.Instance.GetObject(enemyToSpawn.name);
-
-    _enemyController = _spawnedEnemy.GetComponent<EnemyController>();
-    if (_enemyController == null)
-      throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
-
-    _enemyController.startDirection = startDirection;
-
-    _spawnedEnemy.transform.position = this.transform.position;
-
-    Logger.Trace("SPAWNING at " + _spawnedEnemy.transform.position + ", active: " + _spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(_spawnedEnemy.layer));
-
-    if (ballisticTrajectory.isEnabled)
+    switch (respawnMode)
     {
-      _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(_enemyController.characterPhysicsManager
-        , this.transform.position, new Vector3(ballisticTrajectory.endPosition.x, ballisticTrajectory.endPosition.y, transform.position.z)
-        , ballisticTrajectory.projectileGravity, ballisticTrajectory.angle));
+      case RespawnMode.SpawnContinuouslyWhenVisible: 
+        GameObject spawnedEnemy = ObjectPoolingManager.Instance.GetObject(enemyToSpawn.name);
+
+        EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
+        if (enemyController == null)
+          throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
+
+        enemyController.startDirection = startDirection;
+
+        spawnedEnemy.transform.position = this.transform.position;
+
+        Logger.Trace("SPAWNING at " + spawnedEnemy.transform.position + ", active: " + spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedEnemy.layer));
+
+        if (ballisticTrajectorySettings.isEnabled)
+        {
+          _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(enemyController.characterPhysicsManager
+            , this.transform.position
+            , this.transform.position + new Vector3(ballisticTrajectorySettings.endPosition.x, ballisticTrajectorySettings.endPosition.y, transform.position.z)
+            , ballisticTrajectorySettings.projectileGravity
+            , ballisticTrajectorySettings.angle));
+        }
+        break;
+
+      default:
+        _spawnedEnemy = ObjectPoolingManager.Instance.GetObject(enemyToSpawn.name);
+
+        _enemyController = _spawnedEnemy.GetComponent<EnemyController>();
+        if (_enemyController == null)
+          throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
+
+        _enemyController.startDirection = startDirection;
+
+        _spawnedEnemy.transform.position = this.transform.position;
+
+        Logger.Trace("SPAWNING at " + _spawnedEnemy.transform.position + ", active: " + _spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(_spawnedEnemy.layer));
+
+        if (ballisticTrajectorySettings.isEnabled)
+        {
+          _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(_enemyController.characterPhysicsManager
+            , this.transform.position
+            , this.transform.position + new Vector3(ballisticTrajectorySettings.endPosition.x, ballisticTrajectorySettings.endPosition.y, transform.position.z)
+            , ballisticTrajectorySettings.projectileGravity
+            , ballisticTrajectorySettings.angle));
+        }
+
+        // we need to remove the spawned enemy instance since it might be reused in the pool
+        _enemyController.GotDisabled += enemyController_Disabled;
+        break;
     }
 
-    // we need to remove the spawned enemy instance since it might be reused in the pool
-    _enemyController.GotDisabled += enemyController_Disabled;
+
   }
 
   void enemyController_Disabled()

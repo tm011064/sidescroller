@@ -9,7 +9,8 @@ public class PathAttachedEnemyController : TopBounceableEnemyController
 
   void Start()
   {
-    PushControlHandler(new PathAttachedEnemyControlHandler());
+    // we insert in case there is already a control handler attached when spawned by another manager
+    InsertControlHandler(0, new PathAttachedEnemyControlHandler());
   }
 }
 

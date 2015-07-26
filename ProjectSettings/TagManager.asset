@@ -24,7 +24,7 @@ TagManager:
   - Background
   - Platforms
   - PlatformTriggerMask
-  - EnemyMoveMask
+  - EnemyTriggerMask
   - PlayerTriggerMask
   - Editor
   - 

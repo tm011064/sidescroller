@@ -27,7 +27,8 @@ public class ChaserEnemyController : TopBounceableEnemyController
 
   void Start()
   {
-    PushControlHandler(new PatrollingChaserEnemyControlHandler(this, startDirection));
+    // we insert in case there is already a control handler attached when spawned by another manager
+    InsertControlHandler(0, new PatrollingChaserEnemyControlHandler(this, startDirection));
   }
 }
 

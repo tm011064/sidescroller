@@ -143,8 +143,7 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
         }
 
         GameObject platformToRemove = _currentPlatforms.Dequeue();
-        ObjectPoolingManager.Instance.Deactivate(platformToRemove);
-        //platformToRemove.SetActive(false); // TODO (Roman): notify and run fade animation
+        ObjectPoolingManager.Instance.Deactivate(platformToRemove); // TODO (Roman): notify and run fade animation
       }
     }
   }
@@ -153,8 +152,7 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
   {
     yield return new WaitForSeconds(delayTime);
 
-    ObjectPoolingManager.Instance.Deactivate(platform);
-    //platform.SetActive(false); // TODO (Roman): notify and run fade animation
+    ObjectPoolingManager.Instance.Deactivate(platform); // TODO (Roman): notify and run fade animation
   }
 
   void Awake()

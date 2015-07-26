@@ -13,7 +13,6 @@ public class BaseControlHandler : IDisposable
   protected bool doDrawDebugBoundingBox = false;
 
   public virtual void DrawGizmos() { /* can be overridden */ }
-  public virtual void OnEnemyMoveMaskCollision(Collider2D col) { /* can be overridden */ }
   protected virtual void OnAfterUpdate() { /* can be overridden */ }
   public virtual void Dispose() { /* can be overridden */}
 

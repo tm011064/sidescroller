@@ -5,7 +5,7 @@ using UnityEngine;
 public class BaseCharacterController : BaseMonoBehaviour
 {
   #region public fields
-  [HideInInspector] 
+  [HideInInspector]
   public CharacterPhysicsManager characterPhysicsManager;
   #endregion
 
@@ -88,6 +88,19 @@ public class BaseCharacterController : BaseMonoBehaviour
     }
 
     TryActivateCurrentControlHandler(_currentBaseControlHandler);
+  }
+  public void InsertControlHandler(int index, BaseControlHandler controlHandler)
+  {
+    Logger.Info("Pushing handler: " + controlHandler.ToString());
+
+    if (index >= _controlHandlers.Count)
+    {
+      PushControlHandler(controlHandler);
+    }
+    else
+    {
+      _controlHandlers.Insert(index, controlHandler);
+    }
   }
   /// <summary>
   /// Pushes the control handler.
