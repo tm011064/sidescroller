@@ -11,20 +11,20 @@ public class BaseMonoBehaviour : MonoBehaviour
   /// <summary>
   /// Occurs when [got disabled]. Must be set in Awake() method.
   /// </summary>
-  public event Action GotDisabled;
+  public event Action<BaseMonoBehaviour> GotDisabled;
   /// <summary>
   /// Occurs when [got enabled]. Must be set in Awake() method.
   /// </summary>
-  public event Action GotEnabled;
+  public event Action<BaseMonoBehaviour> GotEnabled;
 
   /// <summary>
   /// Occurs when [got visible]. Must be set in Awake() method.
   /// </summary>
-  public event Action GotVisible;
+  public event Action<BaseMonoBehaviour> GotVisible;
   /// <summary>
   /// Occurs when [got hidden]. Must be set in Awake() method.
   /// </summary>
-  public event Action GotHidden;
+  public event Action<BaseMonoBehaviour> GotHidden;
   #endregion
 
   #region private members
@@ -53,7 +53,7 @@ public class BaseMonoBehaviour : MonoBehaviour
   {
     var handler = this.GotEnabled;
     if (handler != null)
-      handler();
+      handler(this);
   }
 
   void OnDisable()
@@ -62,7 +62,7 @@ public class BaseMonoBehaviour : MonoBehaviour
 
     var handler = this.GotDisabled;
     if (handler != null)
-      handler();
+      handler(this);
   }
 
   #endregion
@@ -103,7 +103,7 @@ public class BaseMonoBehaviour : MonoBehaviour
 
         var handler = this.GotVisible;
         if (handler != null)
-          handler();
+          handler(this);
       }
       else if (!isVisible && _isVisible)
       {
@@ -111,7 +111,7 @@ public class BaseMonoBehaviour : MonoBehaviour
 
         var handler = this.GotHidden;
         if (handler != null)
-          handler();
+          handler(this);
       }
 
       _isVisible = isVisible;

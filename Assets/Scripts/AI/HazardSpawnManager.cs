@@ -3,27 +3,27 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public partial class HazardSpawnManager : BaseMonoBehaviour
+public partial class HazardSpawnManager : SpawnBucketItemBehaviour
 {
   private ObjectPoolingManager _objectPoolingManager;
-  private IEnumerator _spawnContinuouslyCoroutine;
+  private float _nextSpawnTime;
 
+  [SpawnableItemAttribute]
   public GameObject projectileToSpawn;
 
-  public SpawnTriggerMode spawnTriggerMode = SpawnTriggerMode.OnGettingVisible;
+  [Tooltip("Set to -1 if continuous spawning should be disabled.")]
   public float continuousSpawnInterval = 10f;
-  public float visibiltyCheckInterval = .1f;
   [Tooltip("Projectiles get pooled internally, so we want to reuse projectiles that have been destroyed. This number is the minimum number of projectiles available at all time.")]
   public int minProjectilesToInstanciate = 10;
 
   public BallisticTrajectorySettings ballisticTrajectorySettings = new BallisticTrajectorySettings();
-  
+
   private void Spawn()
   {
-    GameObject spawnedProjectile = ObjectPoolingManager.Instance.GetObject(projectileToSpawn.name);
-
+    GameObject spawnedProjectile = _objectPoolingManager.GetObject(projectileToSpawn.name);
     spawnedProjectile.transform.position = this.transform.position;
-    Logger.Trace("Spawning projectile at " + spawnedProjectile.transform.position + ", active: " + spawnedProjectile.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedProjectile.layer));
+
+    Logger.Trace("Spawning projectile from " + this.GetHashCode() + " (" + this.transform.position + ") at " + spawnedProjectile.transform.position + ", active: " + spawnedProjectile.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedProjectile.layer));
 
     if (ballisticTrajectorySettings.isEnabled)
     {
@@ -31,63 +31,41 @@ public partial class HazardSpawnManager : BaseMonoBehaviour
 
       Logger.Assert(projectileController != null, "A projectile with ballistic trajectory must have a projectile controller script attached.");
 
-      projectileController.PushControlHandler(new BallisticProjectileControlHandler(projectileController, ballisticTrajectorySettings));           
+      projectileController.PushControlHandler(new BallisticProjectileControlHandler(projectileController, ballisticTrajectorySettings));
     }
   }
-    
+
   void OnDisable()
   {
-    StopCoroutine(_spawnContinuouslyCoroutine);
+    Logger.Trace("Disabling HazardSpawnManager " + this.GetHashCode());
   }
   void OnEnable()
   {
-    if (spawnTriggerMode == SpawnTriggerMode.OnSceneLoad)
-    {
-      StopCoroutine(_spawnContinuouslyCoroutine);
-      StartCoroutine(_spawnContinuouslyCoroutine);
-    }
-    else if (spawnTriggerMode == SpawnTriggerMode.OnGettingVisible)
-    {
-      StartVisibilityChecks(visibiltyCheckInterval, GetComponent<Collider2D>());
-    }
-  }
-  
-  IEnumerator SpawnContinuously()
-  {
-    while (true)
-    {
-      if (_isVisible)
-        Spawn();
+    Logger.Trace("Enabling HazardSpawnManager " + this.GetHashCode());
+    // TODO (Roman): all this should be done at scene load, not here
+    _objectPoolingManager.RegisterPool(projectileToSpawn, minProjectilesToInstanciate, int.MaxValue);
 
-      yield return new WaitForSeconds(continuousSpawnInterval);
+    _nextSpawnTime = Time.time + continuousSpawnInterval;
+  }
+
+  private bool _hasUpdated = false;
+     
+  void FixedUpdate()
+  {
+    // Note: we can not use a coroutine for this because when spawning on the OnEnable method the transform.position of a pooled object would
+    // still point to the last active position when reactivated.
+    if (continuousSpawnInterval > 0f)
+    {
+      if (Time.time > _nextSpawnTime)
+      {
+        Spawn();
+        _nextSpawnTime = Time.time + continuousSpawnInterval;
+      }
     }
   }
 
   void Awake()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    _spawnContinuouslyCoroutine = SpawnContinuously();
-  }
-
-  void Start()
-  {
-    _objectPoolingManager.RegisterPool(projectileToSpawn, minProjectilesToInstanciate, int.MaxValue);
-  }
-
-  protected override void OnGotHidden()
-  {
-    if (spawnTriggerMode == SpawnTriggerMode.OnGettingVisible)
-    {
-      StopCoroutine(_spawnContinuouslyCoroutine);
-    }
-  }
-
-  protected override void OnGotVisible()
-  {
-    if (spawnTriggerMode == SpawnTriggerMode.OnGettingVisible)
-    {
-      StopCoroutine(_spawnContinuouslyCoroutine);
-      StartCoroutine(_spawnContinuouslyCoroutine);
-    }
   }
 }

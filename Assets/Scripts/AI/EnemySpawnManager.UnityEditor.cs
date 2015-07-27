@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class EnemySpawnManager : BaseMonoBehaviour
+public partial class EnemySpawnManager : SpawnBucketItemBehaviour
 {
   private Vector3 _gizmoCenter = Vector3.zero;
   private Vector3 _gizmoExtents = new Vector3(16, 16, 0);

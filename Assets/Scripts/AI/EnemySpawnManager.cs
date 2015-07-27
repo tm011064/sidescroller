@@ -1,177 +1,158 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public enum RespawnMode
 {
+  /// <summary>
+  /// Spawn only one time
+  /// </summary>
   SpawnOnce,
-  SpawnContinuouslyWhenVisible,
-  SpawnWhenDestroyed,
-  SpawnWhenDestroyedAndGettingVisible,
+  /// <summary>
+  /// Spawn continuously as long as the object is enabled
+  /// </summary>
+  SpawnContinuously,
+  /// <summary>
+  /// Spawn when the previously spawned object is destroyed
+  /// </summary>
+  SpawnWhenDestroyed
 }
 
-public enum SpawnTriggerMode
+public partial class EnemySpawnManager : SpawnBucketItemBehaviour
 {
-  OnGettingVisible,
-  OnSceneLoad
-}
+  #region fields
 
-public partial class EnemySpawnManager : BaseMonoBehaviour
-{
+  #region inspector
+  [SpawnableItemAttribute]
   public GameObject enemyToSpawn;
 
-  public SpawnTriggerMode spawnTriggerMode = SpawnTriggerMode.OnGettingVisible;
   public RespawnMode respawnMode = RespawnMode.SpawnOnce;
+  public bool destroySpawnedEnemiesWhenGettingDisabled = false;
   public float continuousSpawnInterval = 10f;
-  public float visibiltyCheckInterval = .1f;
   public Direction startDirection = Direction.Right;
   public BallisticTrajectorySettings ballisticTrajectorySettings = new BallisticTrajectorySettings();
 
   [Range(1f / 30.0f, float.MaxValue)]
   public float respawnOnDestroyDelay = .1f;
+  #endregion
 
-  private GameObject _spawnedEnemy;
-  private EnemyController _enemyController;
+  #region private
+  private List<GameObject> _spawnedEnemies = new List<GameObject>();
+  private ObjectPoolingManager _objectPoolingManager;
+  private IEnumerator _spawnContinuouslyCoroutine;
+  private bool _isDisabling;
+  #endregion
 
+  #endregion
+
+  #region methods
   private void Spawn()
   {
-    switch (respawnMode)
+    GameObject spawnedEnemy = _objectPoolingManager.GetObject(enemyToSpawn.name);
+
+    EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
+    if (enemyController == null)
+      throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
+
+    enemyController.startDirection = startDirection;
+
+    spawnedEnemy.transform.position = this.transform.position;
+
+    Logger.Trace("Spawning enemy from " + this.gameObject.name + " at " + spawnedEnemy.transform.position + ", active: " + spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedEnemy.layer));
+
+    if (ballisticTrajectorySettings.isEnabled)
     {
-      case RespawnMode.SpawnContinuouslyWhenVisible: 
-        GameObject spawnedEnemy = ObjectPoolingManager.Instance.GetObject(enemyToSpawn.name);
-
-        EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
-        if (enemyController == null)
-          throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
-
-        enemyController.startDirection = startDirection;
-
-        spawnedEnemy.transform.position = this.transform.position;
-
-        Logger.Trace("SPAWNING at " + spawnedEnemy.transform.position + ", active: " + spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedEnemy.layer));
-
-        if (ballisticTrajectorySettings.isEnabled)
-        {
-          _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(enemyController.characterPhysicsManager
-            , this.transform.position
-            , this.transform.position + new Vector3(ballisticTrajectorySettings.endPosition.x, ballisticTrajectorySettings.endPosition.y, transform.position.z)
-            , ballisticTrajectorySettings.projectileGravity
-            , ballisticTrajectorySettings.angle));
-        }
-        break;
-
-      default:
-        _spawnedEnemy = ObjectPoolingManager.Instance.GetObject(enemyToSpawn.name);
-
-        _enemyController = _spawnedEnemy.GetComponent<EnemyController>();
-        if (_enemyController == null)
-          throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
-
-        _enemyController.startDirection = startDirection;
-
-        _spawnedEnemy.transform.position = this.transform.position;
-
-        Logger.Trace("SPAWNING at " + _spawnedEnemy.transform.position + ", active: " + _spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(_spawnedEnemy.layer));
-
-        if (ballisticTrajectorySettings.isEnabled)
-        {
-          _enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(_enemyController.characterPhysicsManager
-            , this.transform.position
-            , this.transform.position + new Vector3(ballisticTrajectorySettings.endPosition.x, ballisticTrajectorySettings.endPosition.y, transform.position.z)
-            , ballisticTrajectorySettings.projectileGravity
-            , ballisticTrajectorySettings.angle));
-        }
-
-        // we need to remove the spawned enemy instance since it might be reused in the pool
-        _enemyController.GotDisabled += enemyController_Disabled;
-        break;
+      enemyController.PushControlHandler(new BallisticTrajectoryControlHandler(enemyController.characterPhysicsManager
+        , this.transform.position
+        , this.transform.position + new Vector3(ballisticTrajectorySettings.endPosition.x, ballisticTrajectorySettings.endPosition.y, transform.position.z)
+        , ballisticTrajectorySettings.projectileGravity
+        , ballisticTrajectorySettings.angle));
     }
 
-
+    enemyController.GotDisabled += enemyController_Disabled;
+    _spawnedEnemies.Add(spawnedEnemy);
   }
 
-  void enemyController_Disabled()
+  void enemyController_Disabled(BaseMonoBehaviour obj)
   {
-    _spawnedEnemy = null;
-    if (_enemyController != null)
-    {
-      _enemyController.GotDisabled -= enemyController_Disabled;
-      _enemyController = null;
-    }
+    obj.GotDisabled -= enemyController_Disabled; // unsubscribed cause this could belong to a pooled object
 
-    if (respawnMode == RespawnMode.SpawnWhenDestroyed)
+    if (!_isDisabling)
     {
-      // we need to invoke here as the spawn method would set the enemy active while being currently deactivated...
-      try
+      // while we are disabling this object we don't want to touch the spawned enemies list nor respawn
+
+      _spawnedEnemies.Remove(obj.gameObject);
+
+      if (this.isActiveAndEnabled && respawnMode == RespawnMode.SpawnWhenDestroyed)
       {
-        Invoke("Spawn", .1f);
-      }
-      catch (MissingReferenceException)
-      {
-        // we swallow that one, it happens on scene unload when an enemy disables after this object has been finalized
+        // we need to invoke here as the spawn method would set the enemy active while being currently deactivated...
+        try
+        {
+          Invoke("Spawn", respawnOnDestroyDelay);
+        }
+        catch (MissingReferenceException)
+        {
+          // we swallow that one, it happens on scene unload when an enemy disables after this object has been finalized
+        }
       }
     }
-  }
-
-  void OnDisable()
-  {
-    CancelInvoke();
   }
 
   IEnumerator SpawnContinuously()
   {
     while (true)
     {
-      if (_isVisible)
-        Spawn();
-
+      Spawn();
       yield return new WaitForSeconds(continuousSpawnInterval);
     }
   }
+  #endregion
 
-  void Start()
+  #region monobehaviour
+  void Awake()
   {
-    ObjectPoolingManager.Instance.RegisterPool(enemyToSpawn, 1, int.MaxValue);
-
-    if (spawnTriggerMode == SpawnTriggerMode.OnSceneLoad)
-    {
-      Spawn();
-    }
-
-    if (respawnMode == RespawnMode.SpawnWhenDestroyedAndGettingVisible
-      || spawnTriggerMode == SpawnTriggerMode.OnGettingVisible)
-    {
-      StartVisibilityChecks(visibiltyCheckInterval, GetComponent<Collider2D>());
-    }
-
-    if (respawnMode == RespawnMode.SpawnContinuouslyWhenVisible)
-    {
-      StartCoroutine(SpawnContinuously());
-    }
+    _objectPoolingManager = ObjectPoolingManager.Instance;
+    _spawnContinuouslyCoroutine = SpawnContinuously();
   }
 
-  protected override void OnGotVisible()
+  void OnDisable()
   {
-    if (spawnTriggerMode == SpawnTriggerMode.OnGettingVisible)
-    {
-      if (_spawnedEnemy == null
-          || !_spawnedEnemy.activeSelf // when player kills enemy it will be set inactive since it is pooled...
-          )
-      {
-        Spawn();
-        return; // exit here so we don't progress to later checks...
-      }
-    }
+    Logger.Trace("Disabling EnemySpawnManager " + this.name);
+    StopCoroutine(_spawnContinuouslyCoroutine);
 
-    if (respawnMode == RespawnMode.SpawnWhenDestroyedAndGettingVisible)
+    if (destroySpawnedEnemiesWhenGettingDisabled)
     {
-      if (_spawnedEnemy == null
-          || !_spawnedEnemy.activeSelf // when player kills enemy it will be set inactive since it is pooled...
-          )
+      _isDisabling = true;
+      for (int i = _spawnedEnemies.Count - 1; i >= 0; i--)
       {
-        Spawn();
-        return; // exit here so we don't progress to later checks...
+        _objectPoolingManager.Deactivate(_spawnedEnemies[i]);
+        _spawnedEnemies.RemoveAt(i);
       }
+      _isDisabling = false;
     }
   }
+  void OnEnable()
+  {
+    Logger.Trace("Enabling EnemySpawnManager " + this.name);
+    // TODO (Roman): all this should be done at scene load, not here
+    _objectPoolingManager.RegisterPool(enemyToSpawn, 1, int.MaxValue);
+
+    switch (respawnMode)
+    {
+      case RespawnMode.SpawnContinuously:
+        StopCoroutine(_spawnContinuouslyCoroutine);
+        StartCoroutine(_spawnContinuouslyCoroutine);
+        break;
+
+      case RespawnMode.SpawnOnce:
+      case RespawnMode.SpawnWhenDestroyed:
+        Spawn();
+        break;
+
+      default:
+        throw new NotImplementedException();
+    }
+  }
+  #endregion
 }

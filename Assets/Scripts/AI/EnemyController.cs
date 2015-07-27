@@ -2,7 +2,7 @@
 
 public class EnemyController : BaseCharacterController
 {
-  public Direction startDirection = Direction.Right;
+  public Direction startDirection = Direction.Right;  
 
   void Awake()
   {
