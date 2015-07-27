@@ -33,44 +33,15 @@ public partial class SpawnBucket : BaseMonoBehaviour
     }
   }
 
+  void Awake()
+  {
+    // if in editor, auto register to facilitate
+    RegisterChildObjects();
+  }
+
   public void RegisterChildObjects()
   {
     _children = this.gameObject.GetComponentsInChildren<SpawnBucketItemBehaviour>();
   }
-
-  //private void AddComponentsRecursively(List<SpawnBucketItemBehaviour> children, GameObject gameObject)
-  //{
-  //  foreach (SpawnBucketItemBehaviour spawnBucketItemBehaviour in gameObject.GetComponents<SpawnBucketItemBehaviour>())
-  //  {
-  //    Type type = spawnBucketItemBehaviour.GetType();
-
-  //    foreach (FieldInfo fieldInfo in type.GetFields())
-  //    {
-  //      if (fieldInfo.IsDefined(typeof(SpawnableItemAttribute), true))
-  //      {
-  //        GameObject field = fieldInfo.GetValue(spawnBucketItemBehaviour) as GameObject;
-  //        if (field != null)
-  //        {
-  //          AddComponentsRecursively(children, field);
-  //        }
-  //      }
-  //    }
-
-  //    children.Add(spawnBucketItemBehaviour);
-  //  }
-
-  //  for (int i = 0; i < gameObject.transform.childCount; i++)
-  //  {
-  //    GameObject child = gameObject.transform.GetChild(i).gameObject;
-  //    AddComponentsRecursively(children, child);
-  //  }
-  //}
-
-  //public void RegisterChildObjects()
-  //{
-  //  List<SpawnBucketItemBehaviour> children = new List<SpawnBucketItemBehaviour>();
-  //  AddComponentsRecursively(children, this.gameObject);
-  //  _children = children;
-  //}
 }
 #endif

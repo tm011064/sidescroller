@@ -99,15 +99,18 @@ public class ObjectPoolingManager
   /// <param name="obj">The object.</param>
   public void Deactivate(GameObject obj)
   {
-    var handler = BeforeDeactivated;
-    if (handler != null)
-      handler.Invoke(obj);
+    if (obj != null)
+    {
+      var handler = BeforeDeactivated;
+      if (handler != null)
+        handler.Invoke(obj);
 
-    obj.SendMessage("OnBeforeDisable", SendMessageOptions.DontRequireReceiver);
-    obj.SetActive(false);
+      obj.SendMessage("OnBeforeDisable", SendMessageOptions.DontRequireReceiver);
+      obj.SetActive(false);
 
-    var handler2 = AfterDeactivated;
-    if (handler2 != null)
-      handler2.Invoke(obj);
+      var handler2 = AfterDeactivated;
+      if (handler2 != null)
+        handler2.Invoke(obj);
+    }
   }
 }

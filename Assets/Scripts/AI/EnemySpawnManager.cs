@@ -40,8 +40,8 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   #region private
   private List<GameObject> _spawnedEnemies = new List<GameObject>();
   private ObjectPoolingManager _objectPoolingManager;
-  private IEnumerator _spawnContinuouslyCoroutine;
   private bool _isDisabling;
+  private float _nextSpawnTime;
   #endregion
 
   #endregion
@@ -99,28 +99,37 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
     }
   }
 
-  IEnumerator SpawnContinuously()
+  void FixedUpdate()
   {
-    while (true)
+    // Note: we can not use a coroutine for this because when spawning on the OnEnable method the transform.position of a pooled object would
+    // still point to the last active position when reactivated.
+    if (_nextSpawnTime >= 0f 
+      && Time.time > _nextSpawnTime)
     {
       Spawn();
-      yield return new WaitForSeconds(continuousSpawnInterval);
+
+      if (respawnMode == RespawnMode.SpawnContinuously && continuousSpawnInterval > 0f)
+      {
+        _nextSpawnTime = Time.time + continuousSpawnInterval;
+      }
+      else
+      {
+        _nextSpawnTime = -1f;
+      }
     }
   }
+
   #endregion
 
   #region monobehaviour
   void Awake()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    _spawnContinuouslyCoroutine = SpawnContinuously();
   }
 
   void OnDisable()
   {
     Logger.Trace("Disabling EnemySpawnManager " + this.name);
-    StopCoroutine(_spawnContinuouslyCoroutine);
-
     if (destroySpawnedEnemiesWhenGettingDisabled)
     {
       _isDisabling = true;
@@ -135,24 +144,11 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   void OnEnable()
   {
     Logger.Trace("Enabling EnemySpawnManager " + this.name);
+
     // TODO (Roman): all this should be done at scene load, not here
     _objectPoolingManager.RegisterPool(enemyToSpawn, 1, int.MaxValue);
 
-    switch (respawnMode)
-    {
-      case RespawnMode.SpawnContinuously:
-        StopCoroutine(_spawnContinuouslyCoroutine);
-        StartCoroutine(_spawnContinuouslyCoroutine);
-        break;
-
-      case RespawnMode.SpawnOnce:
-      case RespawnMode.SpawnWhenDestroyed:
-        Spawn();
-        break;
-
-      default:
-        throw new NotImplementedException();
-    }
+    _nextSpawnTime = Time.time;// +continuousSpawnInterval;
   }
   #endregion
 }

@@ -28,14 +28,17 @@ public partial class SpawnBucket : BaseMonoBehaviour
     }
   }
 
-  void Start()
+  void OnEnable()
   {
     for (int i = 0; i < _children.Length; i++)
     {
       if (_children[i].gameObject.activeSelf)
         _children[i].gameObject.SetActive(false);
     }
+  }
 
+  void Start()
+  {
     this.StartVisibilityChecks(visibiltyCheckInterval, this.GetComponent<Collider2D>());
   }
 }

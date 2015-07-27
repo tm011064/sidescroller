@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public partial class Wheel : BaseMonoBehaviour
+public partial class Wheel : SpawnBucketItemBehaviour
 {
   #region nested
   private class GameObjectContainer
@@ -18,17 +18,15 @@ public partial class Wheel : BaseMonoBehaviour
   public float totalPlatforms = 3;
   public float radius = 256f;
   public float speed = 200f;
-  public float visibiltyCheckInterval = .1f;
 
-  public int platformWidth = 128;
-  public int platformHeight = 16;
-  private List<GameObjectContainer> _platforms;
+  private List<GameObjectContainer> _platforms = new List<GameObjectContainer>();
   private bool _isPlayerAttached;
   private BoxCollider2D _visibilityCollider;
-  
+  private ObjectPoolingManager _objectPoolingManager;
+
   void Update()
   {
-    if (_platforms != null)
+    if (_platforms.Count > 0)
     {
       float angleToRotate = speed * Mathf.Deg2Rad * Time.deltaTime;
       for (int i = 0; i < _platforms.Count; i++)
@@ -46,17 +44,18 @@ public partial class Wheel : BaseMonoBehaviour
     }
   }
 
-  protected override void OnGotVisible()
+  void OnEnable()
   {
-    Logger.Info("Wheel " + this.name + " got visible");
-    _platforms = new List<GameObjectContainer>();
+    _objectPoolingManager = ObjectPoolingManager.Instance;
+    // TODO (Roman): this should be done at global scene load
+    _objectPoolingManager.RegisterPool(floatingAttachedPlatform, (int)totalPlatforms, int.MaxValue);
+
+    Logger.Info("Enabling wheel " + this.name);
+    List<GameObjectContainer> platforms = new List<GameObjectContainer>();
 
     for (float angle = 0f; angle < 360 * Mathf.Deg2Rad; angle += 360 * Mathf.Deg2Rad / totalPlatforms)
     {
-      GameObject platform = ObjectPoolingManager.Instance.GetObject(floatingAttachedPlatform.name);
-
-      var groundPlatformSpriteRenderer = platform.GetComponent<GroundPlatformSpriteRenderer>();
-      groundPlatformSpriteRenderer.SetBoundaries(platformWidth/2, platformHeight/2, platformWidth, platformHeight);
+      GameObject platform = _objectPoolingManager.GetObject(floatingAttachedPlatform.name);
 
       Vector3 initial = new Vector3(transform.position.x + radius, transform.position.y, transform.position.z);
 
@@ -66,36 +65,21 @@ public partial class Wheel : BaseMonoBehaviour
         , transform.position.z);
 
       platform.transform.position = rotated;
-      platform.SetActive(true);
-
-      _platforms.Add(new GameObjectContainer() { GameObject = platform, Angle = angle });
+      platforms.Add(new GameObjectContainer() { GameObject = platform, Angle = angle });
     }
+
+    _platforms = platforms;
   }
-  protected override void OnGotHidden()
+
+  void OnDisable()
   {
-    Logger.Info("Wheel " + this.name + " got hidden");
-    for (int i = 0; i < _platforms.Count; i++)
+    Logger.Info("Disabling wheel " + this.name);
+
+    for (int i = _platforms.Count - 1; i >= 0; i--)
     {
-      ObjectPoolingManager.Instance.Deactivate(_platforms[i].GameObject);
+      _objectPoolingManager.Deactivate(_platforms[i].GameObject);
     }
-    _platforms = null;
-  }
-
-  void Start()
-  {
-    // we wanna do this in start as we know that the player has been added to the game context
-    ObjectPoolingManager.Instance.RegisterPool(floatingAttachedPlatform, (int)totalPlatforms, int.MaxValue);
-
-    _visibilityCollider = this.gameObject.AddComponent<BoxCollider2D>();
-    _visibilityCollider.isTrigger = true;
-        
-    // note: multiplying the radius by _visibilityCheckRadiusMultiplier is not ideal as we would really want to get the radius + floatingplatform size.
-    _visibilityCollider.size = new Vector2(
-      (radius + platformWidth) / (this.gameObject.transform.localScale.x == 0f ? 1f : this.gameObject.transform.localScale.x)
-      , (radius + platformHeight) / (this.gameObject.transform.localScale.y == 0f ? 1f : this.gameObject.transform.localScale.y)
-    );
-
-    StartVisibilityChecks(visibiltyCheckInterval, _visibilityCollider);
+    _platforms.Clear();
   }
 }
 

@@ -47,9 +47,7 @@ public partial class HazardSpawnManager : SpawnBucketItemBehaviour
 
     _nextSpawnTime = Time.time + continuousSpawnInterval;
   }
-
-  private bool _hasUpdated = false;
-     
+       
   void FixedUpdate()
   {
     // Note: we can not use a coroutine for this because when spawning on the OnEnable method the transform.position of a pooled object would
