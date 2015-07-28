@@ -155,8 +155,10 @@ MonoBehaviour:
     maxWallDownwardSpeed: -800
   jumpSettings:
     gravity: -3960
-    walkJumpHeight: 450
-    runJumpHeight: 498
+    standJumpHeight: 378
+    walkJumpHeight: 410
+    walkJumpHeightSpeedTrigger: 100
+    runJumpHeight: 474
     runJumpHeightSpeedTrigger: 620
     inAirDamping: 2
     allowJumpAfterGroundLostThreashold: .100000001

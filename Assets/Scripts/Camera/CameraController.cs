@@ -181,7 +181,7 @@ public class CameraController : MonoBehaviour
               if (_cameraMovementSettings.verticalLockSettings.enabled)
               {
                 if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
-                  yPos = _cameraMovementSettings.verticalLockSettings.defaultVerticalLockPosition;
+                  yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
                 else
                   yPos = target.position.y;
 

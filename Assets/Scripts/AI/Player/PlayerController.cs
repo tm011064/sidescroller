@@ -41,8 +41,12 @@ public class JumpSettings
 {
   [Tooltip("Default gravity")]
   public float gravity = -3960f;
+  [Tooltip("Jump height when standing")]
+  public float standJumpHeight = 380f;
   [Tooltip("Jump height when walking")]
   public float walkJumpHeight = 380f;
+  [Tooltip("Only once the character moves at a speed higher than this value the \"Walk Jump Height\" will be applied.")]
+  public float walkJumpHeightSpeedTrigger = 100f;
   [Tooltip("Jump height when running. Player must have exceeded the \"Run Jump Height Speed Trigger\" velocity in order for this height to be used.")]
   public float runJumpHeight = 400f;
   [Tooltip("Only once the character moves at a speed higher than this value the \"Run Jump Height\" will be applied.")]

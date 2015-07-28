@@ -18,6 +18,21 @@ public partial class MultiWayCameraModifier : MonoBehaviour
     public Vector2 offset;
 
     public VerticalCameraFollowMode verticalCameraFollowMode;
+
+    public MultiWayCameraModificationSetting Clone()
+    {
+      MultiWayCameraModificationSetting multiWayCameraModificationSetting = new MultiWayCameraModificationSetting();
+
+      multiWayCameraModificationSetting.verticalLockSettings = verticalLockSettings.Clone();
+      multiWayCameraModificationSetting.horizontalLockSettings = horizontalLockSettings.Clone();
+      multiWayCameraModificationSetting.zoomSettings = zoomSettings.Clone();
+      multiWayCameraModificationSetting.smoothDampMoveSettings = smoothDampMoveSettings.Clone();
+
+      multiWayCameraModificationSetting.offset = offset;
+      multiWayCameraModificationSetting.verticalCameraFollowMode = verticalCameraFollowMode;
+
+      return multiWayCameraModificationSetting;
+    }
   }
 
   public MultiWayCameraModificationSetting redCameraModificationSettings = new MultiWayCameraModificationSetting();
@@ -47,8 +62,10 @@ public partial class MultiWayCameraModifier : MonoBehaviour
 
   private void SetCameraModificationSettings(MultiWayCameraModificationSetting multiWayCameraModificationSetting)
   {
-    Vector3 transformPoint = parentPositionObject.transform.TransformPoint(Vector3.zero);
+    multiWayCameraModificationSetting = multiWayCameraModificationSetting.Clone();
 
+    Vector3 transformPoint = parentPositionObject.transform.TransformPoint(Vector3.zero);
+    Debug.Log(transformPoint);
     if (multiWayCameraModificationSetting.zoomSettings.zoomPercentage == 0f)
       throw new ArgumentOutOfRangeException("Zoom Percentage must not be 0.");
 

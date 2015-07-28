@@ -155,11 +155,20 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float CalculateJumpHeight(Vector2 velocity)
   {
+    float absVelocity = Mathf.Abs(velocity.x);
+    float jumpHeight;
+    if (absVelocity >= _playerController.jumpSettings.runJumpHeightSpeedTrigger)
+      jumpHeight = _playerController.jumpSettings.runJumpHeight;
+    else if (absVelocity >= _playerController.jumpSettings.walkJumpHeightSpeedTrigger)
+      jumpHeight = _playerController.jumpSettings.walkJumpHeight;
+    else
+      jumpHeight = _playerController.jumpSettings.standJumpHeight;
+
     return Mathf.Sqrt(
           2f
           * jumpHeightMultiplier
           * -_playerController.jumpSettings.gravity
-          * (Mathf.Abs(velocity.x) >= _playerController.jumpSettings.runJumpHeightSpeedTrigger ? _playerController.jumpSettings.runJumpHeight : _playerController.jumpSettings.walkJumpHeight)
+          * jumpHeight
           );
   }
 

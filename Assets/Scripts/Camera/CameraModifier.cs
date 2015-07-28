@@ -53,6 +53,11 @@ enableDefaultVerticalLockPosition: {7}; defaultVerticalLockPosition: {8}; transl
       , translatedVerticalLockPosition
       );
   }
+
+  public VerticalLockSettings Clone()
+  {
+    return this.MemberwiseClone() as VerticalLockSettings;
+  }
 }
 [Serializable]
 public class HorizontalLockSettings
@@ -87,6 +92,11 @@ public class HorizontalLockSettings
       , leftBoundary
       );
   }
+
+  public HorizontalLockSettings Clone()
+  {
+    return this.MemberwiseClone() as HorizontalLockSettings;
+  }
 }
 
 [Serializable]
@@ -106,6 +116,11 @@ public class ZoomSettings
       , zoomTime
       , zoomEasingType
       );
+  }
+
+  public ZoomSettings Clone()
+  {
+    return this.MemberwiseClone() as ZoomSettings;
   }
 }
 
@@ -129,6 +144,11 @@ public class SmoothDampMoveSettings
       , verticalRapidDescentSmoothDampTime
       , verticalAboveRapidAcsentSmoothDampTime
       );
+  }
+
+  public SmoothDampMoveSettings Clone()
+  {
+    return this.MemberwiseClone() as SmoothDampMoveSettings;
   }
 }
 
