@@ -100,9 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 10453060be2bff040bf215dce8b9e8aa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isVisible: 1
   projectileToSpawn: {fileID: 136578, guid: 1fc91e749fb28ca47b95ac65737ea9da, type: 2}
-  spawnTriggerMode: 1
   continuousSpawnInterval: 1
   minProjectilesToInstanciate: 10
   ballisticTrajectorySettings:

@@ -8,10 +8,10 @@ public class TrampolineBounceControlHandler : PlayerControlHandler
   private bool _hasJumped = false;
   public bool HasJumped { get { return _hasJumped; } }
 
-  public TrampolineBounceControlHandler(PlayerController playerController, float duration, float jumpHeightMultiplier, float onTrampolineSkidDamping, bool canJump)
+  public TrampolineBounceControlHandler(PlayerController playerController, float duration, float fixedJumpHeight, float onTrampolineSkidDamping, bool canJump)
     : base(playerController, duration)
   {
-    this.jumpHeightMultiplier = jumpHeightMultiplier;
+    this._fixedJumpHeight = fixedJumpHeight;
     this._canJump = canJump;
     this._onTrampolineSkidDamping = onTrampolineSkidDamping;
   }
@@ -22,7 +22,7 @@ public class TrampolineBounceControlHandler : PlayerControlHandler
 
     if (!_hasJumped)
     {
-      velocity.y = GetJumpVerticalVelocity(velocity, _canJump, out _hasJumped);
+      velocity.y = GetJumpVerticalVelocity(velocity, _canJump, out _hasJumped, ButtonPressState.IsPressed);
     }
     else
     {

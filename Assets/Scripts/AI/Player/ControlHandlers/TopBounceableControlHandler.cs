@@ -20,7 +20,7 @@ public class TopBounceableControlHandler : DefaultPlayerControlHandler
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
     if (!_hasPerformedDefaultBounce)
     {
-      if (_gameManager.inputStateManager.GetButtonState("Jump").IsPressed)
+      if ((_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsPressed) != 0)
       {
         velocity.y = CalculateJumpHeight(velocity);
         
@@ -41,7 +41,7 @@ public class TopBounceableControlHandler : DefaultPlayerControlHandler
       }
     }
 
-    if (_gameManager.inputStateManager.GetButtonState("Jump").IsPressed)
+    if ((_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsPressed) != 0)
     {
       velocity.y = CalculateJumpHeight(velocity);
 

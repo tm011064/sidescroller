@@ -33,6 +33,14 @@ public class AxisState
   }
 }
 
+public enum ButtonPressState
+{
+  Idle = 1,
+  IsDown = 2,
+  IsPressed = 4,
+  IsUp = 8,
+}
+
 public class ButtonsState
 {
   private const string TRACE_TAG = "ButtonsState";
@@ -40,33 +48,83 @@ public class ButtonsState
   private string _buttonName;
   private float _pressStarted;
 
-  public bool IsDown;
-  public bool IsUp;
-  public bool IsPressed;
+  // is down check: ((buttonPressState & ButtonPressState.IsDown) != 0)
+  // is up check: ((buttonPressState & ButtonPressState.IsUp) != 0)
+  // is pressed check: ((buttonPressState & ButtonPressState.IsPressed) != 0)
+  public ButtonPressState buttonPressState;
+
+  //public bool IsDown;
+  //public bool IsUp;
+  //public bool IsPressed;
 
   public void Update()
   {
-    bool isPressed = Input.GetButton(_buttonName);
+    ButtonPressState state = ButtonPressState.Idle;
 
-    if (isPressed && !this.IsPressed)
+    //bool isPressed = Input.GetButton(_buttonName);
+    if (Input.GetButton(_buttonName))
+      state |= ButtonPressState.IsPressed;
+
+    if (((state & ButtonPressState.IsPressed) != 0)               // IF   currently pressed
+      && ((buttonPressState & ButtonPressState.IsPressed) == 0))  // AND  previously not pressed
     {
       _pressStarted = Time.time;
-      this.IsDown = true;
+
+      state |= ButtonPressState.IsDown;
 
       Logger.Trace(TRACE_TAG, "Button " + _buttonName + " is down.");
     }
-    else
+
+    if (((state & ButtonPressState.IsPressed) == 0)               // IF   currently not pressed
+      && ((buttonPressState & ButtonPressState.IsPressed) != 0))  // AND  previously pressed
     {
-      this.IsDown = false;
+      state |= ButtonPressState.IsUp;
     }
 
-    this.IsUp = (this.IsPressed && !isPressed);
-    this.IsPressed = isPressed;
+    if ((state & (ButtonPressState.IsUp | ButtonPressState.IsDown | ButtonPressState.IsPressed)) != 0)
+      state &= ~ButtonPressState.Idle;
+
+    buttonPressState = state;
+
+    //bool isPressed = Input.GetButton(_buttonName);
+
+    //if (isPressed && !this.IsPressed)
+    //{
+    //  _pressStarted = Time.time;
+    //  this.IsDown = true;
+
+    //  Logger.Trace(TRACE_TAG, "Button " + _buttonName + " is down.");
+    //}
+    //else
+    //{
+    //  this.IsDown = false;
+    //}
+
+    //this.IsUp = (this.IsPressed && !isPressed);
+    //this.IsPressed = isPressed;
+
+    //if (this.IsDown)
+    //  Logger.Assert(((state & ButtonPressState.IsDown) != 0), "DOWN wrong");
+    //else
+    //  Logger.Assert(((state & ButtonPressState.IsDown) == 0), "DOWN wrong");
+    //if (this.IsUp)
+    //  Logger.Assert(((state & ButtonPressState.IsUp) != 0), "IsUp wrong");
+    //else
+    //  Logger.Assert(((state & ButtonPressState.IsUp) == 0), "IsUp wrong");
+    //if (this.IsPressed)
+    //  Logger.Assert(((state & ButtonPressState.IsPressed) != 0), "IsPressed wrong");
+    //else
+    //  Logger.Assert(((state & ButtonPressState.IsPressed) == 0), "IsPressed wrong");
+    //if (this.IsPressed || this.IsUp || this.IsDown)
+    //  Logger.Assert(((state & ButtonPressState.Idle) == 0), "Idle wrong");
+    //else
+    //  Logger.Assert(((state & ButtonPressState.Idle) != 0), "Idle wrong");
+    //Debug.Log("test done");
   }
 
   public float GetPressedTime()
   {
-    if (!this.IsPressed)
+    if (((buttonPressState & ButtonPressState.IsPressed) == 0))
     {
       return 0f;
     }

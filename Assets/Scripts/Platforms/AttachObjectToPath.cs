@@ -22,19 +22,7 @@ public class AttachObjectToPath : BaseMonoBehaviour
   private iTweenPath _iTweenPath;
 
   private bool _isMoving = false;
-
-  //void onPlayerGrounded(GameObject obj)
-  //{
-  //  if (obj != _gameObject)
-  //    return; // we need to check that the player landed on this platform
-
-  //  if (!_isMoving && movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
-  //  {
-  //    Logger.Info("Player landed on platform, start move...");
-  //    StartMove();
-  //  }
-  //}
-
+  
   void player_OnGroundedPlatformChanged(object sender, PlayerController.GroundedPlatformChangedEventArgs e)
   {
     if (e.currentPlatform != _gameObject)
@@ -46,7 +34,7 @@ public class AttachObjectToPath : BaseMonoBehaviour
       StartMove();
     }
   }
-
+  
   private void OnTweenComplete()
   {
     if (pauseTimeOnLoopComplete > 0f)
@@ -87,7 +75,18 @@ public class AttachObjectToPath : BaseMonoBehaviour
     var pathContainer = GetComponent<iTweenPath>();
     pathContainer.SetPathName(Guid.NewGuid().ToString());
   }
-  
+
+  void attachableObject_Attached(IAttachableObject attachableObject, GameObject obj)
+  {
+    if (!_isMoving)
+    {
+      Logger.Info("Player landed on platform, start move...");
+      StartMove();
+
+      attachableObject.Attached -= attachableObject_Attached;
+    }
+  }
+
   // Use this for initialization
   void Start()
   {
@@ -98,8 +97,15 @@ public class AttachObjectToPath : BaseMonoBehaviour
 
     if (movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
     {
-      GameManager.instance.player.OnGroundedPlatformChanged += player_OnGroundedPlatformChanged;
-      //GameManager.instance.player.characterPhysicsManager.onControllerBecameGrounded += onPlayerGrounded;
+      IAttachableObject attachableObject = _gameObject.GetComponent<IAttachableObject>();
+      if (attachableObject != null)
+      {
+        attachableObject.Attached += attachableObject_Attached;
+      }
+      else
+      {
+        GameManager.instance.player.OnGroundedPlatformChanged += player_OnGroundedPlatformChanged;
+      }
     }
 
     _iTweenPath = GetComponent<iTweenPath>();
@@ -110,5 +116,6 @@ public class AttachObjectToPath : BaseMonoBehaviour
     if (movingPlatformType == MovingPlatformType.MovesAlways)
       StartMove();
   }
+
 
 }

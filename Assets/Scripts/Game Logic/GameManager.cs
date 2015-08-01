@@ -25,15 +25,15 @@ public class GameManager : MonoBehaviour
 
   private List<Checkpoint> _orderedSceneCheckpoints;
   private int _currentCheckpointIndex = 0;
-
+  
   public void LoadScene()
   {
     GameObject checkpoint = null;
     switch (Application.loadedLevelName)
     {
-      case "JumpArena":
+      case "Platforms And Enemies":
         _orderedSceneCheckpoints = new List<Checkpoint>(GameObject.FindObjectsOfType<Checkpoint>());
-        _orderedSceneCheckpoints.Sort((a, b) => a.index > b.index ? -1 : 1);
+        _orderedSceneCheckpoints.Sort((a, b) => b.index.CompareTo(a.index));
 
         _currentCheckpointIndex = 0;
         checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
@@ -41,7 +41,11 @@ public class GameManager : MonoBehaviour
 
       default:
         // TODO (Roman): don't hardcode tags
-        checkpoint = GameObject.FindGameObjectWithTag("Checkpoint 1");
+        _orderedSceneCheckpoints = new List<Checkpoint>(GameObject.FindObjectsOfType<Checkpoint>());
+        _orderedSceneCheckpoints.Sort((a, b) => a.index.CompareTo(b.index));
+
+        _currentCheckpointIndex = 0;
+        checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
         break;
     }
 

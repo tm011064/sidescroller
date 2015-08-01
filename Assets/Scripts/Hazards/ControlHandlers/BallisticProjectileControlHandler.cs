@@ -14,6 +14,8 @@ public class BallisticProjectileControlHandler : BaseProjectileControlHandler
   }
 
   public BallisticProjectileControlHandler(ProjectileController projectileController, BallisticTrajectorySettings ballisticTrajectorySettings)
+    : this(projectileController, ballisticTrajectorySettings, null) { }
+  public BallisticProjectileControlHandler(ProjectileController projectileController, BallisticTrajectorySettings ballisticTrajectorySettings, Vector3? maxVelocity)
     : base(projectileController)
   {
     _ballisticTrajectorySettings = ballisticTrajectorySettings;
@@ -23,5 +25,16 @@ public class BallisticProjectileControlHandler : BaseProjectileControlHandler
       , _projectileController.gameObject.transform.position
       , ballisticTrajectorySettings.angle
       , ballisticTrajectorySettings.projectileGravity);
+
+    if (maxVelocity.HasValue)
+    {
+      if (Mathf.Abs(_velocity.x) > maxVelocity.Value.x)
+        _velocity.x = maxVelocity.Value.x * Mathf.Sign(_velocity.x);
+
+      if (Mathf.Abs(_velocity.y) > maxVelocity.Value.y)
+        _velocity.y = maxVelocity.Value.y * Mathf.Sign(_velocity.y);
+    }
+
+    Debug.Log(_velocity);
   }
 }

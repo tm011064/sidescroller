@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections;
 
-public class ProjectileDestroyTrigger : MonoBehaviour
+public partial class DeactivatePooledObjectTrigger : MonoBehaviour
 {
   void OnTriggerEnter2D(Collider2D col)
   {

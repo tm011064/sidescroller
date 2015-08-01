@@ -166,10 +166,11 @@ public class CharacterPhysicsManager : BasePhysicsManager
   public List<RaycastHit2D> lastRaycastHits = new List<RaycastHit2D>();
 
   [HideInInspector]
+  [NonSerialized]
   public AnimationCurve slopeSpeedMultiplierOverride = null;
   #endregion
 
-  #region private  
+  #region private
   private LayerMask _platformMaskWithoutOneWay = 0;
   /// <summary>
   /// this is used to calculate the downward ray that is cast to check for slopes. We use the somewhat arbitrary value 75 degrees
@@ -500,7 +501,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
   public void PerformMove(MoveCalculationResult moveCalculationResult)
   {
     transform.Translate(moveCalculationResult.deltaMovement, Space.World);
-    
+
     // only calculate velocity if we have a non-zero deltaTime
     if (Time.deltaTime > 0)
     {
@@ -511,7 +512,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
         dx = 0f;
       if (moveCalculationResult.collisionState.right && moveCalculationResult.originalDeltaMovement.x > moveCalculationResult.deltaMovement.x)
         dx = 0f;
-      
+
       velocity = new Vector2(dx, dy) / Time.deltaTime;
     }
 
@@ -1259,6 +1260,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
       var angle = Vector2.Angle(raycastHit.normal, Vector2.up);
       if (angle == 0)
       {
+        Logger.Trace(TRACE_TAG, "HandleVerticalSlope -> no slope");
         return;
       }
 
@@ -1268,6 +1270,8 @@ public class CharacterPhysicsManager : BasePhysicsManager
       {
         // going down we want to speed up in most cases so the slopeSpeedMultiplier curve should be > 1 for negative angles
         var slopeModifier = (slopeSpeedMultiplierOverride == null ? slopeSpeedMultiplier : slopeSpeedMultiplierOverride).Evaluate(-angle);
+        Logger.Trace(TRACE_TAG, "HandleVerticalSlope -> moving down, slope modifier: " + slopeModifier + ", angle: " + angle
+          + ", slopeSpeedMultiplierOverride == null: " + (slopeSpeedMultiplierOverride == null));
         // we add the extra downward movement here to ensure we "stick" to the surface below
         moveCalculationResult.deltaMovement.y += raycastHit.point.y - slopeRay.y - skinWidth;
         moveCalculationResult.deltaMovement.x *= slopeModifier;

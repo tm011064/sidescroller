@@ -1,6 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
+public interface IAttachableObject
+{
+  event Action<IAttachableObject, GameObject> Attached;
+  event Action<IAttachableObject, GameObject> Detached;
+}
+
+public partial class AttachPlayerControllerToTrampoline : MonoBehaviour, IAttachableObject
 {
   public bool canJump = true;
 
@@ -11,14 +18,14 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
   public float platformUpwardDuration = .6f;
   public iTween.EaseType platformUpwardEaseType = iTween.EaseType.easeOutBounce;
 
-  public float autoBounceJumpHeightMultiplier = 1f;
-  public float jumpHeightMultiplier = 2f;
+  public float autoBounceFixedJumpHeight = 224f;  
+  public float fixedJumpHeight = 448f;
 
   public float onTrampolineSkidDamping = 5f;
 
   private bool _isPlayerControllerAttached = false;
   private bool _isGoingUp = false;
-  private bool _hasUpMoveCompleted = false;
+  private bool _hasReachedUpMoveApex = false;
   private bool _hasBounced = false;
   private Vector3 _lastPosition;
 
@@ -27,6 +34,14 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
   protected PlayerController _playerController;
 
   private TrampolineBounceControlHandler _trampolineBounceControlHandler = null;
+  
+  #region IAttachableObject Members
+
+  public event Action<IAttachableObject, GameObject> Attached;
+
+  public event Action<IAttachableObject, GameObject> Detached;
+
+  #endregion
 
   void Awake()
   {
@@ -40,7 +55,7 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
     _gameObject = ObjectPoolingManager.Instance.GetObject(trampolinePrefab.name);
     _gameObject.transform.position = this.transform.position;
-    _gameObject.SetActive(true);
+    _gameObject.transform.parent = this.transform;
 
     _lastPosition = _gameObject.transform.position;
   }
@@ -72,6 +87,10 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
         _trampolineBounceControlHandler = null;
       }
 
+      var handler = this.Detached;
+      if (handler != null)
+        handler.Invoke(this, this.gameObject);
+
       Logger.Info("Removed parent (" + this.gameObject.transform + ") relationship from child (" + _playerController.name + ")");
     }
     else if (e.currentPlatform == this._gameObject)
@@ -80,13 +99,13 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
       {
         _isGoingUp = false;
         _hasBounced = false;
-        _hasUpMoveCompleted = false;
+        _hasReachedUpMoveApex = false;
 
         _isPlayerControllerAttached = true;
 
         _playerController.transform.parent = this._gameObject.transform;
 
-        _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, jumpHeightMultiplier, onTrampolineSkidDamping, canJump);
+        _trampolineBounceControlHandler = new TrampolineBounceControlHandler(_playerController, -1f, fixedJumpHeight, onTrampolineSkidDamping, canJump);
         _playerController.PushControlHandler(_trampolineBounceControlHandler);
 
         iTween.MoveBy(this._gameObject
@@ -98,14 +117,18 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
           , "oncompletetarget", this.gameObject
           ));
 
-        Logger.Info("Added parent (" + this.gameObject.transform + ") relationship to child (" + _playerController.name + ")");
+        var handler = this.Attached;
+        if (handler != null)
+          handler.Invoke(this, this.gameObject);
+
+        Logger.Info("Added parent (" + this.gameObject.transform + ") relationship to child (" + _playerController.name + ")");        
       }
     }
   }
   
   private void OnUpMoveCompleted()
   {
-    _hasUpMoveCompleted = true;
+
   }
 
   private void OnDownMoveComplete()
@@ -124,10 +147,16 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
 
   void Update()
   {
+    if (!_hasReachedUpMoveApex 
+      && _isGoingUp
+      && _lastPosition.y > _gameObject.transform.position.y)
+    {// we assume there is a bounce out animation, so we want to find out when the up move has reached the apex before bouncing around a bit and getting settled
+      _hasReachedUpMoveApex = true;
+    }
+
     if (_isPlayerControllerAttached
       && !_hasBounced
-      && (_isGoingUp || _hasUpMoveCompleted)
-      && _lastPosition.y > _gameObject.transform.position.y
+      && _hasReachedUpMoveApex
       )
     {
       if (_trampolineBounceControlHandler != null)
@@ -136,7 +165,7 @@ public class AttachPlayerControllerToTrampoline : BaseMonoBehaviour
         _trampolineBounceControlHandler = null;
       }
 
-      _playerController.PushControlHandler(new TrampolineAutoBounceControlHandler(_playerController, autoBounceJumpHeightMultiplier));
+      _playerController.PushControlHandler(new TrampolineAutoBounceControlHandler(_playerController, autoBounceFixedJumpHeight));
       _hasBounced = true;
     }
 

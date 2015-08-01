@@ -152,7 +152,7 @@ public class SmoothDampMoveSettings
   }
 }
 
-public class CameraModifier : MonoBehaviour
+public partial class CameraModifier : MonoBehaviour
 {
   public VerticalLockSettings verticalLockSettings;
   public HorizontalLockSettings horizontalLockSettings;
@@ -183,6 +183,9 @@ public class CameraModifier : MonoBehaviour
   void Start()
   {
     _cameraController = Camera.main.GetComponent<CameraController>();
+
+    if (parentPositionObject == null)
+      throw new MissingComponentException("parentPositionObject for camera modifier not set");
   }
 
   void OnTriggerEnter2D(Collider2D col)

@@ -57,6 +57,10 @@ public class JumpSettings
   public float allowJumpAfterGroundLostThreashold = .05f;
   [Tooltip("The downward max speed when falling. Normally we don't want the player to accelerate indefinitely as it will make controlling the player very difficult.")]
   public float maxDownwardSpeed = -1800f;
+  [Tooltip("If enabled, the character can jump in the opposite direction against inertia when changing direction on the ground. This helps when doing left-right-left jumps.")]
+  public bool enableBackflipOnDirectionChange = true;
+  [Tooltip("The horizontal speed applied to the opposite direction while jumping")]
+  public float backflipOnDirectionChangeSpeed = 200f;
 }
 
 
@@ -286,7 +290,7 @@ public partial class PlayerController : BaseCharacterController
   
   protected override void Update()
   {
-    if (_gameManager.inputStateManager.GetButtonState("SwitchPowerUp").IsUp)
+    if ((_gameManager.inputStateManager.GetButtonState("SwitchPowerUp").buttonPressState & ButtonPressState.IsUp) != 0)
     {
       _gameManager.powerUpManager.ApplyNextInventoryPowerUpItem();
     }

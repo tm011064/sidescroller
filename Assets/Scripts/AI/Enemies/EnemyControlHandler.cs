@@ -21,7 +21,7 @@ public class EnemyControlHandler<TEnemyController>
     Debug.DrawRay(start, dir, color);
   }
 
-  private float? _pauseAtEdgeEndTime = null;
+  protected float? _pauseAtEdgeEndTime = null;
 
   protected void MoveHorizontally(ref float moveDirectionFactor, float speed, float gravity, PlatformEdgeMoveMode platformEdgeMoveMode, float edgeTurnAroundPause = 0f)
   {

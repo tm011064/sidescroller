@@ -24,9 +24,9 @@ public class TrampolineAutoBounceControlHandler : PlayerControlHandler
     return velocity.y >= 0f; // exit if player falls down
   }
 
-  public TrampolineAutoBounceControlHandler(PlayerController playerController, float jumpHeightMultiplier)
+  public TrampolineAutoBounceControlHandler(PlayerController playerController, float fixedJumpHeight)
     : base(playerController, -1f)
   {
-    this.jumpHeightMultiplier = jumpHeightMultiplier;
+    this._fixedJumpHeight = fixedJumpHeight;
   }
 }

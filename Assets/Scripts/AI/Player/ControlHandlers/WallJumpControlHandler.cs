@@ -98,7 +98,7 @@ public class WallJumpControlHandler : PlayerControlHandler
     }
     bool isWallJump = false;
     if (!_hasJumpedFromWall
-        && (_gameManager.inputStateManager.GetButtonState("Jump").IsDown))
+        && ((_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsDown) != 0))
     {
       // set flag for later calcs outside this scope
       isWallJump = true;

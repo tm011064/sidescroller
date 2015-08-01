@@ -60,48 +60,54 @@ public partial class MultiWayCameraModifier : MonoBehaviour
     return ((lineTo.x - lineFrom.x) * (point.y - lineFrom.y) - (lineTo.y - lineFrom.y) * (point.x - lineFrom.x)) > 0;
   }
 
-  private void SetCameraModificationSettings(MultiWayCameraModificationSetting multiWayCameraModificationSetting)
+  private MultiWayCameraModificationSetting CloneAndTranslaceCameraModificationSetting(MultiWayCameraModificationSetting source, CameraController cameraController)
   {
-    multiWayCameraModificationSetting = multiWayCameraModificationSetting.Clone();
-
+    MultiWayCameraModificationSetting clone = source.Clone();
     Vector3 transformPoint = parentPositionObject.transform.TransformPoint(Vector3.zero);
-    Debug.Log(transformPoint);
-    if (multiWayCameraModificationSetting.zoomSettings.zoomPercentage == 0f)
+    
+    if (clone.verticalLockSettings.enabled)
+    {
+      if (clone.verticalLockSettings.enableTopVerticalLock)
+        clone.verticalLockSettings.topBoundary = transformPoint.y + clone.verticalLockSettings.topVerticalLockPosition - cameraController.targetScreenSize.y * .5f / clone.zoomSettings.zoomPercentage;
+      if (clone.verticalLockSettings.enableBottomVerticalLock)
+        clone.verticalLockSettings.bottomBoundary = transformPoint.y + clone.verticalLockSettings.bottomVerticalLockPosition + cameraController.targetScreenSize.y * .5f / clone.zoomSettings.zoomPercentage;
+    }
+
+    if (clone.horizontalLockSettings.enabled)
+    {
+      if (clone.horizontalLockSettings.enableLeftHorizontalLock)
+        clone.horizontalLockSettings.leftBoundary = transformPoint.x + clone.horizontalLockSettings.leftHorizontalLockPosition + cameraController.targetScreenSize.x * .5f / clone.zoomSettings.zoomPercentage;
+      if (clone.horizontalLockSettings.enableRightHorizontalLock)
+        clone.horizontalLockSettings.rightBoundary = transformPoint.x + clone.horizontalLockSettings.rightHorizontalLockPosition - cameraController.targetScreenSize.x * .5f / clone.zoomSettings.zoomPercentage;
+    }
+
+    clone.verticalLockSettings.translatedVerticalLockPosition = transformPoint.y + clone.verticalLockSettings.defaultVerticalLockPosition;
+
+    return clone;
+  }
+
+  private void SetCameraModificationSettings(MultiWayCameraModificationSetting source)
+  {
+    if (source.zoomSettings.zoomPercentage == 0f)
       throw new ArgumentOutOfRangeException("Zoom Percentage must not be 0.");
 
-    if (multiWayCameraModificationSetting.verticalLockSettings.enabled)
-    {
-      if (multiWayCameraModificationSetting.verticalLockSettings.enableTopVerticalLock)
-        multiWayCameraModificationSetting.verticalLockSettings.topBoundary = transformPoint.y + multiWayCameraModificationSetting.verticalLockSettings.topVerticalLockPosition - _cameraController.targetScreenSize.y * .5f / multiWayCameraModificationSetting.zoomSettings.zoomPercentage;
-      if (multiWayCameraModificationSetting.verticalLockSettings.enableBottomVerticalLock)
-        multiWayCameraModificationSetting.verticalLockSettings.bottomBoundary = transformPoint.y + multiWayCameraModificationSetting.verticalLockSettings.bottomVerticalLockPosition + _cameraController.targetScreenSize.y * .5f / multiWayCameraModificationSetting.zoomSettings.zoomPercentage;
-    }
-
-    if (multiWayCameraModificationSetting.horizontalLockSettings.enabled)
-    {
-      if (multiWayCameraModificationSetting.horizontalLockSettings.enableLeftHorizontalLock)
-        multiWayCameraModificationSetting.horizontalLockSettings.leftBoundary = transformPoint.x + multiWayCameraModificationSetting.horizontalLockSettings.leftHorizontalLockPosition + _cameraController.targetScreenSize.x * .5f / multiWayCameraModificationSetting.zoomSettings.zoomPercentage;
-      if (multiWayCameraModificationSetting.horizontalLockSettings.enableRightHorizontalLock)
-        multiWayCameraModificationSetting.horizontalLockSettings.rightBoundary = transformPoint.x + multiWayCameraModificationSetting.horizontalLockSettings.rightHorizontalLockPosition - _cameraController.targetScreenSize.x * .5f / multiWayCameraModificationSetting.zoomSettings.zoomPercentage;
-    }
-
-    multiWayCameraModificationSetting.verticalLockSettings.translatedVerticalLockPosition = transformPoint.y + multiWayCameraModificationSetting.verticalLockSettings.defaultVerticalLockPosition;
+    MultiWayCameraModificationSetting clone = CloneAndTranslaceCameraModificationSetting(source, _cameraController);
 
     CameraMovementSettings cameraMovementSettings = new CameraMovementSettings(
-      multiWayCameraModificationSetting.verticalLockSettings
-      , multiWayCameraModificationSetting.horizontalLockSettings
-      , multiWayCameraModificationSetting.zoomSettings
-      , multiWayCameraModificationSetting.smoothDampMoveSettings
-      , multiWayCameraModificationSetting.offset
-      , multiWayCameraModificationSetting.verticalCameraFollowMode
+      clone.verticalLockSettings
+      , clone.horizontalLockSettings
+      , clone.zoomSettings
+      , clone.smoothDampMoveSettings
+      , clone.offset
+      , clone.verticalCameraFollowMode
       );
 
     var cameraController = Camera.main.GetComponent<CameraController>();
 
     cameraController.SetCameraMovementSettings(cameraMovementSettings);
 
-    _lastMultiWayCameraModificationSetting = multiWayCameraModificationSetting;
-    Logger.Info("Applied " + (multiWayCameraModificationSetting == redCameraModificationSettings ? "red" : "green") + " camera setting for camera modifier " + this.name);
+    _lastMultiWayCameraModificationSetting = source;
+    Logger.Info("Applied " + (source == redCameraModificationSettings ? "red" : "green") + " camera setting for camera modifier " + this.name);
   }
 
   void OnTriggerExit2D(Collider2D col)

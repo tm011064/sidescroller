@@ -11,6 +11,9 @@ public class PlayerControlHandler : BaseControlHandler
 
   private bool _isCrouching = false;
   protected float jumpHeightMultiplier = 1f;
+  protected float? _fixedJumpHeight = null;
+
+  protected bool _hasPerformedGroundJumpThisFrame = false;
   #endregion
 
   #region methods
@@ -143,7 +146,8 @@ public class PlayerControlHandler : BaseControlHandler
   protected float GetGravityAdjustedVerticalVelocity(Vector3 velocity, float gravity, bool canBreakUpMovement)
   {
     // apply gravity before moving
-    if (canBreakUpMovement && velocity.y > 0f && _gameManager.inputStateManager.GetButtonState("Jump").IsUp)
+    if (canBreakUpMovement && velocity.y > 0f
+      && (_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsUp) != 0)
     {
       return (velocity.y + gravity * Time.deltaTime) * _playerMetricSettings.jumpReleaseUpVelocityMultiplier;
     }
@@ -155,37 +159,53 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float CalculateJumpHeight(Vector2 velocity)
   {
-    float absVelocity = Mathf.Abs(velocity.x);
-    float jumpHeight;
-    if (absVelocity >= _playerController.jumpSettings.runJumpHeightSpeedTrigger)
-      jumpHeight = _playerController.jumpSettings.runJumpHeight;
-    else if (absVelocity >= _playerController.jumpSettings.walkJumpHeightSpeedTrigger)
-      jumpHeight = _playerController.jumpSettings.walkJumpHeight;
+    if (_fixedJumpHeight.HasValue)
+    {
+      return Mathf.Sqrt(
+            2f
+            * -_playerController.jumpSettings.gravity
+            * _fixedJumpHeight.Value
+            );
+    }
     else
-      jumpHeight = _playerController.jumpSettings.standJumpHeight;
+    {
+      float absVelocity = Mathf.Abs(velocity.x);
+      float jumpHeight;
+      if (absVelocity >= _playerController.jumpSettings.runJumpHeightSpeedTrigger)
+        jumpHeight = _playerController.jumpSettings.runJumpHeight;
+      else if (absVelocity >= _playerController.jumpSettings.walkJumpHeightSpeedTrigger)
+        jumpHeight = _playerController.jumpSettings.walkJumpHeight;
+      else
+        jumpHeight = _playerController.jumpSettings.standJumpHeight;
 
-    return Mathf.Sqrt(
-          2f
-          * jumpHeightMultiplier
-          * -_playerController.jumpSettings.gravity
-          * jumpHeight
-          );
+      return Mathf.Sqrt(
+            2f
+            * jumpHeightMultiplier
+            * -_playerController.jumpSettings.gravity
+            * jumpHeight
+            );
+    }
   }
 
-  protected float GetJumpVerticalVelocity(Vector3 velocity, bool canJump, out bool hasJumped)
+  protected float GetJumpVerticalVelocity(Vector3 velocity, bool canJump, out bool hasJumped
+    , ButtonPressState allowedJumpButtonPressState = ButtonPressState.IsDown)
   {
     float value = velocity.y;
     hasJumped = false;
+    _hasPerformedGroundJumpThisFrame = false;
 
     if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
       value = 0f;
 
-    if (canJump && _gameManager.inputStateManager.GetButtonState("Jump").IsDown)
+    if (canJump
+      && (_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & allowedJumpButtonPressState) != 0
+      )
     {
       if (this.CanJump())
       {
         value = CalculateJumpHeight(velocity);
         hasJumped = true;
+        _hasPerformedGroundJumpThisFrame = true;
 
         Logger.Info("Ground Jump executed. Velocity y: " + value);
       }
@@ -232,7 +252,7 @@ public class PlayerControlHandler : BaseControlHandler
   protected float GetHorizontalVelocityWithDamping(Vector3 velocity, float hAxis, float normalizedHorizontalSpeed)
   {
     float speed = _playerController.runSettings.walkSpeed;
-    if (_gameManager.inputStateManager.GetButtonState("Dash").IsPressed)
+    if ((_gameManager.inputStateManager.GetButtonState("Dash").buttonPressState & ButtonPressState.IsPressed) != 0)
     {
       if (                                                                // allow dash speed if
             _playerController.runSettings.enableRunning                   // running is enabled
@@ -267,8 +287,15 @@ public class PlayerControlHandler : BaseControlHandler
 
     float groundedAdjustmentFactor = _playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below ? Mathf.Abs(hAxis) : 1f;
 
-    return Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * speed * groundedAdjustmentFactor
-      , Time.deltaTime * smoothedMovementFactor);
+    float newVelocity = normalizedHorizontalSpeed * speed * groundedAdjustmentFactor;
+    if (_playerController.jumpSettings.enableBackflipOnDirectionChange
+      && _hasPerformedGroundJumpThisFrame
+      && Mathf.Sign(newVelocity) != Mathf.Sign(velocity.x))
+    {// Note: this only works if the jump velocity calculation is done before the horizontal calculation!
+      return normalizedHorizontalSpeed * _playerController.jumpSettings.backflipOnDirectionChangeSpeed;
+    }
+
+    return Mathf.Lerp(velocity.x, newVelocity, Time.deltaTime * smoothedMovementFactor);
   }
 
   protected float GetDefaultHorizontalVelocity(Vector3 velocity)
@@ -295,7 +322,7 @@ public class PlayerControlHandler : BaseControlHandler
   protected void CheckOneWayPlatformFallThrough()
   {
     if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below
-      && _gameManager.inputStateManager.GetButtonState("Fall").IsPressed
+      && (_gameManager.inputStateManager.GetButtonState("Fall").buttonPressState & ButtonPressState.IsPressed) != 0
       && _playerController.currentPlatform != null
       && _playerController.currentPlatform.layer == LayerMask.NameToLayer("OneWayPlatform"))
     {
