@@ -103,6 +103,12 @@ public partial class PlayerController : BaseCharacterController
   public bool isTakingDamage = false;
   [HideInInspector]
   public bool isAttachedToWall = false;
+  [HideInInspector]
+  public bool isCrouching = false;
+  [HideInInspector]
+  public bool isPerformingSpinMeleeAttack = false;
+  [HideInInspector]
+  public GameObject spinMeleeAttackBoxCollider = null;
   #endregion
 
   #region private fields
@@ -131,6 +137,12 @@ public partial class PlayerController : BaseCharacterController
     boxCollider = GetComponent<BoxCollider2D>();
     boxColliderOffsetDefault = boxCollider.offset;
     boxColliderSizeDefault = boxCollider.size;
+
+    Transform childTransform = this.transform.FindChild("SpinMeleeAttackBoxCollider");
+    Logger.Assert(childTransform != null, "Player controller is expected to have a SpinMeleeAttackBoxCollider child object. If this is no longer needed, remove this line in code.");
+    spinMeleeAttackBoxCollider = childTransform.gameObject;
+    spinMeleeAttackBoxCollider.SetActive(false); // we only want to activate this when the player performs the attack.
+
 
     characterPhysicsManager = GetComponent<CharacterPhysicsManager>();
     animator = this.transform.GetComponent<Animator>();

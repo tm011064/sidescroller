@@ -9,8 +9,10 @@ public enum PowerUpType
   Basic = 1,
   Floater = 2,
   DoubleJump = 4,
-  Boots = 8,
-  ForceField = 16,
+  SpinMeleeAttack = 8,
+  TaserAttack = 16,
+  //Boots = 8,
+  //ForceField = 16,
 }
 
 [Serializable]
@@ -149,6 +151,10 @@ public class PowerUpManager
 
           case PowerUpType.DoubleJump:
             _currentPowerUpControlHandler = new PowerUpDoubleJumpControlHandler(_gameManager.player);
+            break;
+
+          case PowerUpType.SpinMeleeAttack:
+            _currentPowerUpControlHandler = new PowerUpSpinMeleeAttackControlHandler(_gameManager.player);
             break;
         }
 

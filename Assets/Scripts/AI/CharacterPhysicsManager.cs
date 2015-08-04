@@ -226,7 +226,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
     transform = GetComponent<Transform>();
     boxCollider = GetComponent<BoxCollider2D>();
     rigidBody2D = GetComponent<Rigidbody2D>();
-
+    
     // here, we trigger our properties that have setters with bodies
     skinWidth = _skinWidth;
 

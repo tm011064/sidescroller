@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     powerUpManager = new PowerUpManager(this);
     inputStateManager = new InputStateManager();
-    inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp");
+    inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp", "Attack");
     inputStateManager.InitializeAxes("Horizontal", "Vertical");
 
     DontDestroyOnLoad(gameObject);
@@ -83,10 +83,13 @@ public class GameManager : MonoBehaviour
   {
     inputStateManager.Update();
 
+    // TODO (Roman): this must not make it into release
 //#if !FINAL
 
     if (Input.GetKeyUp("n"))
     {
+      Debug.Log("Key Command: Go to next checkpoint");
+
       _currentCheckpointIndex--;
       if (_currentCheckpointIndex < 0)
         _currentCheckpointIndex = _orderedSceneCheckpoints.Count - 1;
@@ -97,6 +100,8 @@ public class GameManager : MonoBehaviour
     }
     if (Input.GetKeyUp("p"))
     {
+      Debug.Log("Key Command: Go to previous checkpoint");
+
       _currentCheckpointIndex++;
       if (_currentCheckpointIndex >= _orderedSceneCheckpoints.Count)
         _currentCheckpointIndex = 0;
@@ -104,6 +109,14 @@ public class GameManager : MonoBehaviour
       GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
       this.player.spawnLocation = checkpoint.gameObject.transform.position;
       this.player.Respawn();
+    }
+    if (Input.GetKeyUp("z"))
+    {
+      Debug.Log("Key Command: add all powerups");
+
+      GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.Floater);
+      GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.DoubleJump);
+      GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.SpinMeleeAttack);
     }
 
 

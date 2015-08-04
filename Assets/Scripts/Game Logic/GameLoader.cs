@@ -8,6 +8,8 @@ public class PowerUpSettings
 {
   public float floaterGravity = -100f;
   public float startFloatingDuringFallVelocityMultiplier = .1f;
+  public float floaterGravityDecreaseInterpolationFactor = .05f;
+  public float floaterInAirDampingOverride = 3f;
 }
 [Serializable]
 public class PlayerMetricSettings

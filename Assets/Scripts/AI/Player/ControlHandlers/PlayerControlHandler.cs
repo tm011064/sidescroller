@@ -9,7 +9,6 @@ public class PlayerControlHandler : BaseControlHandler
   protected PlayerController _playerController;
   protected PlayerMetricSettings _playerMetricSettings;
 
-  private bool _isCrouching = false;
   protected float jumpHeightMultiplier = 1f;
   protected float? _fixedJumpHeight = null;
 
@@ -32,13 +31,36 @@ public class PlayerControlHandler : BaseControlHandler
   {
     Logger.Trace(TRACE_TAG, "OnAfterUpdate -> Velocity: " + _characterPhysicsManager.velocity);
 
+    if (_playerController.isPerformingSpinMeleeAttack)
+    {
+      // we need to check whether the animation has finished. If so, we set the flag which will allow the player to do another attack.
+      AnimatorStateInfo animatorStateInfo = _playerController.animator.GetCurrentAnimatorStateInfo(0);
+      if (animatorStateInfo.IsName("PlayerSpinMeleeAttack"))
+      {// we are already running the animation
+        if (animatorStateInfo.normalizedTime > 1f)
+        {
+          // this means a full cycle has been performed, so we can stop the animation
+          _playerController.isPerformingSpinMeleeAttack = false;
+        }
+        else
+        {
+          return;
+        }
+      }
+      else
+      {
+        _playerController.animator.Play(Animator.StringToHash("PlayerSpinMeleeAttack"));
+        return;
+      }
+    }
+
     if (_playerController.isTakingDamage)
     {
       _playerController.animator.Play(Animator.StringToHash("PlayerDamageTaken"));
     }
     else if (_playerController.isAttachedToWall
-      && _playerController.characterPhysicsManager.velocity.y < 0f
-      && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnRightWall) != 0)
+          && _playerController.characterPhysicsManager.velocity.y < 0f
+          && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnRightWall) != 0)
     {
       if (_playerController.transform.localScale.x < 1f)
         _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
@@ -72,21 +94,21 @@ public class PlayerControlHandler : BaseControlHandler
           _playerController.animator.Play(Animator.StringToHash("PlayerCrouchRun"));
         }
 
-        if (!_isCrouching)
+        if (!_playerController.isCrouching)
         {
           // we also need to adjust the collider size...
           _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetCrouched;
           _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeCrouched;
 
           _characterPhysicsManager.RecalculateDistanceBetweenRays();
-          _isCrouching = true;
+          _playerController.isCrouching = true;
 
           Logger.Info("Crouch executed, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
         }
       }
       else
       {
-        if (_isCrouching)
+        if (_playerController.isCrouching)
         {
           if (_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
           {
@@ -97,7 +119,7 @@ public class PlayerControlHandler : BaseControlHandler
             _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
 
             _characterPhysicsManager.RecalculateDistanceBetweenRays();
-            _isCrouching = false;
+            _playerController.isCrouching = false;
 
             Logger.Info("Crouch ended, box collider size set to: " + _characterPhysicsManager.boxCollider.size + ", offset: " + _characterPhysicsManager.boxCollider.offset);
           }
@@ -115,7 +137,7 @@ public class PlayerControlHandler : BaseControlHandler
           }
         }
 
-        if (!_isCrouching)
+        if (!_playerController.isCrouching)
         {
           if (xAxis > -threshold
             && xAxis < threshold)

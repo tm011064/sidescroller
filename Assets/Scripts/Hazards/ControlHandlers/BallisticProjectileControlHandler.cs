@@ -34,7 +34,5 @@ public class BallisticProjectileControlHandler : BaseProjectileControlHandler
       if (Mathf.Abs(_velocity.y) > maxVelocity.Value.y)
         _velocity.y = maxVelocity.Value.y * Mathf.Sign(_velocity.y);
     }
-
-    Debug.Log(_velocity);
   }
 }

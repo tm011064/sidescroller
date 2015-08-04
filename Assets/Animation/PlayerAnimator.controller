@@ -73,6 +73,23 @@ AnimatorState:
   m_Mirror: 0
   m_Motion: {fileID: 7400000, guid: 5ccb4c018e5f27449a30fe59c4281515, type: 2}
   m_Tag: 
+--- !u!1102 &110214892
+AnimatorState:
+  serializedVersion: 5
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: PlayerSpinMeleeAttack
+  m_Speed: 1
+  m_CycleOffset: 0
+  m_Transitions: []
+  m_StateMachineBehaviours: []
+  m_Position: {x: 50, y: 50, z: 0}
+  m_IKOnFeet: 0
+  m_WriteDefaultValues: 1
+  m_Mirror: 0
+  m_Motion: {fileID: 7400000, guid: a75b62bb7521bd44f8f0f20698ad1a81, type: 2}
+  m_Tag: 
 --- !u!1102 &110232534
 AnimatorState:
   serializedVersion: 5
@@ -186,10 +203,13 @@ AnimatorStateMachine:
     m_Position: {x: 375, y: 325, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110294206}
-    m_Position: {x: 410, y: 390, z: 0}
+    m_Position: {x: 408, y: 384, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 110232534}
     m_Position: {x: 445, y: 455, z: 0}
+  - serializedVersion: 1
+    m_State: {fileID: 110214892}
+    m_Position: {x: 480, y: 520, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []

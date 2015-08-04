@@ -108,11 +108,6 @@ MonoBehaviour:
   performIsOnWallChecks: 0
   enableEdgeSlideUpHelp: 0
   edgeSlideUpCornerWidth: 16
-  slopeSpeedMultiplierOverride:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
   _skinWidth: 2
 --- !u!114 &11476222
 MonoBehaviour:

@@ -29,6 +29,8 @@ public class BaseControlHandler : IDisposable
     return true;
   }
 
+  public virtual void OnAfterStackPeekUpdate() { }
+
   /// <summary>
   /// Updates this instance.
   /// </summary>
