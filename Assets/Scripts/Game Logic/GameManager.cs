@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     GameObject checkpoint = null;
     switch (Application.loadedLevelName)
     {
+      case "JumpArena":
       case "Platforms And Enemies":
         _orderedSceneCheckpoints = new List<Checkpoint>(GameObject.FindObjectsOfType<Checkpoint>());
         _orderedSceneCheckpoints.Sort((a, b) => b.index.CompareTo(a.index));
