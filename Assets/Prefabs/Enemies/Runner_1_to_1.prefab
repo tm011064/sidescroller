@@ -76,7 +76,7 @@ MonoBehaviour:
     m_Bits: 4096
   triggerMask:
     serializedVersion: 2
-    m_Bits: 16640
+    m_Bits: 147712
   oneWayPlatformMask:
     serializedVersion: 2
     m_Bits: 0
@@ -108,11 +108,6 @@ MonoBehaviour:
   performIsOnWallChecks: 0
   enableEdgeSlideUpHelp: 0
   edgeSlideUpCornerWidth: 16
-  slopeSpeedMultiplierOverride:
-    serializedVersion: 2
-    m_Curve: []
-    m_PreInfinity: 2
-    m_PostInfinity: 2
   _skinWidth: 2
 --- !u!114 &11436874
 MonoBehaviour:

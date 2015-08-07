@@ -118,6 +118,7 @@ public class GameManager : MonoBehaviour
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.Floater);
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.DoubleJump);
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.SpinMeleeAttack);
+      GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.JetPack);
     }
 
 

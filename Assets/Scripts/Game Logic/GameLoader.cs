@@ -4,12 +4,26 @@ using System;
 using System.Collections.Generic;
 
 [Serializable]
-public class PowerUpSettings
+public class JetpackSettings
+{
+  public float jetpackSpeed = 600f;
+  public float airDamping = 2f;
+
+}
+[Serializable]
+public class FloaterSettings
 {
   public float floaterGravity = -100f;
   public float startFloatingDuringFallVelocityMultiplier = .1f;
   public float floaterGravityDecreaseInterpolationFactor = .05f;
   public float floaterInAirDampingOverride = 3f;
+}
+
+[Serializable]
+public class PowerUpSettings
+{
+  public FloaterSettings floaterSettings;
+  public JetpackSettings jetpackSettings;
 }
 [Serializable]
 public class PlayerMetricSettings
@@ -26,6 +40,7 @@ public class PooledObjectItem
 public class PooledObjects
 {
   public PooledObjectItem basicPowerUpPrefab;
+  public PooledObjectItem basicBullet;
 }
 [Serializable]
 public class LogSettings
@@ -66,13 +81,14 @@ public class GameLoader : MonoBehaviour
   void Awake()
   {
     Logger.Initialize(gameSettings.logSettings);
-    
+
     if (GameManager.instance == null)
       Instantiate(gameManager);
 
     GameManager.instance.gameSettings = gameSettings;
 
     ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.basicPowerUpPrefab.prefab, gameSettings.pooledObjects.basicPowerUpPrefab.initialSize, int.MaxValue);
+    ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.basicBullet.prefab, gameSettings.pooledObjects.basicBullet.initialSize, int.MaxValue);
 
     //if (SoundManager.instance == null)
     //  Instantiate(soundManager);

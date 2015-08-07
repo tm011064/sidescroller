@@ -11,6 +11,7 @@ public enum PowerUpType
   DoubleJump = 4,
   SpinMeleeAttack = 8,
   TaserAttack = 16,
+  JetPack = 32
   //Boots = 8,
   //ForceField = 16,
 }
@@ -155,6 +156,9 @@ public class PowerUpManager
 
           case PowerUpType.SpinMeleeAttack:
             _currentPowerUpControlHandler = new PowerUpSpinMeleeAttackControlHandler(_gameManager.player);
+            break;
+          case PowerUpType.JetPack:
+            _currentPowerUpControlHandler = new PowerUpJetPackControlHandler(_gameManager.player, 30f, _gameManager.gameSettings.powerUpSettings);
             break;
         }
 

@@ -68,7 +68,7 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
           && (_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsDown) != 0)
         {
           // player is on his way down,can float and pressed the jump button, so he starts floating
-          velocity.y *= _powerUpSettings.startFloatingDuringFallVelocityMultiplier;
+          velocity.y *= _powerUpSettings.floaterSettings.startFloatingDuringFallVelocityMultiplier;
           _floatStatus |= FloatStatus.IsFloating;
         }
         if ((_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsPressed) != 0)
@@ -89,12 +89,12 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
     {
       if (_isFloating)
       {
-        _playerController.adjustedGravity = Mathf.Lerp(_playerController.adjustedGravity, _playerController.jumpSettings.gravity, Time.deltaTime * _powerUpSettings.floaterGravityDecreaseInterpolationFactor); // TODO (Roman): hard coded...
+        _playerController.adjustedGravity = Mathf.Lerp(_playerController.adjustedGravity, _playerController.jumpSettings.gravity, Time.deltaTime * _powerUpSettings.floaterSettings.floaterGravityDecreaseInterpolationFactor); // TODO (Roman): hard coded...
       }
       else
       {
-        _playerController.adjustedGravity = _powerUpSettings.floaterGravity;
-        _playerController.jumpSettings.inAirDamping = _powerUpSettings.floaterInAirDampingOverride;
+        _playerController.adjustedGravity = _powerUpSettings.floaterSettings.floaterGravity;
+        _playerController.jumpSettings.inAirDamping = _powerUpSettings.floaterSettings.floaterInAirDampingOverride;
       }
     }
     else
