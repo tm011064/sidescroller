@@ -7,7 +7,6 @@ using UnityEngine;
 public class PowerUpJetPackControlHandler : PlayerControlHandler
 {
   private PowerUpSettings _powerUpSettings;
-  private bool _isFloating;
 
   public PowerUpJetPackControlHandler(PlayerController playerController, float duration, PowerUpSettings powerUpSettings)
     : base(playerController, duration)
@@ -40,13 +39,17 @@ public class PowerUpJetPackControlHandler : PlayerControlHandler
 
     if ((_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & ButtonPressState.IsPressed) != 0)
     {
+
       // we want to dash towards the direction the controller points to
       velocity.x = Mathf.Lerp(velocity.x, horizontalAxisState.value * _powerUpSettings.jetpackSettings.jetpackSpeed, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
-      velocity.y = Mathf.Lerp(velocity.y, verticalAxisState.value * _powerUpSettings.jetpackSettings.jetpackSpeed, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
+      if (horizontalAxisState.value == 0f)
+        velocity.y = Mathf.Lerp(velocity.y, 1f * _powerUpSettings.jetpackSettings.jetpackSpeed, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
+      else
+        velocity.y = Mathf.Lerp(velocity.y, verticalAxisState.value * _powerUpSettings.jetpackSettings.jetpackSpeed, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
+
     }
     else
     {
-      Debug.Log(_characterPhysicsManager.lastMoveCalculationResult.collisionState.below);
       if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below == true)
       {
         velocity.y = 0f;
@@ -57,15 +60,23 @@ public class PowerUpJetPackControlHandler : PlayerControlHandler
       }
       else
       {
-        if (velocity.x != 0f)
-          velocity.x = Mathf.Lerp(velocity.x, 0f, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
-        if (velocity.y != 0f)
-          velocity.y = Mathf.Lerp(velocity.y, 0f, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
+        if (_powerUpSettings.jetpackSettings.autoFloatWithoutThrust)
+        {
+          if (velocity.x != 0f)
+            velocity.x = Mathf.Lerp(velocity.x, 0f, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
+          if (velocity.y != 0f)
+            velocity.y = Mathf.Lerp(velocity.y, 0f, Time.deltaTime * _powerUpSettings.jetpackSettings.airDamping);
 
-        if (velocity.x < 10f && velocity.x > -10f)
-          velocity.x = 0f;
-        if (velocity.y < 10f && velocity.y > -10f)
-          velocity.y = 0f;
+          if (velocity.x < 10f && velocity.x > -10f)
+            velocity.x = 0f;
+          if (velocity.y < 10f && velocity.y > -10f)
+            velocity.y = 0f;
+        }
+        else
+        {
+          velocity.y = Mathf.Max(GetGravityAdjustedVerticalVelocity(velocity, _powerUpSettings.jetpackSettings.floatGravity, true), _playerController.jumpSettings.maxDownwardSpeed);
+          velocity.x = GetDefaultHorizontalVelocity(velocity);
+        }
       }
     }
 
