@@ -6,11 +6,14 @@ using System.Collections.Generic;
 [Serializable]
 public class JetpackSettings
 {
+  [Tooltip("The speed at which the jetpack travels")]
   public float jetpackSpeed = 600f;
+  [Tooltip("The speed at which the jetpack can change direction. Higher value means faster change.")]
   public float airDamping = 2f;
+  [Tooltip("If true, the jetpack will float in mid air when not propelled; otherwise, the jetpack will fall down controlled by the 'JetpackSettings -> Float Gravity' force.")]
   public bool autoFloatWithoutThrust = false;
+  [Tooltip("If 'Auto Float Without Thrust' is disabled, this gravity will be used to move the player towards the ground.")]
   public float floatGravity = -200f;
-
 }
 [Serializable]
 public class FloaterSettings

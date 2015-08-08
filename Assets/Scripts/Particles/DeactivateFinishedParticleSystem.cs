@@ -5,10 +5,14 @@ public class DeactivateFinishedParticleSystem : MonoBehaviour
 {
   private ParticleSystem _particleSystem;
 
-  void Start()
+  void OnDisable()
+  {
+    StopCoroutine(DeactivationTriggerCheck());
+  }
+  void OnEnable()
   {
     _particleSystem = this.GetComponent<ParticleSystem>();
-    StartCoroutine("DeactivationTriggerCheck");
+    StartCoroutine(DeactivationTriggerCheck());
   }
 
   IEnumerator DeactivationTriggerCheck()

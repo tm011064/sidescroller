@@ -84,22 +84,19 @@ public class PowerUpJetPackControlHandler : PlayerControlHandler
     if ((_gameManager.inputStateManager.GetButtonState("Dash").buttonPressState & ButtonPressState.IsPressed) != 0)
     {// fire
 
-      float autoFireBulletsPerSecond = 10f;
+      float autoFireBulletsPerSecond = 10f; // TODO (Roman): hardcoded
       if (_lastBulletTime + (1 / autoFireBulletsPerSecond) <= Time.time)
       {
         Vector2 direction = new Vector2(horizontalAxisState.value, verticalAxisState.value).normalized;
 
         if (direction.x == 0f && direction.y == 0f)
-        {
           direction.x = _playerController.transform.localScale.x > 0f ? 1f : -1f;
-        }
 
         GameObject bulletObject = ObjectPoolingManager.Instance.GetObject(_gameManager.gameSettings.pooledObjects.basicBullet.prefab.name);
         Bullet bullet = bulletObject.GetComponent<Bullet>();
-        bullet.StartMove(_playerController.transform.position, direction * 2000f);
+        bullet.StartMove(_playerController.transform.position, direction * 2000f); // TODO (Roman): hardcoded
 
         float rot_z = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        //bulletObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90f);
         bulletObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z);
 
         _lastBulletTime = Time.time;
