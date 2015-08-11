@@ -47,6 +47,7 @@ public class PooledObjects
   public PooledObjectItem basicPowerUpPrefab;
   public PooledObjectItem basicBullet;
   public PooledObjectItem defaultEnemyDeathParticlePrefab;
+  public PooledObjectItem defaultPlayerDeathParticlePrefab;
 }
 [Serializable]
 public class LogSettings
@@ -96,6 +97,7 @@ public class GameLoader : MonoBehaviour
     ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.basicPowerUpPrefab.prefab, gameSettings.pooledObjects.basicPowerUpPrefab.initialSize, int.MaxValue);
     ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.basicBullet.prefab, gameSettings.pooledObjects.basicBullet.initialSize, int.MaxValue);
     ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.defaultEnemyDeathParticlePrefab.prefab, gameSettings.pooledObjects.defaultEnemyDeathParticlePrefab.initialSize, int.MaxValue);
+    ObjectPoolingManager.Instance.RegisterPool(gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.prefab, gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.initialSize, int.MaxValue);
 
     //if (SoundManager.instance == null)
     //  Instantiate(soundManager);

@@ -226,7 +226,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
     transform = GetComponent<Transform>();
     boxCollider = GetComponent<BoxCollider2D>();
     rigidBody2D = GetComponent<Rigidbody2D>();
-    
+
     // here, we trigger our properties that have setters with bodies
     skinWidth = _skinWidth;
 
@@ -603,6 +603,22 @@ public class CharacterPhysicsManager : BasePhysicsManager
     velocity = Vector3.zero;
     this.transform.position = position;
     _raycastHitsThisFrame.Clear();
+  }
+
+  public bool IsFloorWithinDistance(float rayDistance)
+  {
+    rayDistance += _skinWidth;
+    for (var i = 0; i < totalVerticalRays; i++)
+    {
+      if (Physics2D.Raycast(
+        new Vector2(_raycastOrigins.bottomLeft.x + i * _horizontalDistanceBetweenRays, _raycastOrigins.bottomLeft.y)
+        , -Vector2.up
+        , rayDistance
+        , platformMask))
+        return true;
+    }
+
+    return false;
   }
 
   #endregion

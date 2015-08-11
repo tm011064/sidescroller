@@ -52,6 +52,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   {
     switch (anchor)
     {
+      case TextAnchor.LowerCenter: return new Vector2(-width / 2, height);
       case TextAnchor.LowerLeft: return new Vector2(0, height);
       case TextAnchor.MiddleCenter: return new Vector2(-width / 2, height / 2);
 
@@ -63,6 +64,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   {
     switch (anchor)
     {
+      case TextAnchor.LowerCenter: return new Vector2(width / 2, height);
       case TextAnchor.LowerLeft: return new Vector2(width, height);
       case TextAnchor.MiddleCenter: return new Vector2(width / 2, height / 2);
 
@@ -74,6 +76,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   {
     switch (anchor)
     {
+      case TextAnchor.LowerCenter: return new Vector2(-width / 2, 0);
       case TextAnchor.LowerLeft: return new Vector2(0, 0);
       case TextAnchor.MiddleCenter: return new Vector2(-width / 2, -height / 2);
 
@@ -85,6 +88,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
   {
     switch (anchor)
     {
+      case TextAnchor.LowerCenter: return new Vector2(width / 2, 0);
       case TextAnchor.LowerLeft: return new Vector2(width, 0);
       case TextAnchor.MiddleCenter: return new Vector2(width / 2, -height / 2);
 
@@ -116,13 +120,9 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
       switch (anchor)
       {
-        case TextAnchor.LowerLeft:
-          boxCollider2D.offset = new Vector2(width / 2, height / 2);
-          break;
-
-        case TextAnchor.MiddleCenter:
-          boxCollider2D.offset = new Vector2(0, 0);
-          break;
+        case TextAnchor.LowerCenter: boxCollider2D.offset = new Vector2(0, height / 2); break;
+        case TextAnchor.LowerLeft: boxCollider2D.offset = new Vector2(width / 2, height / 2); break;
+        case TextAnchor.MiddleCenter: boxCollider2D.offset = new Vector2(0, 0); break;
 
         default:
           throw new ArgumentException("TextAnchor " + anchor + " not supported.");
@@ -284,6 +284,13 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
     switch (anchor)
     {
+      case TextAnchor.LowerCenter:
+        vertices.Add(new Vector3(-width / 2, height, 0)); //top-left
+        vertices.Add(new Vector3(width / 2, height, 0)); //top-right
+        vertices.Add(new Vector3(-width / 2, 0, 0)); //bottom-left
+        vertices.Add(new Vector3(width / 2, 0, 0)); //bottom-right
+        break;
+
       case TextAnchor.LowerLeft:
         vertices.Add(new Vector3(0, height, 0)); //top-left
         vertices.Add(new Vector3(width, height, 0)); //top-right
@@ -330,7 +337,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
     return mesh;
   }
 
-  Mesh CreateTiles(int tileWidth, int tileHeight, int gridWidth, int gridHeight)
+  Mesh CreateTiles(float tileWidth, float tileHeight, float gridWidth, float gridHeight)
   {
     var mesh = new Mesh();
 
@@ -344,9 +351,16 @@ public partial class RectangleMeshBuildScript : BasePlatform
 
     var index = 0;
 
-    int xFrom, xTo, yFrom, yTo;
+    float xFrom, xTo, yFrom, yTo;
     switch (anchor)
     {
+      case TextAnchor.LowerCenter:
+        xFrom = -gridWidth / 2f;
+        xTo = gridWidth / 2f;
+        yFrom = 0f;
+        yTo = gridHeight;
+        break;
+
       case TextAnchor.LowerLeft:
         xFrom = 0;
         xTo = gridWidth;
@@ -355,10 +369,10 @@ public partial class RectangleMeshBuildScript : BasePlatform
         break;
 
       case TextAnchor.MiddleCenter:
-        xFrom = -gridWidth / 2;
-        xTo = gridWidth / 2;
-        yFrom = -gridHeight / 2;
-        yTo = gridHeight / 2;
+        xFrom = -gridWidth / 2f;
+        xTo = gridWidth / 2f;
+        yFrom = -gridHeight / 2f;
+        yTo = gridHeight / 2f;
         break;
 
       default:
@@ -385,7 +399,7 @@ public partial class RectangleMeshBuildScript : BasePlatform
     return mesh;
   }
 
-  private static void AddVertices(int tileHeight, int tileWidth, int y, int x, ICollection<Vector3> vertices)
+  private static void AddVertices(float tileHeight, float tileWidth, float y, float x, ICollection<Vector3> vertices)
   {
     vertices.Add(new Vector3((x * tileWidth), (y * tileHeight), 0));
     vertices.Add(new Vector3((x * tileWidth) + tileWidth, (y * tileHeight), 0));

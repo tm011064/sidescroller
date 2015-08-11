@@ -83,6 +83,11 @@ public class PowerUpManager
 
     // player died
     Logger.Info("Added damage, respawn. " + this.ToString());
+    
+    // TODO (Roman): this should be somewhere else - this is just test code
+    GameObject deathParticles = ObjectPoolingManager.Instance.GetObject(GameManager.instance.gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.prefab.name);
+    deathParticles.transform.position = _gameManager.player.gameObject.transform.position;
+
     _gameManager.player.Respawn();
   }
   public DamageResult AddDamage()
@@ -112,6 +117,9 @@ public class PowerUpManager
       {
         // player died
         Logger.Info("Added damage, respawn. " + this.ToString());
+        // TODO (Roman): this should be somewhere else - this is just test code
+        GameObject deathParticles = ObjectPoolingManager.Instance.GetObject(GameManager.instance.gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.prefab.name);
+        deathParticles.transform.position = _gameManager.player.gameObject.transform.position;
         _gameManager.player.Respawn();
         return DamageResult.IsDead;
       }

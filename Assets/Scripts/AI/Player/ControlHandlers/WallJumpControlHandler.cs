@@ -72,6 +72,13 @@ public class WallJumpControlHandler : PlayerControlHandler
       Logger.Info("Popped wall jump because player is grounded.");
       return false; // we only want this handler to be active while the player is in mid air
     }
+
+    if (_playerController.wallJumpSettings.minDistanceFromFloor > 0f && _playerController.characterPhysicsManager.IsFloorWithinDistance(_playerController.wallJumpSettings.minDistanceFromFloor))
+    {
+      Logger.Info("Popped wall jump because player is within min threshold distance (" + _playerController.wallJumpSettings.minDistanceFromFloor + " units) to floor.");
+      return false; // we only want this handler to be active while the player is in mid air
+    }
+
     // TODO (Roman): when wall jumping and floating, we should not be able to climb up a wall using wall jumps and floats
     Vector3 velocity = _playerController.characterPhysicsManager.velocity;
 

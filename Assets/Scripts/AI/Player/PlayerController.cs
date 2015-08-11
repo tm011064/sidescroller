@@ -19,6 +19,8 @@ public class WallJumpSettings
   public float wallJumpWallEvaluationDuration = .1f;
   [Tooltip("The downward max speed when sliding down a wall.")]
   public float maxWallDownwardSpeed = -1000f;
+  [Tooltip("This is the minimum distance to the bottom floor a player must have in order to allow walljumps. This prevents unwanted walljumps when a player jumps into a low wall.")]
+  public float minDistanceFromFloor = 128f;
 }
 
 [Serializable]

@@ -40,6 +40,34 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!1 &190546
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 421806}
+  - 108: {fileID: 10812524}
+  m_Layer: 0
+  m_Name: Point light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &421806
+Transform:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190546}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: -512}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 489804}
+  m_RootOrder: 1
 --- !u!4 &437382
 Transform:
   m_ObjectHideFlags: 1
@@ -59,10 +87,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 113450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4368, y: -10560, z: 0}
+  m_LocalPosition: {x: -1600, y: 368, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 437382}
+  - {fileID: 421806}
   m_Father: {fileID: 0}
   m_RootOrder: 0
 --- !u!50 &5034758
@@ -138,6 +167,38 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!108 &10812524
+Light:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 190546}
+  m_Enabled: 1
+  serializedVersion: 6
+  m_Type: 0
+  m_Color: {r: .985294104, g: 0, b: 0, a: 1}
+  m_Intensity: 7.19000006
+  m_Range: 2048
+  m_SpotAngle: 104.099998
+  m_CookieSize: 10
+  m_Shadows:
+    m_Type: 2
+    m_Resolution: -1
+    m_Strength: 1
+    m_Bias: .0500000007
+    m_NormalBias: .400000006
+  m_Cookie: {fileID: 0}
+  m_DrawHalo: 0
+  m_Flare: {fileID: 0}
+  m_RenderMode: 0
+  m_CullingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_Lightmapping: 4
+  m_BounceIntensity: 1
+  m_ShadowRadius: 0
+  m_ShadowAngle: 0
+  m_AreaSize: {x: 1, y: 1}
 --- !u!114 &11442070
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -218,6 +279,7 @@ MonoBehaviour:
     wallStickGravity: -3960
     wallJumpWallEvaluationDuration: .0199999996
     maxWallDownwardSpeed: -800
+    minDistanceFromFloor: 64
   jumpSettings:
     gravity: -3960
     standJumpHeight: 378
@@ -248,7 +310,9 @@ MonoBehaviour:
   isInvincible: 0
   isTakingDamage: 0
   isAttachedToWall: 0
+  isCrouching: 0
   isPerformingSpinMeleeAttack: 0
+  spinMeleeAttackBoxCollider: {fileID: 0}
 --- !u!114 &11491702
 MonoBehaviour:
   m_ObjectHideFlags: 1

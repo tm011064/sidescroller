@@ -101,6 +101,16 @@ public class iTweenPath : MonoBehaviour
 
     return worldNodes;
   }
+  public Vector3[] GetPathInWorldSpaceReversed()
+  {
+    Vector3[] worldNodes = new Vector3[nodes.Count];
+
+    int j = nodes.Count - 1;
+    for (int i = 0; i < nodes.Count; i++)
+      worldNodes[j--] = this.gameObject.transform.TransformPoint(nodes[i]);
+
+    return worldNodes;
+  }
 
   /// <summary>
   /// Returns the reversed visually edited path as a Vector3 array.
