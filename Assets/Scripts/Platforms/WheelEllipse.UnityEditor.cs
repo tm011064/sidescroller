@@ -17,22 +17,22 @@ public partial class WheelEllipse : SpawnBucketItemBehaviour
   {
     if (showGizmoOutline)
     {
-      if (!_areGizmosInitialized)
+      //if (!_areGizmosInitialized)
+      //{
+      if (floatingAttachedPlatform != null)
       {
-        if (floatingAttachedPlatform != null)
+        BoxCollider2D boxCollider2D = floatingAttachedPlatform.GetComponent<BoxCollider2D>();
+        if (boxCollider2D != null)
         {
-          BoxCollider2D boxCollider2D = floatingAttachedPlatform.GetComponent<BoxCollider2D>();
-          if (boxCollider2D != null)
-          {
-            _gizmoCenter = Vector2.zero;
-            _gizmoExtents = new Vector3(
-              width + boxCollider2D.size.x / 2
-              ,height + boxCollider2D.size.y / 2
-              );
-          }
+          _gizmoCenter = Vector2.zero;
+          _gizmoExtents = new Vector3(
+            width + boxCollider2D.size.x / 2
+            , height + boxCollider2D.size.y / 2
+            );
         }
-        _areGizmosInitialized = true;
       }
+      _areGizmosInitialized = true;
+      //}
 
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }

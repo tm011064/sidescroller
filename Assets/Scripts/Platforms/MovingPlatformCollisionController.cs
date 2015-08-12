@@ -21,6 +21,7 @@ public class MovingPlatformCollisionController : MonoBehaviour
     _playerController = GameManager.instance.player;
 
     _boxCollider = this.GetComponent<BoxCollider2D>();
+
     _playerBoxCollider = _playerController.boxCollider;
   }
 

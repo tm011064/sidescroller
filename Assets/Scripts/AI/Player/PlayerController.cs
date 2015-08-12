@@ -137,6 +137,7 @@ public partial class PlayerController : BaseCharacterController
     Logger.Info("Playercontroller awoke and added to game context instance.");
 
     boxCollider = GetComponent<BoxCollider2D>();
+    Debug.Log("BOX: " + boxCollider);
     boxColliderOffsetDefault = boxCollider.offset;
     boxColliderSizeDefault = boxCollider.size;
 

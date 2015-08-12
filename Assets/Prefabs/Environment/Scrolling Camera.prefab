@@ -72,7 +72,7 @@ AudioListener:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162944}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!92 &9215898
 Behaviour:
   m_ObjectHideFlags: 1
@@ -118,13 +118,30 @@ MonoBehaviour:
   gameManager: {fileID: 168078, guid: c0a6b3f01887eb34db0fcf6fd811c92f, type: 2}
   gameSettings:
     powerUpSettings:
-      floaterGravity: -500
-      startFloatingDuringFallVelocityMultiplier: .100000001
+      floaterSettings:
+        floaterGravity: -100
+        startFloatingDuringFallVelocityMultiplier: .100000001
+        floaterGravityDecreaseInterpolationFactor: .0500000007
+        floaterInAirDampingOverride: 3
+      jetpackSettings:
+        jetpackSpeed: 600
+        airDamping: 1.20000005
+        autoFloatWithoutThrust: 0
+        floatGravity: -200
     playerMetricSettings:
       jumpReleaseUpVelocityMultiplier: .400000006
     pooledObjects:
       basicPowerUpPrefab:
         prefab: {fileID: 166798, guid: 4bd4b6c05980bf9458a9f748bd42daee, type: 2}
+        initialSize: 1
+      basicBullet:
+        prefab: {fileID: 140326, guid: a827156a372f3b947a7662c8844f43df, type: 2}
+        initialSize: 100
+      defaultEnemyDeathParticlePrefab:
+        prefab: {fileID: 167798, guid: 3b5cf00d763170241b9fa290837211d6, type: 2}
+        initialSize: 5
+      defaultPlayerDeathParticlePrefab:
+        prefab: {fileID: 167798, guid: fa9163f60e66184438326f473debaf07, type: 2}
         initialSize: 1
     logSettings:
       logFile: Log\Log.txt
@@ -140,6 +157,7 @@ MonoBehaviour:
       - _PlayerControlHandler
       - InputState
       - _PlayerMetricsDebug
+      - _CharacterPhysicsManagerSlide
       enableAllTraceTags: 0
       addTraceTagToMessage: 1
     playerDamageControlHandlerSettings:
@@ -158,7 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cameraOffset: {x: 0, y: 0, z: 10}
   useFixedUpdate: 0
-  maxPixelHeight: 1080
+  targetScreenSize: {x: 1920, y: 1080}
   target: {fileID: 0}
   transform: {fileID: 0}
 --- !u!124 &12498726
@@ -167,7 +185,7 @@ Behaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 162944}
-  m_Enabled: 1
+  m_Enabled: 0
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

@@ -12,22 +12,22 @@ public partial class SpawnBucket : BaseMonoBehaviour
 
   public Color outlineGizmoColor = Color.yellow;
   public bool showGizmoOutline = true;
-  
+
   void OnDrawGizmos()
   {
     if (showGizmoOutline)
     {
-      if (!_areGizmosInitialized)
+      //if (!_areGizmosInitialized)
+      //{
+      BoxCollider2D boxCollider2D = this.GetComponent<BoxCollider2D>();
+      if (boxCollider2D != null)
       {
-        BoxCollider2D boxCollider2D = this.GetComponent<BoxCollider2D>();
-        if (boxCollider2D != null)
-        {
-          _gizmoCenter = boxCollider2D.offset;
-          _gizmoExtents = boxCollider2D.size / 2;
-        }
-
-        _areGizmosInitialized = true;
+        _gizmoCenter = boxCollider2D.offset;
+        _gizmoExtents = boxCollider2D.size / 2;
       }
+
+      _areGizmosInitialized = true;
+      //}
 
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }
