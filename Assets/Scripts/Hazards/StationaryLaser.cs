@@ -6,9 +6,12 @@ public class StationaryLaser : MonoBehaviour
 {
   private LineRenderer _lineRenderer;
 
-  public Direction direction;
+  [Tooltip("All layers that the scan rays can collide with. Should include platforms and player.")]
   public LayerMask scanRayCollisionLayers = 0;
-  public float beamStartPositionFudgeFactor = 1f;
+  [Tooltip("The direction of the laser emitted from the game object's position.")]
+  public Direction direction;
+  [Tooltip("The offset of the point where the laser gets emitted.")]
+  public Vector3 scanRayEmissionPositionOffset = Vector3.zero;
 
   void Awake()
   {
@@ -25,22 +28,22 @@ public class StationaryLaser : MonoBehaviour
       case Direction.Bottom:
         vector = -Vector2.up;
         magnitude = Screen.height;
-        startPosition += new Vector3(0f, -beamStartPositionFudgeFactor);
+        startPosition += scanRayEmissionPositionOffset;
         break;
       case Direction.Left:
         vector = -Vector2.right;
         magnitude = Screen.width;
-        startPosition += new Vector3(-beamStartPositionFudgeFactor, 0f);
+        startPosition += scanRayEmissionPositionOffset;
         break;
       case Direction.Right:
         vector = Vector2.right;
         magnitude = Screen.width;
-        startPosition += new Vector3(beamStartPositionFudgeFactor, 0f);
+        startPosition += scanRayEmissionPositionOffset;
         break;
       case Direction.Top:
         vector = Vector2.up;
         magnitude = Screen.height;
-        startPosition += new Vector3(0f, beamStartPositionFudgeFactor);
+        startPosition += scanRayEmissionPositionOffset;
         break;
 
       default: throw new ArgumentException("Direction " + direction + " not supported.");

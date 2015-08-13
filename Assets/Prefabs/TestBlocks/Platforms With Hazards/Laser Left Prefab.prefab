@@ -12,7 +12,7 @@ GameObject:
   - 33: {fileID: 3319994}
   - 114: {fileID: 11433232}
   - 61: {fileID: 6102406}
-  m_Layer: 12
+  m_Layer: 11
   m_Name: Laser Block
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -144,11 +144,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2184eb6c7404ea34990e05b4c989317e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  direction: 1
   scanRayCollisionLayers:
     serializedVersion: 2
     m_Bits: 4352
-  beamStartPositionFudgeFactor: 1
+  direction: 1
+  scanRayEmissionPositionOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &11433232
 MonoBehaviour:
   m_ObjectHideFlags: 1

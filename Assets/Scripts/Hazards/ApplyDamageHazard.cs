@@ -3,6 +3,8 @@ using System.Collections;
 
 public class ApplyDamageHazard : MonoBehaviour
 {
+  public bool destroyHazardOnCollision = false;
+
   private GameManager _gameManager;
 
   void OnTriggerStay2D(Collider2D col)
@@ -12,7 +14,8 @@ public class ApplyDamageHazard : MonoBehaviour
       if (_gameManager.player.isInvincible)
         return;
 
-      ObjectPoolingManager.Instance.Deactivate(this.gameObject);
+      if (destroyHazardOnCollision)
+        ObjectPoolingManager.Instance.Deactivate(this.gameObject);
 
       switch (_gameManager.powerUpManager.AddDamage())
       {
@@ -20,7 +23,6 @@ public class ApplyDamageHazard : MonoBehaviour
           return;
 
         default:
-
           _gameManager.player.PushControlHandler(new DamageTakenPlayerControlHandler());
           break;
       }
@@ -35,7 +37,8 @@ public class ApplyDamageHazard : MonoBehaviour
       if (_gameManager.player.isInvincible)
         return;
 
-      ObjectPoolingManager.Instance.Deactivate(this.gameObject);
+      if (destroyHazardOnCollision)
+        ObjectPoolingManager.Instance.Deactivate(this.gameObject);
 
       switch (_gameManager.powerUpManager.AddDamage())
       {
@@ -43,7 +46,6 @@ public class ApplyDamageHazard : MonoBehaviour
           return;
 
         default:
-
           _gameManager.player.PushControlHandler(new DamageTakenPlayerControlHandler());
           break;
       }

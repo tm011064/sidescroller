@@ -28,7 +28,7 @@ TagManager:
   - PlayerTriggerMask
   - Editor
   - PlayerProjectilesTriggerMask
-  - 
+  - EnemyProjectilesTriggerMask
   - 
   - 
   - 
