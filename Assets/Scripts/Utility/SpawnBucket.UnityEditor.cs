@@ -17,8 +17,6 @@ public partial class SpawnBucket : BaseMonoBehaviour
   {
     if (showGizmoOutline)
     {
-      //if (!_areGizmosInitialized)
-      //{
       BoxCollider2D boxCollider2D = this.GetComponent<BoxCollider2D>();
       if (boxCollider2D != null)
       {
@@ -27,7 +25,6 @@ public partial class SpawnBucket : BaseMonoBehaviour
       }
 
       _areGizmosInitialized = true;
-      //}
 
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }

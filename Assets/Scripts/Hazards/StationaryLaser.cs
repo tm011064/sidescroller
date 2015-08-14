@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class StationaryLaser : MonoBehaviour
+public class StationaryLaser : SpawnBucketItemBehaviour
 {
   private LineRenderer _lineRenderer;
 
@@ -17,7 +17,7 @@ public class StationaryLaser : MonoBehaviour
   {
     _lineRenderer = this.GetComponent<LineRenderer>();
   }
-
+  
   void Update()
   {
     Vector2 vector;

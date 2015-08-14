@@ -12,7 +12,7 @@ public partial class HalfWheel : SpawnBucketItemBehaviour
   public float stopDuration = 2f;
   public Direction startDirection = Direction.Right;
   public EasingType easingType = EasingType.Linear;
-
+  
   private GameObject _platform;
   private float _currentAngle;
   private float _currentMoveDuration;

@@ -2,7 +2,7 @@
 using System.Collections;
 using System;
 
-public class StationarySentryLaser : MonoBehaviour
+public class StationarySentryLaser : SpawnBucketItemBehaviour
 {
   private LineRenderer _lineRenderer;
 
@@ -48,6 +48,7 @@ public class StationarySentryLaser : MonoBehaviour
   void OnEnable()
   {
     _playerController = GameManager.instance.player;
+    Logger.Info("Enabled stationary sentry laser " + this.GetHashCode());
   }
 
   void Update()

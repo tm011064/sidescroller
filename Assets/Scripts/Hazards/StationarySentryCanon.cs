@@ -7,7 +7,7 @@ public interface IEnemyProjectile
   void StartMove(Vector2 startPosition, Vector2 direction, float acceleration, float targetVelocity);
 }
 
-public class StationarySentryCanon : MonoBehaviour
+public class StationarySentryCanon : SpawnBucketItemBehaviour
 {
   public GameObject projectilePrefab;
   public float projectileAcceleration = .05f;
@@ -55,6 +55,8 @@ public class StationarySentryCanon : MonoBehaviour
 
     // TODO (Roman): this should be done by level manager...
     _objectPoolingManager.RegisterPool(projectilePrefab, 10, int.MaxValue);
+
+    Logger.Info("Enabled sentry canon " + this.GetHashCode());
   }
 
   void Update()
