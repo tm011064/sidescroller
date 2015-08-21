@@ -13,6 +13,7 @@ public class PlayerControlHandler : BaseControlHandler
   protected float? _fixedJumpHeight = null;
 
   protected bool _hasPerformedGroundJumpThisFrame = false;
+  protected bool _hadDashPressedWhileJumpOff = false;
   #endregion
 
   #region methods
@@ -217,7 +218,10 @@ public class PlayerControlHandler : BaseControlHandler
     _hasPerformedGroundJumpThisFrame = false;
 
     if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
+    {
+      _hadDashPressedWhileJumpOff = false; // we set this to false here as the value is only used when player jumps off, not when he is grounded
       value = 0f;
+    }
 
     if (canJump
       && (_gameManager.inputStateManager.GetButtonState("Jump").buttonPressState & allowedJumpButtonPressState) != 0
@@ -228,7 +232,7 @@ public class PlayerControlHandler : BaseControlHandler
         value = CalculateJumpHeight(velocity);
         hasJumped = true;
         _hasPerformedGroundJumpThisFrame = true;
-
+        _hadDashPressedWhileJumpOff = (_gameManager.inputStateManager.GetButtonState("Dash").buttonPressState & ButtonPressState.IsPressed) != 0;
         Logger.Info("Ground Jump executed. Velocity y: " + value);
       }
     }
@@ -281,6 +285,7 @@ public class PlayerControlHandler : BaseControlHandler
             && (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below                       // either the player is grounded
                 || velocity.x > _playerController.runSettings.walkSpeed   // or the current horizontal velocity is higher than the walkspeed, meaning that the player jumped while running
                 || velocity.x < -_playerController.runSettings.walkSpeed
+                || _hadDashPressedWhileJumpOff
             )
         )
       {

@@ -11,16 +11,21 @@ public class StompingBlock : MonoBehaviour
   public float backMotionTime = 5f;
   public float pauseTimeOnToMotionComplete = 0f;
   public float pauseTimeOnBackMotionComplete = 0f;
+  public float delay = 0f;
 
   private bool _isMovingBack = false;
   private GameObject _gameObject;
   private iTweenPath _iTweenPath;
-  
+
   private void OnTweenComplete()
   {
     StartMove(!_isMovingBack);
   }
 
+  private void StartMove()
+  {
+    StartMove(false);
+  }
   private void StartMove(bool isMovingBack)
   {
     _isMovingBack = isMovingBack;
@@ -74,6 +79,9 @@ public class StompingBlock : MonoBehaviour
 
     _gameObject.transform.position = _iTweenPath.GetFirstNodeInWorldSpace();
 
-    StartMove(false);
+    if (delay > 0f)
+      Invoke("StartMove", delay);
+    else
+      StartMove(false);
   }
 }

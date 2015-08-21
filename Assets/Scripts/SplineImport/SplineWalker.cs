@@ -9,6 +9,7 @@ public class SplineWalker : MonoBehaviour
   public MovingPlatformType movingPlatformType = MovingPlatformType.StartsWhenPlayerLands;
   public GameObject movingObjectPrefab;
   public bool goingForward = true;
+  public float startPositionAsPercentage = 0f;
 
   private float _progress;
   private GameObject _gameObject;
@@ -42,10 +43,13 @@ public class SplineWalker : MonoBehaviour
     _gameObject = ObjectPoolingManager.Instance.GetObject(movingObjectPrefab.name);
 
     if (!goingForward)
-      _progress = 1f;
+    {
+      _progress = 1f - Mathf.Clamp01(startPositionAsPercentage);
+    }
     else
-      _progress = 0f;
-
+    {
+      _progress = Mathf.Clamp01(startPositionAsPercentage);
+    }
     spline.CalculateLengths(10);
 
     if (movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)

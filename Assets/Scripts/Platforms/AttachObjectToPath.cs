@@ -14,8 +14,9 @@ public class AttachObjectToPath : BaseMonoBehaviour
   public iTween.EaseType easeType = iTween.EaseType.easeInOutSine;
   public iTween.LoopType loopType = iTween.LoopType.pingPong;
   public float time = 5f;
-  public float delay = 0f;
+  public float delay = 0f;  
   public float pauseTimeOnLoopComplete = 0f;
+  public float startPercentage = 0f;
   public MovingPlatformType movingPlatformType = MovingPlatformType.StartsWhenPlayerLands;
 
   private GameObject _gameObject;
@@ -50,17 +51,34 @@ public class AttachObjectToPath : BaseMonoBehaviour
     iTween.Resume(_gameObject);
   }
 
+  private bool _delayExecuted;
   private void StartMove()
   {
+    float adjustedDelay = delay;
+    if (delay > 0f && loopType != iTween.LoopType.none && !_delayExecuted)
+    {
+      if (!_delayExecuted)
+      {
+        // since we are looping, the delay would occur on each cycle which is not wanted
+        _delayExecuted = true;
+        Invoke("StartMove", delay);
+        return;
+      }
+      else
+      {
+        adjustedDelay = 0f;
+      }
+    }
+
     Vector3[] path = _iTweenPath.GetPathInWorldSpace();
     _gameObject.transform.position = path[0];
-
+    
     iTween.MoveTo(_gameObject, iTween.Hash(
       "path", path
       , "time", time
       , "easetype", easeType
       , "looptype", loopType
-      , "delay", delay
+      , "delay", adjustedDelay
       , "oncomplete", "OnTweenComplete"
       , "oncompletetarget", this.gameObject
       ));
