@@ -1,24 +1,3 @@
-// Copyright (c) 2010 Bob Berkebile
-// Please direct any bugs/comments/suggestions to http://www.pixelplacement.com
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
 using UnityEngine;
 using UnityEditor;
 using System.Collections;
@@ -27,13 +6,6 @@ using System.Collections;
 public class LinearPathEditor : Editor
 {
   GUIStyle style = new GUIStyle();
-  /*   
-  public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
-  public int nodeCount;
-
-  public Color outlineGizmoColor = Color.white;
-  public bool showGizmoOutline = true;
-   */
   private LinearPath _target;
 
   void OnEnable()
@@ -44,20 +16,6 @@ public class LinearPathEditor : Editor
     _target = (LinearPath)target;
   }
 
-  /*
-   
-  public EasingType easingType = EasingType.Linear;
-
-  public GameObject objectToAttach;
-  public int totalObjectsOnPath = 1;
-  public LoopMode loopMode = LoopMode.Once;
-
-  public float time = 5f;
-  public MovingPlatformType movingPlatformType = MovingPlatformType.StartsWhenPlayerLands;
-  public StartPosition startPosition = StartPosition.Center;
-  public StartPathDirection startPathDirection = StartPathDirection.Forward;
-   */
-
   public override void OnInspectorGUI()
   {
     //draw the path?
@@ -65,12 +23,6 @@ public class LinearPathEditor : Editor
     EditorGUILayout.PrefixLabel("Show Gizmo Outline");
     _target.showGizmoOutline = EditorGUILayout.Toggle(_target.showGizmoOutline);
     EditorGUILayout.EndHorizontal();
-
-    //path name:
-    //EditorGUILayout.BeginHorizontal();
-    //EditorGUILayout.PrefixLabel("Path Name");
-    //_target.pathName = EditorGUILayout.TextField(_target.pathName);
-    //EditorGUILayout.EndHorizontal();
 
     //path color:
     EditorGUILayout.BeginHorizontal();
@@ -96,6 +48,12 @@ public class LinearPathEditor : Editor
     _target.time = Mathf.Max(.01f, EditorGUILayout.FloatField("Time", _target.time));
     EditorGUILayout.EndHorizontal();
 
+    EditorGUILayout.BeginHorizontal();
+    _target.startDelayOnEnabled = Mathf.Max(0f, EditorGUILayout.FloatField("Start Delay On Enabled", _target.startDelayOnEnabled));
+    EditorGUILayout.EndHorizontal();
+    EditorGUILayout.BeginHorizontal();
+    _target.delayBetweenCycles = Mathf.Max(0f, EditorGUILayout.FloatField("Delay Between Cycles", _target.delayBetweenCycles));
+    EditorGUILayout.EndHorizontal();
 
     EditorGUILayout.BeginHorizontal();
     EditorGUILayout.PrefixLabel("Loop Mode");

@@ -12,47 +12,40 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
   public Color outlineGizmoColor = Color.yellow;
   public bool showGizmoOutline = true;
 
-  private bool _areGizmosInitialized = false;
-
   void OnDrawGizmos()
   {
     if (showGizmoOutline)
     {
-      if (!_areGizmosInitialized)
+      if (platformPrefab != null)
       {
-        if (platformPrefab != null)
+        RectangleMeshBuildScript rectangleMeshBuildScript = platformPrefab.GetComponent<RectangleMeshBuildScript>();
+        if (rectangleMeshBuildScript != null)
         {
-          RectangleMeshBuildScript rectangleMeshBuildScript = platformPrefab.GetComponent<RectangleMeshBuildScript>();
-          if (rectangleMeshBuildScript != null)
+          switch (rectangleMeshBuildScript.anchor)
           {
-            switch (rectangleMeshBuildScript.anchor)
-            {
-              case TextAnchor.MiddleCenter:
-                _gizmoCenter = Vector3.zero;
-                _gizmoExtents = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
-                break;
+            case TextAnchor.MiddleCenter:
+              _gizmoCenter = Vector3.zero;
+              _gizmoExtents = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
+              break;
 
-              case TextAnchor.LowerLeft:
-                _gizmoCenter = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
-                _gizmoExtents = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
-                break;
+            case TextAnchor.LowerLeft:
+              _gizmoCenter = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
+              _gizmoExtents = new Vector3(rectangleMeshBuildScript.width / 2, rectangleMeshBuildScript.height / 2);
+              break;
 
-              default:
-                throw new ArgumentException("rectangleMeshBuildScript anchor " + rectangleMeshBuildScript.anchor + " not supported.");
-            }
-          }
-          else
-          {
-            BoxCollider2D boxCollider2D = platformPrefab.GetComponent<BoxCollider2D>();
-            if (boxCollider2D != null)
-            {
-              _gizmoCenter = boxCollider2D.offset;
-              _gizmoExtents = boxCollider2D.bounds.extents;
-            }
+            default:
+              throw new ArgumentException("rectangleMeshBuildScript anchor " + rectangleMeshBuildScript.anchor + " not supported.");
           }
         }
-
-        _areGizmosInitialized = true;
+        else
+        {
+          BoxCollider2D boxCollider2D = platformPrefab.GetComponent<BoxCollider2D>();
+          if (boxCollider2D != null)
+          {
+            _gizmoCenter = boxCollider2D.offset;
+            _gizmoExtents = boxCollider2D.bounds.extents;
+          }
+        }
       }
 
       for (int i = 0; i < platformPositions.Count; i++)

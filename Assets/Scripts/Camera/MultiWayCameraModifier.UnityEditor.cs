@@ -35,7 +35,6 @@ public partial class MultiWayCameraModifier : MonoBehaviour
     public Vector2 rightBottom;
   }
 
-  private bool _areGizmosInitialized = false;
   private BoxVertices _greenBox;
   private BoxVertices _redBox;
 
@@ -110,7 +109,7 @@ public partial class MultiWayCameraModifier : MonoBehaviour
 
       Gizmos.DrawLine(v1, v2);
     }
-    
+
 
     if (redCameraModificationSettings.horizontalLockSettings.enabled
       && redCameraModificationSettings.horizontalLockSettings.enableRightHorizontalLock)
@@ -167,11 +166,7 @@ public partial class MultiWayCameraModifier : MonoBehaviour
 
   void OnDrawGizmos()
   {
-    if (!_areGizmosInitialized)
-    {
-      SetColoredBoxVertices();
-      _areGizmosInitialized = true;
-    }
+    SetColoredBoxVertices();
 
     Gizmos.color = Color.green;
     Gizmos.DrawLine(this.transform.TransformPoint(_greenBox.leftTop), this.transform.TransformPoint(_greenBox.rightTop));

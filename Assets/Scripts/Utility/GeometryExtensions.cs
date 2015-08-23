@@ -55,5 +55,10 @@ public static class GeometryExtensions
   {
     return new Vector3(vector.x, vector.y);
   }
+  
+  public static float CrossProduct(this Vector2 v1, Vector2 v2)
+  {
+    return v1.x * v2.y - v1.y * v2.x;
+  }
 }
 

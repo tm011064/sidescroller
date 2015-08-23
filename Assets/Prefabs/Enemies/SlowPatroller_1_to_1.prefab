@@ -73,7 +73,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   platformMask:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 4608
   triggerMask:
     serializedVersion: 2
     m_Bits: 147712

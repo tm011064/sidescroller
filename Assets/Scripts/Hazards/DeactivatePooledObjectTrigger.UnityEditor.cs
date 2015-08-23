@@ -12,18 +12,13 @@ public partial class DeactivatePooledObjectTrigger : MonoBehaviour
   public Color outlineGizmoColor = Color.magenta;
   public bool showGizmoOutline = true;
 
-  private bool _areGizmosInitialized = false;
   private BoxCollider2D _boxCollider2D;
 
   void OnDrawGizmos()
   {
     if (showGizmoOutline)
     {
-      if (!_areGizmosInitialized)
-      {
-        _boxCollider2D = this.GetComponent<BoxCollider2D>();
-        _areGizmosInitialized = true;
-      }
+      _boxCollider2D = this.GetComponent<BoxCollider2D>();
 
       if (_boxCollider2D != null)
       {

@@ -147,7 +147,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
-  floatingAttachedPlatform: {fileID: 108416, guid: 05ffa42594c8f7845ab616ee7e2d0327,
+  floatingAttachedPlatform: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327,
     type: 2}
   totalPlatforms: 1
   radius: 384
@@ -198,7 +198,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
-  floatingAttachedPlatform: {fileID: 108416, guid: 05ffa42594c8f7845ab616ee7e2d0327,
+  floatingAttachedPlatform: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327,
     type: 2}
   totalPlatforms: 1
   radius: 384

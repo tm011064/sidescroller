@@ -11,6 +11,7 @@ public class TrampolineAutoBounceControlHandler : PlayerControlHandler
     if (_isFirstUpdate)
     {
       velocity.y = CalculateJumpHeight(velocity);
+      _hadDashPressedWhileJumpOff = (_gameManager.inputStateManager.GetButtonState("Dash").buttonPressState & ButtonPressState.IsPressed) != 0;
       _isFirstUpdate = false;
     }
 

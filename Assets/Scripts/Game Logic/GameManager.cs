@@ -15,6 +15,8 @@ public class GameManager : MonoBehaviour
   public PowerUpManager powerUpManager;
   [HideInInspector]
   public InputStateManager inputStateManager;
+  [HideInInspector]
+  public Easing easing;
 
   private int _totalCoins = 0;
 
@@ -76,6 +78,8 @@ public class GameManager : MonoBehaviour
     inputStateManager = new InputStateManager();
     inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp", "Attack");
     inputStateManager.InitializeAxes("Horizontal", "Vertical");
+
+    easing = new Easing();
 
     DontDestroyOnLoad(gameObject);
   }

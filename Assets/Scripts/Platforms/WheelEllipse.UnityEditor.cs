@@ -10,15 +10,11 @@ public partial class WheelEllipse : SpawnBucketItemBehaviour
 
   public Color outlineGizmoColor = Color.white;
   public bool showGizmoOutline = true;
-
-  private bool _areGizmosInitialized = false;
-
+  
   void OnDrawGizmos()
   {
     if (showGizmoOutline)
     {
-      //if (!_areGizmosInitialized)
-      //{
       if (floatingAttachedPlatform != null)
       {
         BoxCollider2D boxCollider2D = floatingAttachedPlatform.GetComponent<BoxCollider2D>();
@@ -31,9 +27,6 @@ public partial class WheelEllipse : SpawnBucketItemBehaviour
             );
         }
       }
-      _areGizmosInitialized = true;
-      //}
-
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }
   }

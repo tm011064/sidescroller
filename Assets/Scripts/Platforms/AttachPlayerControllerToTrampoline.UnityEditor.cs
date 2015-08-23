@@ -12,26 +12,21 @@ public partial class AttachPlayerControllerToTrampoline : MonoBehaviour
   public Color outlineGizmoColor = Color.yellow;
   public bool showGizmoOutline = true;
 
-  private bool _areGizmosInitialized = false;
 
   void OnDrawGizmos()
   {
     if (showGizmoOutline)
     {
-      if (!_areGizmosInitialized)
+      if (trampolinePrefab != null)
       {
-        if (trampolinePrefab != null)
+        BoxCollider2D boxCollider2D = trampolinePrefab.GetComponent<BoxCollider2D>();
+        if (boxCollider2D != null)
         {
-          BoxCollider2D boxCollider2D = trampolinePrefab.GetComponent<BoxCollider2D>();
-          if (boxCollider2D != null)
-          {
-            _gizmoCenter = boxCollider2D.offset;
-            _gizmoExtents = boxCollider2D.size / 2;
-          }
+          _gizmoCenter = boxCollider2D.offset;
+          _gizmoExtents = boxCollider2D.size / 2;
         }
-
-        _areGizmosInitialized = true;
       }
+
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }
   }

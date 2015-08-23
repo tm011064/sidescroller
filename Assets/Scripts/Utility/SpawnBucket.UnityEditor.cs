@@ -8,7 +8,6 @@ public partial class SpawnBucket : BaseMonoBehaviour
 {
   private Vector3 _gizmoCenter = Vector3.zero;
   private Vector3 _gizmoExtents = new Vector3(16, 16, 0);
-  private bool _areGizmosInitialized = false;
 
   public Color outlineGizmoColor = Color.yellow;
   public bool showGizmoOutline = true;
@@ -23,8 +22,6 @@ public partial class SpawnBucket : BaseMonoBehaviour
         _gizmoCenter = boxCollider2D.offset;
         _gizmoExtents = boxCollider2D.size / 2;
       }
-
-      _areGizmosInitialized = true;
 
       GizmoUtility.DrawBoundingBox(this.transform.TransformPoint(_gizmoCenter), _gizmoExtents, outlineGizmoColor);
     }

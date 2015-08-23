@@ -1233,6 +1233,7 @@ MonoBehaviour:
   time: 4
   delay: 0
   pauseTimeOnLoopComplete: .5
+  startPercentage: 0
   movingPlatformType: 0
 --- !u!114 &59194604
 MonoBehaviour:
@@ -4205,12 +4206,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedObject: {fileID: 135722, guid: b947fb7f96f17de4ea5c5cbafcc49a7c, type: 2}
+  attachedObject: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   easeType: 21
   loopType: 2
   time: 4
   delay: 0
   pauseTimeOnLoopComplete: .5
+  startPercentage: 0
   movingPlatformType: 0
 --- !u!114 &381451792
 MonoBehaviour:
@@ -8536,6 +8538,7 @@ MonoBehaviour:
   time: 6
   delay: 0
   pauseTimeOnLoopComplete: .5
+  startPercentage: 0
   movingPlatformType: 1
 --- !u!114 &924260016
 MonoBehaviour:
@@ -19069,6 +19072,7 @@ MonoBehaviour:
   time: 4
   delay: 0
   pauseTimeOnLoopComplete: .5
+  startPercentage: 0
   movingPlatformType: 0
 --- !u!114 &2050993864
 MonoBehaviour:

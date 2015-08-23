@@ -50,6 +50,8 @@ public class CameraController : MonoBehaviour
   public new Transform transform;
 
   private PlayerController _playerController;
+
+  private CameraTrolley[] _cameraTrolleys;
   #endregion
 
   void Reset()
@@ -68,6 +70,11 @@ public class CameraController : MonoBehaviour
 
   void Start()
   {
+    if (_cameraTrolleys == null)
+    {
+      _cameraTrolleys = FindObjectsOfType<CameraTrolley>();
+      Debug.Log("Found " + _cameraTrolleys.Length + " camera trolleys.");
+    }
     transform = gameObject.transform;
     _playerController = GameManager.instance.player;
     // we set the target of the camera to our player through code
@@ -133,126 +140,160 @@ public class CameraController : MonoBehaviour
   void updateCameraPosition()
   {
     float yPos = 0f, xPos;
+    bool isOnCameraTrolley = false;
 
-    bool isFallingDown = false;
-    bool doSmoothDamp = false;
-
-    switch (_cameraMovementSettings.verticalCameraFollowMode)
+    if (_cameraTrolleys != null)
     {
-      case VerticalCameraFollowMode.FollowWhenGrounded:
-        if (_isAboveJumpHeightLocked && _characterPhysicsManager.velocity.y < 0f)
+      for (int i = 0; i < _cameraTrolleys.Length; i++)
+      {
+        if (_cameraTrolleys[i].isPlayerWithinBoundingBox)
         {
-          // We set this value to true in order to make the camera follow the character upwards when catapulted above the maximum jump height. The
-          // character can not exceed the maximum jump heihgt without help (trampoline, powerup...).
-          _isAboveJumpHeightLocked = false; // if we reached the peak we unlock
-        }
-
-        if (_isAboveJumpHeightLocked && (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary))
-        {
-          // we were locked but character has exceeded the top boundary. In that case we set the y pos and smooth damp
-          yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
-          doSmoothDamp = true;
-        }
-        else
-        {
-          // we want to adjust the y position on upward movement if:
-          if (_isAboveJumpHeightLocked                                                                                                // either we are locked in above jump height lock
-              || (
-                    (!_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock                                              // OR (we either have no top boundary or we are beneath the top boundary in which case we can go up)
-                      || target.position.y <= _cameraMovementSettings.verticalLockSettings.topBoundary)                                   //    AND
-                    && (target.position.y > transform.position.y + this.cameraOffset.y + _playerController.jumpSettings.runJumpHeight  //    (the character has exceeded the jump height which means he has been artifically catapulted upwards)
-                        && _characterPhysicsManager.velocity.y > 0f                                                                  //    AND we go up
-                    )
-                 )
-            )
+          float? posY = _cameraTrolleys[i].GetPositionY(target.position.x);
+          if (posY.HasValue)
           {
-            yPos = target.position.y - _playerController.jumpSettings.runJumpHeight;
-            _isAboveJumpHeightLocked = true; // make sure for second if condition
+            yPos = posY.Value;
+            isOnCameraTrolley = true;
+          }
+
+          break;
+        }
+      }
+    }
+    float verticalSmoothDampTime = _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime;
+    if (!isOnCameraTrolley)
+    {
+      #region vertical locking
+
+      bool isFallingDown = false;
+      bool doSmoothDamp = false;
+
+      switch (_cameraMovementSettings.verticalCameraFollowMode)
+      {
+        case VerticalCameraFollowMode.FollowWhenGrounded:
+          if (_isAboveJumpHeightLocked && _characterPhysicsManager.velocity.y < 0f)
+          {
+            // We set this value to true in order to make the camera follow the character upwards when catapulted above the maximum jump height. The
+            // character can not exceed the maximum jump heihgt without help (trampoline, powerup...).
+            _isAboveJumpHeightLocked = false; // if we reached the peak we unlock
+          }
+
+          if (_isAboveJumpHeightLocked && (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary))
+          {
+            // we were locked but character has exceeded the top boundary. In that case we set the y pos and smooth damp
+            yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
+            doSmoothDamp = true;
           }
           else
           {
-            isFallingDown = (_characterPhysicsManager.velocity.y < 0f
-               && (target.position.y < this.transform.position.y + this.cameraOffset.y)
-              );
-
-            if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below
-                || isFallingDown)
+            // we want to adjust the y position on upward movement if:
+            if (_isAboveJumpHeightLocked                                                                                                // either we are locked in above jump height lock
+                || (
+                      (!_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock                                              // OR (we either have no top boundary or we are beneath the top boundary in which case we can go up)
+                        || target.position.y <= _cameraMovementSettings.verticalLockSettings.topBoundary)                                   //    AND
+                      && (target.position.y > transform.position.y + this.cameraOffset.y + _playerController.jumpSettings.runJumpHeight  //    (the character has exceeded the jump height which means he has been artifically catapulted upwards)
+                          && _characterPhysicsManager.velocity.y > 0f                                                                  //    AND we go up
+                      )
+                   )
+              )
             {
-              if (_cameraMovementSettings.verticalLockSettings.enabled)
+              yPos = target.position.y - _playerController.jumpSettings.runJumpHeight;
+              _isAboveJumpHeightLocked = true; // make sure for second if condition
+            }
+            else
+            {
+              isFallingDown = (_characterPhysicsManager.velocity.y < 0f
+                 && (target.position.y < this.transform.position.y + this.cameraOffset.y)
+                );
+
+              if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below
+                  || isFallingDown)
               {
-                if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
-                  yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
-                else
-                  yPos = target.position.y;
-
-                if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-                  && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
+                if (_cameraMovementSettings.verticalLockSettings.enabled)
                 {
-                  yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
+                  if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
+                    yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
+                  else
+                    yPos = target.position.y;
 
-                  // we might have been shot up, so use smooth damp override
-                  doSmoothDamp = true;
+                  if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
+                    && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
+                  {
+                    yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
+
+                    // we might have been shot up, so use smooth damp override
+                    doSmoothDamp = true;
+                  }
+                  else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
+                    && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
+                  {
+                    yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
+
+                    // we might have been falling down, so use smooth damp override
+                    doSmoothDamp = true;
+                  }
                 }
-                else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-                  && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
+                else
                 {
-                  yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
-
-                  // we might have been falling down, so use smooth damp override
-                  doSmoothDamp = true;
+                  yPos = target.position.y;
                 }
               }
               else
               {
-                yPos = target.position.y;
+                // character is in air, so the camera stays same
+                yPos = transform.position.y + this.cameraOffset.y; // we need to add offset bceause we will deduct it later on again
               }
             }
+          }
+          break;
+
+        case VerticalCameraFollowMode.FollowAlways:
+        default:
+          _isAboveJumpHeightLocked = false; // this is not used at this mode
+
+          #region vertical locking
+          if (_cameraMovementSettings.verticalLockSettings.enabled)
+          {
+            if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
+              yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
             else
+              yPos = target.position.y;
+
+            if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
+              && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
             {
-              // character is in air, so the camera stays same
-              yPos = transform.position.y + this.cameraOffset.y; // we need to add offset bceause we will deduct it later on again
+              yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
+
+              // we might have been shot up, so use smooth damp override
+              doSmoothDamp = true;
+            }
+            else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
+              && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
+            {
+              yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
+
+              // we might have been falling down, so use smooth damp override
+              doSmoothDamp = true;
             }
           }
-        }
-        break;
-
-      case VerticalCameraFollowMode.FollowAlways:
-      default:
-        _isAboveJumpHeightLocked = false; // this is not used at this mode
-
-        #region vertical locking
-        if (_cameraMovementSettings.verticalLockSettings.enabled)
-        {
-          if (_cameraMovementSettings.verticalLockSettings.enableDefaultVerticalLockPosition)
-            yPos = _cameraMovementSettings.verticalLockSettings.translatedVerticalLockPosition;
           else
+          {
             yPos = target.position.y;
-
-          if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-            && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
-          {
-            yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
-
-            // we might have been shot up, so use smooth damp override
-            doSmoothDamp = true;
           }
-          else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-            && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
-          {
-            yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
+          #endregion
+          break;
+      }
+      #endregion
 
-            // we might have been falling down, so use smooth damp override
-            doSmoothDamp = true;
-          }
-        }
-        else
-        {
-          yPos = target.position.y;
-        }
-        #endregion
-        break;
+      verticalSmoothDampTime =
+      doSmoothDamp // override
+      ? _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime
+      : isFallingDown
+        ? _cameraMovementSettings.smoothDampMoveSettings.verticalRapidDescentSmoothDampTime
+        : _isAboveJumpHeightLocked
+          ? _cameraMovementSettings.smoothDampMoveSettings.verticalAboveRapidAcsentSmoothDampTime
+          : _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime;
     }
-
+    
     #region horizontal locking
     xPos = target.position.x;
     if (_cameraMovementSettings.horizontalLockSettings.enabled)
@@ -279,16 +320,7 @@ public class CameraController : MonoBehaviour
     #endregion
 
     Vector3 hvec = new Vector3(xPos, yPos, target.position.z);
-
-    float verticalSmoothDampTime =
-      doSmoothDamp // override
-      ? _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime
-      : isFallingDown
-        ? _cameraMovementSettings.smoothDampMoveSettings.verticalRapidDescentSmoothDampTime
-        : _isAboveJumpHeightLocked
-          ? _cameraMovementSettings.smoothDampMoveSettings.verticalAboveRapidAcsentSmoothDampTime
-          : _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime;
-
+    
     if (_characterPhysicsManager.velocity.x > 0)
     {
       Vector3 targetPositon = hvec - cameraOffset;
