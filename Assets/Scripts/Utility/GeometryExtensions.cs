@@ -7,6 +7,19 @@ public static class GeometryExtensions
     Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
     return GeometryUtility.TestPlanesAABB(planes, renderer.bounds);
   }
+
+  public static bool IntserSects(Rect a, Rect b)
+  {
+    if (a.max.x < b.min.x
+      || a.max.y < b.min.y
+      || a.min.x > b.max.x
+      || a.min.y > b.max.y)
+    {
+      return false;
+    }
+    return true;
+  }
+
   public static bool IsVisibleFrom(this Collider2D collider, Camera camera)
   {
     Plane[] planes = GeometryUtility.CalculateFrustumPlanes(camera);
@@ -55,7 +68,7 @@ public static class GeometryExtensions
   {
     return new Vector3(vector.x, vector.y);
   }
-  
+
   public static float CrossProduct(this Vector2 v1, Vector2 v2)
   {
     return v1.x * v2.y - v1.y * v2.x;

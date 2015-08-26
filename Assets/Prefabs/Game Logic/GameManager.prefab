@@ -42,13 +42,29 @@ MonoBehaviour:
   player: {fileID: 11463698, guid: 0d314c482e4fa1149b404e6b91347eed, type: 2}
   gameSettings:
     powerUpSettings:
-      floaterGravity: -100
-      startFloatingDuringFallVelocityMultiplier: .100000001
+      floaterSettings:
+        floaterGravity: -100
+        startFloatingDuringFallVelocityMultiplier: .100000001
+        floaterGravityDecreaseInterpolationFactor: .0500000007
+        floaterInAirDampingOverride: 3
+      jetpackSettings:
+        jetpackSpeed: 600
+        airDamping: 2
+        autoFloatWithoutThrust: 0
+        floatGravity: -200
     playerMetricSettings:
-      dashMultiplier: 2
       jumpReleaseUpVelocityMultiplier: .5
     pooledObjects:
       basicPowerUpPrefab:
+        prefab: {fileID: 0}
+        initialSize: 1
+      basicBullet:
+        prefab: {fileID: 0}
+        initialSize: 1
+      defaultEnemyDeathParticlePrefab:
+        prefab: {fileID: 0}
+        initialSize: 1
+      defaultPlayerDeathParticlePrefab:
         prefab: {fileID: 0}
         initialSize: 1
     logSettings:
@@ -61,6 +77,9 @@ MonoBehaviour:
       enabledTraceTags: []
       enableAllTraceTags: 0
       addTraceTagToMessage: 1
+    playerDamageControlHandlerSettings:
+      duration: 3
+      suspendPhysicsTime: 1
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

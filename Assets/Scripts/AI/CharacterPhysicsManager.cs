@@ -1126,7 +1126,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
             RaycastHit2D rch = Physics2D.Raycast(raytest, -Vector2.right, edgeSlideUpCornerWidth, mask);
 
             DrawRay(raytest, -Vector2.right * edgeSlideUpCornerWidth, Color.magenta);
-            Logger.Assert(rch == true, "This should always hit!!");
+            Logger.Assert(rch == true, "This should always hit! raytest: " + raytest + "; direction: " + (-Vector2.right) + "; magnitude: " + edgeSlideUpCornerWidth);
 
             transform.Translate(edgeSlideUpCornerWidth - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR, 0f, 0f, Space.World);
             return;
@@ -1147,7 +1147,7 @@ public class CharacterPhysicsManager : BasePhysicsManager
             RaycastHit2D rch = Physics2D.Raycast(raytest, Vector2.right, edgeSlideUpCornerWidth, mask);
 
             DrawRay(raytest, -Vector2.right * edgeSlideUpCornerWidth, Color.magenta);
-            Logger.Assert(rch == true, "This should always hit!!");
+            Logger.Assert(rch == true, "This should always hit! raytest: " + raytest + "; direction: " + (Vector2.right) + "; magnitude: " + edgeSlideUpCornerWidth);
 
             transform.Translate(-(edgeSlideUpCornerWidth - rch.distance + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR), 0f, 0f, Space.World);
             return;

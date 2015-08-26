@@ -8,9 +8,7 @@ using UnityEditor;
 
 public class DistanceToolMenu : MonoBehaviour
 {
-
-  [MenuItem("GameObject/The 3D Ninja/Create Distance Tool")]
-
+  [MenuItem("Tools/Create Distance Tool")]
   static void CreateDistanceTool()
   {
     if (Selection.activeGameObject != null)
@@ -48,8 +46,6 @@ public class DistanceToolMenu : MonoBehaviour
         createNewDistanceTool();
       }
     }
-
-
   }
 
   static void createNewDistanceTool()

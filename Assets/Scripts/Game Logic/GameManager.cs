@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
     powerUpManager = new PowerUpManager(this);
     inputStateManager = new InputStateManager();
-    inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp", "Attack");
+    inputStateManager.InitializeButtons("Jump", "Dash", "Fall", "SwitchPowerUp", "Attack", "Aim");
     inputStateManager.InitializeAxes("Horizontal", "Vertical");
 
     easing = new Easing();
@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.DoubleJump);
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.SpinMeleeAttack);
       GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.JetPack);
+      GameManager.instance.powerUpManager.ApplyPowerUpItem(PowerUpType.Gun);
     }
 
 

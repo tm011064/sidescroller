@@ -11,7 +11,7 @@ public class PowerUpSpinMeleeAttackControlHandler : DefaultPlayerControlHandler
   {
 #if !FINAL
     // TODO (Release): remove this
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, .75f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, .75f, 1f);
 #endif
   }
 
@@ -21,7 +21,7 @@ public class PowerUpSpinMeleeAttackControlHandler : DefaultPlayerControlHandler
     _playerController.isPerformingSpinMeleeAttack = false;
 
 #if !FINAL
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
 #endif
   }
 

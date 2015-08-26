@@ -108,6 +108,11 @@ public class AttachObjectToPath : BaseMonoBehaviour
   // Use this for initialization
   void Start()
   {
+#if UNITY_EDITOR
+    if (attachedObject == null)
+      throw new MissingReferenceException("Game object '" + this.name + "' is missing variable 'attachedObject'.");
+#endif
+
     // we wanna do this in start as we know that the player has been added to the game context
     ObjectPoolingManager.Instance.RegisterPool(attachedObject, 1, int.MaxValue);
 

@@ -26,14 +26,14 @@ public class PowerUpFloaterControlHandler : PlayerControlHandler
     _originalInAirDamping = _playerController.jumpSettings.inAirDamping;
 #if !FINAL
     // TODO (Release): remove this
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(.5f, 1f, 1f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(.5f, 1f, 1f, 1f);
 #endif
   }
 
   public override void Dispose()
   {
 #if !FINAL
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
 #endif
     _playerController.adjustedGravity = _playerController.jumpSettings.gravity;
     _playerController.jumpSettings.inAirDamping = _originalInAirDamping;

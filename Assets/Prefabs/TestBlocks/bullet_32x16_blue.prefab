@@ -9,10 +9,10 @@ GameObject:
   m_Component:
   - 4: {fileID: 408832}
   - 212: {fileID: 21201434}
-  - 50: {fileID: 5008280}
   - 114: {fileID: 11446722}
   - 61: {fileID: 6133340}
-  m_Layer: 17
+  - 114: {fileID: 11472264}
+  m_Layer: 11
   m_Name: bullet_32x16_blue
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -31,21 +31,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!50 &5008280
-Rigidbody2D:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 140326}
-  m_Mass: 1
-  m_LinearDrag: 0
-  m_AngularDrag: .0500000007
-  m_GravityScale: 1
-  m_FixedAngle: 0
-  m_IsKinematic: 1
-  m_Interpolate: 0
-  m_SleepingMode: 1
-  m_CollisionDetection: 0
 --- !u!61 &6133340
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -70,6 +55,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 625370787a72a9e439c9089981482575, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11472264
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 140326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e461a2bea6b33040a9c4d7bfc8e59ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scanRayDirectionDownCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 5632
+  scanRayDirectionUpCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 5120
+  skinWidth: .100000001
 --- !u!212 &21201434
 SpriteRenderer:
   m_ObjectHideFlags: 1

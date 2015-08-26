@@ -15,14 +15,14 @@ public class PowerUpJetPackControlHandler : PlayerControlHandler
 
 #if !FINAL
     // TODO (Release): remove this
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(1f, 0.2f, .5f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(1f, 0.2f, .5f, 1f);
 #endif
   }
 
   public override void Dispose()
   {
 #if !FINAL
-    _playerController.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
+    _playerController.sprite.GetComponent<SpriteRenderer>().color = new Color(1f, 1f, 1f, 1f);
 #endif
   }
 
@@ -90,7 +90,7 @@ public class PowerUpJetPackControlHandler : PlayerControlHandler
         Vector2 direction = new Vector2(horizontalAxisState.value, verticalAxisState.value).normalized;
 
         if (direction.x == 0f && direction.y == 0f)
-          direction.x = _playerController.transform.localScale.x > 0f ? 1f : -1f;
+          direction.x = _playerController.sprite.transform.localScale.x > 0f ? 1f : -1f;
 
         GameObject bulletObject = ObjectPoolingManager.Instance.GetObject(_gameManager.gameSettings.pooledObjects.basicBullet.prefab.name);
         Bullet bullet = bulletObject.GetComponent<Bullet>();

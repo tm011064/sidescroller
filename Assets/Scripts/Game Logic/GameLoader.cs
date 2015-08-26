@@ -23,12 +23,39 @@ public class FloaterSettings
   public float floaterGravityDecreaseInterpolationFactor = .05f;
   public float floaterInAirDampingOverride = 3f;
 }
+[Serializable]
+public class LaserAimGunSetting
+{
+  [Tooltip("All layers that the scan rays can collide with. Should include platforms and player.")]
+  public LayerMask scanRayDirectionDownCollisionLayers = 0;
+  [Tooltip("All layers that the scan rays can collide with. Should include platforms and player.")]
+  public LayerMask scanRayDirectionUpCollisionLayers = 0;
+  [Tooltip("The length of the scan rays emitted from the position of this gameobject.")]
+  public float scanRayLength = 1280;
+  public float bulletsPerSecond = 10;
+  public bool allowSlowMotionRealTimeBulletsPerSecond = true;
+  public float bulletSpeed = 2000f;
+
+  //public float aimSlowMotionTimeScaleFactor = .125f;
+  public float intervalBetweenAiming = 1f;
+  public AnimationCurve slowMotionFactorMultplierCurve = new AnimationCurve(
+    new Keyframe(0f, 1f)
+    , new Keyframe(.2f, .125f)
+    , new Keyframe(1.2f, .125f)
+    , new Keyframe(2f, 1f));
+
+  public bool doAutoAim = true;
+  public float autoAimSearchAngle = 12f;
+  [Range(1, 6)]
+  public int totalAutoAimSearchRaysPerSide = 2;
+}
 
 [Serializable]
 public class PowerUpSettings
 {
   public FloaterSettings floaterSettings;
   public JetpackSettings jetpackSettings;
+  public LaserAimGunSetting laserAimGunSetting;
 }
 [Serializable]
 public class PlayerMetricSettings

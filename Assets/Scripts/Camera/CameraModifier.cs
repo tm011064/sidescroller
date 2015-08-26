@@ -13,12 +13,12 @@ public class VerticalLockSettings
 {
   [Tooltip("If false, all vertical lock settings will be ignored.")]
   public bool enabled = false;
-  
+
   [Tooltip("Enables the default vertical lock position. The default position simulates a Super Mario Bros style side scrolling camera which is fixed on the y axis, not reacting to vertical player movement.")]
   public bool enableDefaultVerticalLockPosition = true;
   [Tooltip("Default is center of the screen.")]
   public float defaultVerticalLockPosition = 540f;
-  
+
   [Tooltip("If enabled, the camera follows the player upwards until the \"Top Vertical Lock Position\" is reached.")]
   public bool enableTopVerticalLock = false;
   [Tooltip("The highest visible location relative to the \"Parent Position Object\" game object space")]

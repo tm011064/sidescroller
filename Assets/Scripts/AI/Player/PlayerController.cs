@@ -93,6 +93,8 @@ public partial class PlayerController : BaseCharacterController
   [HideInInspector]
   public Animator animator;
   [HideInInspector]
+  public GameObject sprite;
+  [HideInInspector]
   public BoxCollider2D boxCollider;
   [HideInInspector]
   public Vector3 spawnLocation;
@@ -111,6 +113,8 @@ public partial class PlayerController : BaseCharacterController
   public bool isPerformingSpinMeleeAttack = false;
   [HideInInspector]
   public GameObject spinMeleeAttackBoxCollider = null;
+  [HideInInspector]
+  public LaserGunAimContainer laserGunAimContainer = null;
   #endregion
 
   #region private fields
@@ -137,18 +141,29 @@ public partial class PlayerController : BaseCharacterController
     Logger.Info("Playercontroller awoke and added to game context instance.");
 
     boxCollider = GetComponent<BoxCollider2D>();
-    Debug.Log("BOX: " + boxCollider);
     boxColliderOffsetDefault = boxCollider.offset;
     boxColliderSizeDefault = boxCollider.size;
 
-    Transform childTransform = this.transform.FindChild("SpinMeleeAttackBoxCollider");
+    #region set up special purpose child transforms
+    Transform childTransform;
+    
+    childTransform = this.transform.FindChild("SpinMeleeAttackBoxCollider");
     Logger.Assert(childTransform != null, "Player controller is expected to have a SpinMeleeAttackBoxCollider child object. If this is no longer needed, remove this line in code.");
     spinMeleeAttackBoxCollider = childTransform.gameObject;
     spinMeleeAttackBoxCollider.SetActive(false); // we only want to activate this when the player performs the attack.
 
+    laserGunAimContainer = new LaserGunAimContainer();
+    laserGunAimContainer.Initialize(this.transform.FindChild("LaserGunAim"));
+
+    childTransform = this.transform.FindChild("SpriteAndAnimator");
+    Logger.Assert(childTransform != null, "Player controller is expected to have a SpriteAndAnimator child object. If this is no longer needed, remove this line in code.");
+    sprite = childTransform.gameObject;
+    animator = childTransform.gameObject.GetComponent<Animator>();
+
+    #endregion
 
     characterPhysicsManager = GetComponent<CharacterPhysicsManager>();
-    animator = this.transform.GetComponent<Animator>();
+    //animator = this.transform.GetComponent<Animator>();
 
     // listen to some events for illustration purposes
     characterPhysicsManager.onControllerCollidedEvent += onControllerCollider;

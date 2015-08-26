@@ -14,6 +14,9 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected bool _hasPerformedGroundJumpThisFrame = false;
   protected bool _hadDashPressedWhileJumpOff = false;
+
+  protected AxisState horizontalAxisOverride;
+  protected AxisState verticalAxisOverride;
   #endregion
 
   #region methods
@@ -63,8 +66,8 @@ public class PlayerControlHandler : BaseControlHandler
           && _playerController.characterPhysicsManager.velocity.y < 0f
           && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnRightWall) != 0)
     {
-      if (_playerController.transform.localScale.x < 1f)
-        _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
+      if (_playerController.sprite.transform.localScale.x < 1f)
+        _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
 
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
     }
@@ -72,15 +75,15 @@ public class PlayerControlHandler : BaseControlHandler
       && _playerController.characterPhysicsManager.velocity.y < 0f
       && (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.characterWallState & CharacterWallState.OnLeftWall) != 0)
     {
-      if (_playerController.transform.localScale.x > -1f)
-        _playerController.transform.localScale = new Vector3(_playerController.transform.localScale.x * -1, _playerController.transform.localScale.y, _playerController.transform.localScale.z);
+      if (_playerController.sprite.transform.localScale.x > -1f)
+        _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
 
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
     }
     else if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
-      float yAxis = _gameManager.inputStateManager.GetAxisState("Vertical").value;
-      float xAxis = _gameManager.inputStateManager.GetAxisState("Horizontal").value;
+      float yAxis = verticalAxisOverride == null ? _gameManager.inputStateManager.GetAxisState("Vertical").value : verticalAxisOverride.value;
+      float xAxis = horizontalAxisOverride == null ? _gameManager.inputStateManager.GetAxisState("Horizontal").value : horizontalAxisOverride.value;
 
       float threshold = .1f; // TODO (Roman): hardcoded
       if (yAxis < 0f)
@@ -147,6 +150,12 @@ public class PlayerControlHandler : BaseControlHandler
           }
           else
           {
+            if ((xAxis > 0f && _playerController.sprite.transform.localScale.x < 1f)
+              || (xAxis < 0f && _playerController.sprite.transform.localScale.x > -1f))
+            {// flip local scale
+              _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
+            }
+
             _playerController.animator.Play(Animator.StringToHash("PlayerRun"));
           }
         }
@@ -154,6 +163,13 @@ public class PlayerControlHandler : BaseControlHandler
     }
     else
     {
+      float xAxis = horizontalAxisOverride == null ? _gameManager.inputStateManager.GetAxisState("Horizontal").value : horizontalAxisOverride.value;
+      if ((xAxis > 0f && _playerController.sprite.transform.localScale.x < 1f)
+        || (xAxis < 0f && _playerController.sprite.transform.localScale.x > -1f))
+      {// flip local scale
+        _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
+      }
+
       if (_playerController.characterPhysicsManager.velocity.y >= 0f)
       {
         _playerController.animator.Play(Animator.StringToHash("PlayerJump"));
@@ -327,10 +343,10 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected float GetDefaultHorizontalVelocity(Vector3 velocity)
   {
-    AxisState axisState = _gameManager.inputStateManager.GetAxisState("Horizontal");
-    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(axisState);
+    AxisState horizontalAxis = horizontalAxisOverride == null ? _gameManager.inputStateManager.GetAxisState("Horizontal") : horizontalAxisOverride;
+    float normalizedHorizontalSpeed = GetNormalizedHorizontalSpeed(horizontalAxis);
 
-    return GetHorizontalVelocityWithDamping(velocity, axisState.value, normalizedHorizontalSpeed);
+    return GetHorizontalVelocityWithDamping(velocity, horizontalAxis.value, normalizedHorizontalSpeed);
   }
 
   protected virtual bool CanJump()

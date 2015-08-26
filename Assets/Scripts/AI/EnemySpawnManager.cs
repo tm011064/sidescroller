@@ -84,17 +84,17 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
 
       _spawnedEnemies.Remove(obj.gameObject);
 
-      if (this.isActiveAndEnabled && respawnMode == RespawnMode.SpawnWhenDestroyed)
+      try
       {
-        // we need to invoke here as the spawn method would set the enemy active while being currently deactivated...
-        try
+        if (this.isActiveAndEnabled && respawnMode == RespawnMode.SpawnWhenDestroyed)
         {
+          // we need to invoke here as the spawn method would set the enemy active while being currently deactivated...
           Invoke("Spawn", respawnOnDestroyDelay);
         }
-        catch (MissingReferenceException)
-        {
-          // we swallow that one, it happens on scene unload when an enemy disables after this object has been finalized
-        }
+      }
+      catch (MissingReferenceException)
+      {
+        // we swallow that one, it happens on scene unload when an enemy disables after this object has been finalized
       }
     }
   }
@@ -103,7 +103,7 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   {
     // Note: we can not use a coroutine for this because when spawning on the OnEnable method the transform.position of a pooled object would
     // still point to the last active position when reactivated.
-    if (_nextSpawnTime >= 0f 
+    if (_nextSpawnTime >= 0f
       && Time.time > _nextSpawnTime)
     {
       Spawn();
@@ -122,11 +122,6 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   #endregion
 
   #region monobehaviour
-  void Awake()
-  {
-    _objectPoolingManager = ObjectPoolingManager.Instance;
-  }
-
   void OnDisable()
   {
     Logger.Trace("Disabling EnemySpawnManager " + this.name);
@@ -143,6 +138,8 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   }
   void OnEnable()
   {
+    _objectPoolingManager = ObjectPoolingManager.Instance;
+
     Logger.Trace("Enabling EnemySpawnManager " + this.name);
 
     // TODO (Roman): all this should be done at scene load, not here

@@ -7,25 +7,47 @@ public class AutoSnap : EditorWindow
   private bool doSnap = true;
   private float snapValue = 16;
 
-  [MenuItem("Edit/Auto Snap %_l")]
+  [MenuItem("Tools/Auto Snap %_l")]
   static void Init()
   {
     var window = (AutoSnap)EditorWindow.GetWindow(typeof(AutoSnap));
     window.maxSize = new Vector2(200, 100);
   }
 
+  void Awake()
+  {
+    // Remove delegate listener if it has previously
+    // been assigned.
+    SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+    // Add (or re-add) the delegate.
+    SceneView.onSceneGUIDelegate += this.OnSceneGUI;
+  }
+
   public void OnGUI()
   {
+
     doSnap = EditorGUILayout.Toggle("Auto Snap", doSnap);
     snapValue = EditorGUILayout.FloatField("Snap Value", snapValue);
   }
-
-  public void OnDrawGizmos()
+    
+  // Window has been selected
+  void OnFocus()
   {
-    Debug.DrawLine(Vector3.zero, new Vector3(100, 100, 0), Color.red);
+    // Remove delegate listener if it has previously
+    // been assigned.
+    SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+    // Add (or re-add) the delegate.
+    SceneView.onSceneGUIDelegate += this.OnSceneGUI;
   }
 
-  public void Update()
+  void OnDestroy()
+  {
+    // When the window is destroyed, remove the delegate
+    // so that it will no longer do any drawing.
+    SceneView.onSceneGUIDelegate -= this.OnSceneGUI;
+  }
+
+  void OnSceneGUI(SceneView sceneView)
   {
     if (doSnap
       && !EditorApplication.isPlaying

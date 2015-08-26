@@ -86,7 +86,15 @@ public class ObjectPoolingManager
   /// Get an object from the pool.
   /// </summary>
   /// <param name="objName">String name of the object you wish to have access to.</param>
-  /// <returns>A GameObject if one is available, else returns null if all are currently active and max size is reached.</returns>
+  /// <param name="position">The position assigned before activation.</param>
+  /// <returns>
+  /// A GameObject if one is available, else returns null if all are currently active and max size is reached.
+  /// </returns>
+  public GameObject GetObject(string objName, Vector3 position)
+  {
+    //Find the right pool and ask it for an object.
+    return _objectPools[objName].GetObject(position);
+  }
   public GameObject GetObject(string objName)
   {
     //Find the right pool and ask it for an object.

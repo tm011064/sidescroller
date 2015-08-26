@@ -62,12 +62,24 @@ public class ObjectPool
   /// <returns>Game Object of requested type if it is available, otherwise null.</returns>
   public GameObject GetObject()
   {
+    return this.GetObject(null);
+  }
+  /// <summary>
+  /// Returns an active object from the object pool without resetting any of its values.
+  /// You will need to set its values and set it inactive again when you are done with it.
+  /// </summary>
+  /// <returns>Game Object of requested type if it is available, otherwise null.</returns>
+  public GameObject GetObject(Vector3? position)
+  {
     //iterate through all pooled objects.
     for (int i = 0; i < _pooledObjects.Count; i++)
     {
       //look for the first one that is inactive.
       if (_pooledObjects[i].activeSelf == false)
       {
+        if (position.HasValue)
+          _pooledObjects[i].transform.position = position.Value;
+
         //set the object to active.
         _pooledObjects[i].SetActive(true);
         //return the object we found.
@@ -80,7 +92,7 @@ public class ObjectPool
     if (this._maxPoolSize > this._pooledObjects.Count)
     {
       //Instantiate a new object.
-      GameObject nObj = GameObject.Instantiate(_pooledObj, Vector3.zero, Quaternion.identity) as GameObject;
+      GameObject nObj = GameObject.Instantiate(_pooledObj, position.HasValue ? position.Value : Vector3.zero, Quaternion.identity) as GameObject;
       //set it to active since we are about to use it.
       nObj.SetActive(true);
       //add it to the pool of objects
@@ -128,5 +140,4 @@ public class ObjectPool
       }
     }
   }
-
 }

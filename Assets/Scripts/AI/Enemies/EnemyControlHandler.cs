@@ -23,7 +23,8 @@ public class EnemyControlHandler<TEnemyController>
 
   protected float? _pauseAtEdgeEndTime = null;
 
-  protected void MoveHorizontally(ref float moveDirectionFactor, float speed, float gravity, PlatformEdgeMoveMode platformEdgeMoveMode, float edgeTurnAroundPause = 0f)
+  protected void MoveHorizontally(ref float moveDirectionFactor, float speed, float gravity, PlatformEdgeMoveMode platformEdgeMoveMode, float edgeTurnAroundPause = 0f
+    , float? jumpVelocityY = null)
   {
     Vector3 velocity = _characterPhysicsManager.velocity;
 
@@ -32,6 +33,8 @@ public class EnemyControlHandler<TEnemyController>
       if (_pauseAtEdgeEndTime.Value > Time.time)
       {
         velocity.x = 0f;
+        if (jumpVelocityY.HasValue)
+          velocity.y = jumpVelocityY.Value;
         velocity.y += gravity * Time.deltaTime;
 
         _characterPhysicsManager.Move(velocity * Time.deltaTime);
@@ -45,12 +48,17 @@ public class EnemyControlHandler<TEnemyController>
         _pauseAtEdgeEndTime = null;
       }
     }
-    
-    if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
-      velocity.y = 0;
-    
+
     // move with constant speed
     velocity.x = moveDirectionFactor * speed;
+
+    if (jumpVelocityY.HasValue)
+    {
+      velocity.y = jumpVelocityY.Value;
+      Debug.Log("JUMP: " + velocity.y);
+    }
+    else if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
+      velocity.y = 0;
 
     // apply gravity before moving
     velocity.y += gravity * Time.deltaTime;
