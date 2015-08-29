@@ -7,6 +7,7 @@ public class CameraTrolleyEditor : Editor
 {
   GUIStyle style = new GUIStyle();
   private CameraTrolley _target;
+  private int _selectedHandleIndex = -1;
 
   void OnEnable()
   {
@@ -18,28 +19,20 @@ public class CameraTrolleyEditor : Editor
 
   public override void OnInspectorGUI()
   {
-    //draw the path?
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Show Gizmo Outline");
-    _target.showGizmoOutline = EditorGUILayout.Toggle(_target.showGizmoOutline);
-    EditorGUILayout.EndHorizontal();
+    DrawDefaultInspector();
 
-    //path color:
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Outline Gizmo Color");
-    _target.outlineGizmoColor = EditorGUILayout.ColorField(_target.outlineGizmoColor);
-    EditorGUILayout.EndHorizontal();
-    
-    EditorGUILayout.BeginHorizontal();
-    _target.nodeCount = Mathf.Max(2, EditorGUILayout.IntField("Node Count", _target.nodeCount));
-    EditorGUILayout.EndHorizontal();
+    if (_target.nodeCount < 2)
+      _target.nodeCount = 2;
 
     //add node?
     if (_target.nodeCount > _target.nodes.Count)
     {
       for (int i = 0; i < _target.nodeCount - _target.nodes.Count; i++)
       {
-        _target.nodes.Add(Vector3.zero);
+        _target.nodes.Add(new Vector3(
+          _target.nodes[_target.nodes.Count - 1].x + 10f
+          , _target.nodes[_target.nodes.Count - 1].y
+          , _target.nodes[_target.nodes.Count - 1].z));
       }
     }
 
@@ -81,12 +74,45 @@ public class CameraTrolleyEditor : Editor
       Handles.Label(_target.gameObject.transform.TransformPoint(_target.nodes[0]), "'" + _target.name + "' Begin", style);
       Handles.Label(_target.gameObject.transform.TransformPoint(_target.nodes[_target.nodes.Count - 1]), "'" + _target.name + "' End", style);
 
+      int hashCode = GetHashCode();
+
       //node handle display:
       for (int i = 0; i < _target.nodes.Count; i++)
       {
+        int controlIDBeforeHandle = GUIUtility.GetControlID(hashCode, FocusType.Passive);
+        bool isEventUsedBeforeHandle = (Event.current.type == EventType.used);
+
+
         _target.nodes[i] = _target.gameObject.transform.InverseTransformPoint(
           Handles.PositionHandle(_target.gameObject.transform.TransformPoint(_target.nodes[i]), Quaternion.identity));
+
+        int controlIDAfterHandle = GUIUtility.GetControlID(hashCode, FocusType.Passive);
+        bool isEventUsedByHandle = !isEventUsedBeforeHandle && (Event.current.type == EventType.used);
+
+        if ((controlIDBeforeHandle < GUIUtility.hotControl && GUIUtility.hotControl < controlIDAfterHandle) || isEventUsedByHandle)
+        {
+          _selectedHandleIndex = i;
+        }
       }
+    }
+
+    Event e = Event.current;
+    switch (e.type)
+    {
+      case EventType.keyDown:
+        if (Event.current.keyCode == (KeyCode.Delete))
+        {
+          Debug.Log(_selectedHandleIndex);
+          if (_selectedHandleIndex >= 0)
+          {
+            e.Use();
+
+            _target.nodes.RemoveAt(_selectedHandleIndex);
+            _target.nodeCount = _target.nodes.Count;
+          }
+        }
+        break;
+
     }
   }
 }

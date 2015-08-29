@@ -52,24 +52,6 @@ public class SceneSwitchWindow : EditorWindow
       }
     }
 
-
-    //for (var i = 0; i < EditorBuildSettings.scenes.Length; i++)
-    //{
-    //  var scene = EditorBuildSettings.scenes[i];
-    //  if (scene.enabled)
-    //  {
-    //    var sceneName = Path.GetFileNameWithoutExtension(scene.path);
-    //    var pressed = GUILayout.Button(i + ": " + sceneName, new GUIStyle(GUI.skin.GetStyle("Button")) { alignment = TextAnchor.MiddleLeft });
-    //    if (pressed)
-    //    {
-    //      if (EditorApplication.SaveCurrentSceneIfUserWantsTo())
-    //      {
-    //        EditorApplication.OpenScene(scene.path);
-    //      }
-    //    }
-    //  }
-    //}
-
     EditorGUILayout.EndScrollView();
     EditorGUILayout.EndVertical();
   }

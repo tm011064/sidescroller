@@ -39,9 +39,6 @@ public partial class LinearPath : SpawnBucketItemBehaviour
   }
   #endregion
 
-  public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
-  public int nodeCount;
-
   public Color outlineGizmoColor = Color.white;
   public bool showGizmoOutline = true;
 
@@ -53,16 +50,22 @@ public partial class LinearPath : SpawnBucketItemBehaviour
 
   public float time = 5f;
   public MovingPlatformType movingPlatformType = MovingPlatformType.StartsWhenPlayerLands;
+  public List<GameObject> synchronizedStartObjects = new List<GameObject>();
   public StartPosition startPosition = StartPosition.Center;
   public StartPathDirection startPathDirection = StartPathDirection.Forward;
 
   public float startDelayOnEnabled = 0f;
   public float delayBetweenCycles = 0f;
 
+  public int nodeCount;
+  [HideInInspector]
+  public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
+
   private bool _needsToUnSubscribeAttachedEvent = false;
   private bool _isMoving = false;
   private float _moveStartTime;
   private List<GameObjectTrackingInformation> _gameObjectTrackingInformation = new List<GameObjectTrackingInformation>();
+  private IMoveable[] _synchronizedStartObjects;
 
   private float[] _segmentLengthPercentages = null;
   private GameManager _gameManager;
@@ -105,6 +108,12 @@ public partial class LinearPath : SpawnBucketItemBehaviour
       {
         _gameObjectTrackingInformation[i].gameObject.GetComponent<IAttachableObject>().Attached -= attachableObject_Attached;
       }
+
+      for (int i = 0; i < _synchronizedStartObjects.Length; i++)
+      {
+        _synchronizedStartObjects[i].StartMove();
+      }
+
       _needsToUnSubscribeAttachedEvent = false;
     }
   }
@@ -118,6 +127,11 @@ public partial class LinearPath : SpawnBucketItemBehaviour
       Logger.Info("Player landed on platform, start move...");
       _isMoving = true;
       _moveStartTime = Time.time + startDelayOnEnabled;
+
+      for (int i = 0; i < _synchronizedStartObjects.Length; i++)
+      {
+        _synchronizedStartObjects[i].StartMove();
+      }
     }
   }
 
@@ -168,7 +182,7 @@ public partial class LinearPath : SpawnBucketItemBehaviour
           }
 
           _gameObjectTrackingInformation[i].percentage += (pct * _gameObjectTrackingInformation[i].directionMultiplicationFactor);
-          
+
           if (_gameObjectTrackingInformation[i].gameObject == null)
           {// for loop mode with delay between cycles
             _gameObjectTrackingInformation[i].gameObject = ObjectPoolingManager.Instance.GetObject(objectToAttach.name);
@@ -268,13 +282,29 @@ public partial class LinearPath : SpawnBucketItemBehaviour
 
     _gameObjectTrackingInformation = new List<GameObjectTrackingInformation>();
     _isMoving = false;
+
+    Logger.Info("Disabled moving linear path " + this.name);
   }
 
   void OnEnable()
   {
+    Logger.Info("Enabled moving linear path " + this.name);
+
     Logger.Assert(time > 0f, "Time must be set to a positive value greater than 0");
     if (_gameManager == null)
       _gameManager = GameManager.instance;
+
+    if (_synchronizedStartObjects == null)
+    {
+      List<IMoveable> list = new List<IMoveable>();
+      for (int i = 0; i < synchronizedStartObjects.Count; i++)
+      {
+        IMoveable moveable = synchronizedStartObjects[i].GetComponent<IMoveable>();
+        if (moveable != null)
+          list.Add(moveable);
+      }
+      _synchronizedStartObjects = list.ToArray();
+    }
 
     if (_segmentLengthPercentages == null)
     {// first calculate lengths      
@@ -326,7 +356,8 @@ public partial class LinearPath : SpawnBucketItemBehaviour
     {
       _isMoving = true;
       _moveStartTime = Time.time + startDelayOnEnabled;
-      Debug.Log(this.name + " st: " + _moveStartTime);
+      
+      Logger.Info("Start moving linear path " + this.name);      
     }
   }
 }

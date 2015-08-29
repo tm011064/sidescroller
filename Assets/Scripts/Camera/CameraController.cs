@@ -332,7 +332,7 @@ public class CameraController : MonoBehaviour
     else
     {
       var leftOffset = cameraOffset;
-      leftOffset.x *= -1;
+      //leftOffset.x *= -1;
 
       Vector3 targetPositon = hvec - leftOffset;
       transform.position = new Vector3(

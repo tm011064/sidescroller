@@ -18,63 +18,10 @@ public class LinearPathEditor : Editor
 
   public override void OnInspectorGUI()
   {
-    //draw the path?
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Show Gizmo Outline");
-    _target.showGizmoOutline = EditorGUILayout.Toggle(_target.showGizmoOutline);
-    EditorGUILayout.EndHorizontal();
+    DrawDefaultInspector();
 
-    //path color:
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Outline Gizmo Color");
-    _target.outlineGizmoColor = EditorGUILayout.ColorField(_target.outlineGizmoColor);
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Easing Type");
-    _target.easingType = (EasingType)EditorGUILayout.EnumPopup(_target.easingType);
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Game Object To Attach");
-    _target.objectToAttach = (GameObject)EditorGUILayout.ObjectField(_target.objectToAttach, typeof(GameObject));
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    _target.totalObjectsOnPath = Mathf.Max(1, EditorGUILayout.IntField("Total Objects On Path", _target.totalObjectsOnPath));
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    _target.time = Mathf.Max(.01f, EditorGUILayout.FloatField("Time", _target.time));
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    _target.startDelayOnEnabled = Mathf.Max(0f, EditorGUILayout.FloatField("Start Delay On Enabled", _target.startDelayOnEnabled));
-    EditorGUILayout.EndHorizontal();
-    EditorGUILayout.BeginHorizontal();
-    _target.delayBetweenCycles = Mathf.Max(0f, EditorGUILayout.FloatField("Delay Between Cycles", _target.delayBetweenCycles));
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Loop Mode");
-    _target.loopMode = (LinearPath.LoopMode)EditorGUILayout.EnumPopup(_target.loopMode);
-    EditorGUILayout.EndHorizontal();
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Moving Platform Type");
-    _target.movingPlatformType = (MovingPlatformType)EditorGUILayout.EnumPopup(_target.movingPlatformType);
-    EditorGUILayout.EndHorizontal();
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Start Position");
-    _target.startPosition = (LinearPath.StartPosition)EditorGUILayout.EnumPopup(_target.startPosition);
-    EditorGUILayout.EndHorizontal();
-    EditorGUILayout.BeginHorizontal();
-    EditorGUILayout.PrefixLabel("Start Path Direction");
-    _target.startPathDirection = (LinearPath.StartPathDirection)EditorGUILayout.EnumPopup(_target.startPathDirection);
-    EditorGUILayout.EndHorizontal();
-
-    EditorGUILayout.BeginHorizontal();
-    _target.nodeCount = Mathf.Max(2, EditorGUILayout.IntField("Node Count", _target.nodeCount));
-    EditorGUILayout.EndHorizontal();
+    if (_target.nodeCount < 2)
+      _target.nodeCount = 2;
 
     //add node?
     if (_target.nodeCount > _target.nodes.Count)

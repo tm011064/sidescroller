@@ -7,12 +7,9 @@ using UnityEngine;
 [RequireComponent(typeof(BoxCollider2D))]
 public partial class CameraTrolley : MonoBehaviour
 {
-  public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
   public int nodeCount;
-
-  public Color outlineGizmoColor = Color.white;
-  public bool showGizmoOutline = true;
-
+  [HideInInspector]
+  public List<Vector3> nodes = new List<Vector3>() { Vector3.zero, Vector3.zero };
   [HideInInspector]
   public bool isPlayerWithinBoundingBox;
 
@@ -42,10 +39,4 @@ public partial class CameraTrolley : MonoBehaviour
 
     return null;
   }
-
-  void OnEnable()
-  {
-
-  }
-
 }
