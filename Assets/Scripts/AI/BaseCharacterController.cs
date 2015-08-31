@@ -40,19 +40,22 @@ public class BaseCharacterController : BaseMonoBehaviour
   {
     try
     {
-      while (!_currentBaseControlHandler.Update())
+      if (_currentBaseControlHandler != null)
       {
-        BaseControlHandler poppedHandler = _controlHandlers.Pop();
-        poppedHandler.Dispose();
+        while (!_currentBaseControlHandler.Update())
+        {
+          BaseControlHandler poppedHandler = _controlHandlers.Pop();
+          poppedHandler.Dispose();
 
-        Logger.Info("Popped handler: " + poppedHandler.ToString());
-        TryActivateCurrentControlHandler(poppedHandler);
+          Logger.Info("Popped handler: " + poppedHandler.ToString());
+          TryActivateCurrentControlHandler(poppedHandler);
+        }
+
+        // after we updated the control handler, we now want to notify all stack members (excluding the current handler/peek) that an update
+        // has occurred. This is necessary in case stacked handlers need to react to actions, for example: melee attack is interrupted by wall jump handler
+        for (int i = _controlHandlers.Count - 2; i >= 0; i--)
+          _controlHandlers[i].OnAfterStackPeekUpdate();
       }
-
-      // after we updated the control handler, we now want to notify all stack members (excluding the current handler/peek) that an update
-      // has occurred. This is necessary in case stacked handlers need to react to actions, for example: melee attack is interrupted by wall jump handler
-      for (int i = _controlHandlers.Count - 2; i >= 0; i--)
-        _controlHandlers[i].OnAfterStackPeekUpdate();
     }
     catch (Exception err)
     {

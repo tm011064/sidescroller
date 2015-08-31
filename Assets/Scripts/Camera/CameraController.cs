@@ -52,6 +52,8 @@ public class CameraController : MonoBehaviour
   private PlayerController _playerController;
 
   private CameraTrolley[] _cameraTrolleys;
+  private Vector3 _lastTargetPosition;
+  private float _targetedTransformPositionX;
   #endregion
 
   void Reset()
@@ -63,7 +65,8 @@ public class CameraController : MonoBehaviour
       , new ZoomSettings()
       , new SmoothDampMoveSettings()
       , Vector2.zero
-      , VerticalCameraFollowMode.FollowAlways);
+      , VerticalCameraFollowMode.FollowAlways
+      , 0f);
 
     SetCameraMovementSettings(cameraMovementSettings);
   }
@@ -79,6 +82,9 @@ public class CameraController : MonoBehaviour
     _playerController = GameManager.instance.player;
     // we set the target of the camera to our player through code
     target = _playerController.transform;
+
+    _lastTargetPosition = target.transform.position;
+    _targetedTransformPositionX = _lastTargetPosition.x;
 
     _characterPhysicsManager = target.GetComponent<CharacterPhysicsManager>();
 
@@ -293,53 +299,79 @@ public class CameraController : MonoBehaviour
           ? _cameraMovementSettings.smoothDampMoveSettings.verticalAboveRapidAcsentSmoothDampTime
           : _cameraMovementSettings.smoothDampMoveSettings.verticalSmoothDampTime;
     }
-    
+
     #region horizontal locking
+    float xTargetDelta = target.transform.position.x - _lastTargetPosition.x;
+
     xPos = target.position.x;
+    bool doAdjustHorizontalOffset = cameraOffset.x != 0f;
     if (_cameraMovementSettings.horizontalLockSettings.enabled)
     {
       if (_cameraMovementSettings.horizontalLockSettings.enableRightHorizontalLock
-        && target.position.x > _cameraMovementSettings.horizontalLockSettings.rightBoundary)
+        && target.position.x > _cameraMovementSettings.horizontalLockSettings.rightBoundary - cameraOffset.x)
       {
-        xPos = _cameraMovementSettings.horizontalLockSettings.rightBoundary + cameraOffset.x;
+        xPos = _cameraMovementSettings.horizontalLockSettings.rightBoundary;
+        doAdjustHorizontalOffset = false;
       }
       else if (_cameraMovementSettings.horizontalLockSettings.enableLeftHorizontalLock
-        && target.position.x < _cameraMovementSettings.horizontalLockSettings.leftBoundary)
+        && target.position.x < _cameraMovementSettings.horizontalLockSettings.leftBoundary + cameraOffset.x)
       {
-        xPos = _cameraMovementSettings.horizontalLockSettings.leftBoundary + cameraOffset.x;
-      }
-      else
-      {
-        xPos = target.position.x;
+        xPos = _cameraMovementSettings.horizontalLockSettings.leftBoundary;
+        doAdjustHorizontalOffset = false;
       }
     }
-    else
+    if (doAdjustHorizontalOffset)
     {
-      xPos = target.position.x;
+      xPos = _targetedTransformPositionX;
+      
+      if ((xTargetDelta < -.001f
+          || xTargetDelta > .001f))
+      {
+        if (cameraOffset.x < 0f)
+        {
+          xPos = _targetedTransformPositionX + xTargetDelta
+            * _cameraMovementSettings.horizontalOffsetDeltaMovementFactor;
+
+          if (xTargetDelta > 0f)
+          {// going right
+            if (xPos + cameraOffset.x > target.position.x)
+            {
+              xPos = target.position.x - cameraOffset.x;
+            }
+
+            if (_cameraMovementSettings.horizontalLockSettings.enableRightHorizontalLock
+              && xPos > _cameraMovementSettings.horizontalLockSettings.rightBoundary)
+            {
+              xPos = _cameraMovementSettings.horizontalLockSettings.rightBoundary;
+            }
+          }
+          else
+          {// going left
+            if (xPos - cameraOffset.x < target.position.x)
+            {
+              xPos = target.position.x + cameraOffset.x;
+            }
+
+            if (_cameraMovementSettings.horizontalLockSettings.enableLeftHorizontalLock
+              && xPos < _cameraMovementSettings.horizontalLockSettings.leftBoundary)
+            {
+              xPos = _cameraMovementSettings.horizontalLockSettings.leftBoundary;
+            }
+          }
+        }
+      }
     }
     #endregion
 
-    Vector3 hvec = new Vector3(xPos, yPos, target.position.z);
-    
-    if (_characterPhysicsManager.velocity.x > 0)
-    {
-      Vector3 targetPositon = hvec - cameraOffset;
-      transform.position = new Vector3(
-        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, _cameraMovementSettings.smoothDampMoveSettings.horizontalSmoothDampTime)
-        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
-        , targetPositon.z);
-    }
-    else
-    {
-      var leftOffset = cameraOffset;
-      //leftOffset.x *= -1;
+    _targetedTransformPositionX = xPos;
 
-      Vector3 targetPositon = hvec - leftOffset;
-      transform.position = new Vector3(
-        Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, _cameraMovementSettings.smoothDampMoveSettings.horizontalSmoothDampTime)
-        , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
-        , targetPositon.z);
-    }
+    Vector3 targetPositon = new Vector3(xPos, yPos - cameraOffset.y, target.position.z - cameraOffset.z);
+    transform.position = new Vector3(
+      Mathf.SmoothDamp(transform.position.x, targetPositon.x, ref _horizontalSmoothDampVelocity, _cameraMovementSettings.smoothDampMoveSettings.horizontalSmoothDampTime)
+      , Mathf.SmoothDamp(transform.position.y, targetPositon.y, ref _verticalSmoothDampVelocity, verticalSmoothDampTime)
+      , targetPositon.z);
+
+    _lastTargetPosition = target.transform.position;
   }
 
 }

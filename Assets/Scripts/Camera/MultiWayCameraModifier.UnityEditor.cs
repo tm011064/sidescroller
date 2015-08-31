@@ -230,6 +230,7 @@ public partial class MultiWayCameraModifier : MonoBehaviour
 
       multiWayCameraModificationSetting.offset = cameraModifier.offset;
       multiWayCameraModificationSetting.verticalCameraFollowMode = cameraModifier.verticalCameraFollowMode;
+      multiWayCameraModificationSetting.horizontalOffsetDeltaMovementFactor = cameraModifier.horizontalOffsetDeltaMovementFactor;
 
       switch (importCameraSettings.importCameraSettingsMode)
       {

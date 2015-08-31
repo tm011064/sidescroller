@@ -10,10 +10,10 @@ public class RunnerEnemyController : TopBounceableEnemyController
     get { return new DamageTakenPlayerControlHandler(); }
   }
 
-  void Start()
+  public override void Reset(Direction startDirection)
   {
-    // we insert in case there is already a control handler attached when spawned by another manager
-    InsertControlHandler(0, new RunnerEnemyControlHandler(this, startDirection));
+    // TODO (Roman): does that break anything - there was a reason for inserting at 0, but can't remember why :(
+    ResetControlHandlers(new RunnerEnemyControlHandler(this, startDirection));
   }
 }
 

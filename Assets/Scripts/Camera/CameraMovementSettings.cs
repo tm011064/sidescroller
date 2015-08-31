@@ -8,6 +8,7 @@ public class CameraMovementSettings
   public SmoothDampMoveSettings smoothDampMoveSettings;
 
   public Vector2 offset;
+  public float horizontalOffsetDeltaMovementFactor;
 
   public VerticalCameraFollowMode verticalCameraFollowMode;
 
@@ -26,7 +27,9 @@ public class CameraMovementSettings
   public CameraMovementSettings(VerticalLockSettings verticalLockSettings, HorizontalLockSettings horizontalLockSettings
       , ZoomSettings zoomSettings, SmoothDampMoveSettings smoothDampMoveSettings
       , Vector2 offset
-      , VerticalCameraFollowMode verticalCameraFollowMode)
+      , VerticalCameraFollowMode verticalCameraFollowMode
+      , float horizontalOffsetDeltaMovementFactor
+    )
   {
     this.horizontalLockSettings = horizontalLockSettings;
     this.verticalLockSettings = verticalLockSettings;
@@ -34,5 +37,6 @@ public class CameraMovementSettings
     this.zoomSettings = zoomSettings;
     this.smoothDampMoveSettings = smoothDampMoveSettings;
     this.verticalCameraFollowMode = verticalCameraFollowMode;
+    this.horizontalOffsetDeltaMovementFactor = horizontalOffsetDeltaMovementFactor;
   }
 }

@@ -959,10 +959,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 896, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -971,10 +967,15 @@ MonoBehaviour:
   loopMode: 1
   time: 4.4000001
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 1
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 896, z: 0}
 --- !u!1 &208026222
 GameObject:
   m_ObjectHideFlags: 0
@@ -1123,10 +1124,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 2096, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -1135,10 +1132,15 @@ MonoBehaviour:
   loopMode: 0
   time: 8
   movingPlatformType: 1
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 2096, y: 0, z: 0}
 --- !u!1 &231281799
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,10 +1500,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 896, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -1510,10 +1508,15 @@ MonoBehaviour:
   loopMode: 1
   time: 4.4000001
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 1
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 896, z: 0}
 --- !u!1 &350209649
 GameObject:
   m_ObjectHideFlags: 0
@@ -2081,10 +2084,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 896, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -2093,10 +2092,15 @@ MonoBehaviour:
   loopMode: 1
   time: 4.4000001
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 1
   startDelayOnEnabled: 2.20000005
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 896, z: 0}
 --- !u!1 &442487961
 GameObject:
   m_ObjectHideFlags: 0
@@ -2136,10 +2140,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -2148,10 +2148,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 2
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!1 &453699611
 GameObject:
   m_ObjectHideFlags: 0
@@ -2544,10 +2549,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -2556,10 +2557,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!1 &538259094
 GameObject:
   m_ObjectHideFlags: 0
@@ -2708,10 +2714,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: -1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -2720,10 +2722,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 1
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: -1536, y: 0, z: 0}
 --- !u!1 &565872213
 GameObject:
   m_ObjectHideFlags: 0
@@ -3951,10 +3958,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: -1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -3963,10 +3966,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 1
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: -1536, y: 0, z: 0}
 --- !u!1 &819415067
 GameObject:
   m_ObjectHideFlags: 0
@@ -5819,10 +5827,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -5831,10 +5835,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 2
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!1 &1158381654
 GameObject:
   m_ObjectHideFlags: 0
@@ -6857,10 +6866,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: -1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -6869,10 +6874,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 1.5
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: -1536, y: 0, z: 0}
 --- !u!1 &1291383080
 GameObject:
   m_ObjectHideFlags: 0
@@ -7770,10 +7780,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: -1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -7782,10 +7788,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 1.5
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: -1536, y: 0, z: 0}
 --- !u!1 &1525404606
 GameObject:
   m_ObjectHideFlags: 0
@@ -8074,10 +8085,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -8086,10 +8093,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!1 &1604172415
 GameObject:
   m_ObjectHideFlags: 0
@@ -8191,10 +8203,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 896, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -8203,10 +8211,15 @@ MonoBehaviour:
   loopMode: 1
   time: 4.4000001
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 896, z: 0}
 --- !u!1001 &1722696250
 Prefab:
   m_ObjectHideFlags: 0
@@ -8924,10 +8937,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -8936,10 +8945,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!43 &1827721069
 Mesh:
   m_ObjectHideFlags: 0
@@ -9216,10 +9230,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 5120, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -9228,10 +9238,15 @@ MonoBehaviour:
   loopMode: 1
   time: 25
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 1
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 5120, z: 0}
 --- !u!1 &1883033742
 GameObject:
   m_ObjectHideFlags: 0
@@ -9904,10 +9919,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 0, y: 5120, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -9916,10 +9927,15 @@ MonoBehaviour:
   loopMode: 1
   time: 25
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: 5120, z: 0}
 --- !u!1 &2049008166
 GameObject:
   m_ObjectHideFlags: 0
@@ -10458,10 +10474,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nodes:
-  - {x: 0, y: 0, z: 0}
-  - {x: 1536, y: 0, z: 0}
-  nodeCount: 2
   outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
   showGizmoOutline: 1
   easingType: 0
@@ -10470,10 +10482,15 @@ MonoBehaviour:
   loopMode: 1
   time: 2
   movingPlatformType: 0
+  synchronizedStartObjects: []
   startPosition: 0
   startPathDirection: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  nodeCount: 2
+  nodes:
+  - {x: 0, y: 0, z: 0}
+  - {x: 1536, y: 0, z: 0}
 --- !u!1 &2104460335
 GameObject:
   m_ObjectHideFlags: 0

@@ -162,6 +162,8 @@ public partial class CameraModifier : MonoBehaviour
   [Tooltip("The (x, y) offset of the camera. This can be used when default vertical locking is disabled and you want the player to be below, above, right or left of the screen center.")]
   public Vector2 offset;
 
+  public float horizontalOffsetDeltaMovementFactor = 40f;
+
   public VerticalCameraFollowMode verticalCameraFollowMode;
 
   public Color gizmoColor = Color.magenta;
@@ -220,6 +222,7 @@ public partial class CameraModifier : MonoBehaviour
       , smoothDampMoveSettings
       , offset
       , verticalCameraFollowMode
+      , horizontalOffsetDeltaMovementFactor
       );
 
     var cameraController = Camera.main.GetComponent<CameraController>();

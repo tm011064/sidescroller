@@ -226,7 +226,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 15184942}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11440, y: 3792, z: 0}
+  m_LocalPosition: {x: 11904, y: 3792, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1218323993}
@@ -323,7 +323,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 26896415}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10176, y: 3696, z: 0}
+  m_LocalPosition: {x: 10576, y: 3696, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1218323993}
@@ -369,7 +369,7 @@ MeshFilter:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 26896415}
-  m_Mesh: {fileID: 1610553290}
+  m_Mesh: {fileID: 1006252220}
 --- !u!23 &26896420
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1498,7 +1498,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 167417283}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10736, y: 4224, z: 0}
+  m_LocalPosition: {x: 11152, y: 4224, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1109902075}
@@ -1849,6 +1849,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -1880,6 +1881,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: 0
@@ -3524,6 +3526,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: -384, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -3555,6 +3558,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: -384, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: 180
@@ -3885,6 +3889,7 @@ Transform:
   - {fileID: 440873721}
   - {fileID: 1072450012}
   - {fileID: 1114587197}
+  - {fileID: 1290847122}
   m_Father: {fileID: 0}
   m_RootOrder: 4
 --- !u!43 &597566248
@@ -4173,6 +4178,52 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &615438245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 615438246}
+  - 114: {fileID: 615438247}
+  m_Layer: 12
+  m_Name: Falling Platform 7
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &615438246
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 615438245}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 10288, y: 3744, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 1109902075}
+  m_RootOrder: 6
+--- !u!114 &615438247
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 615438245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9cfb9d81f7db334a8ba0e954d9780ce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineGizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
+  showGizmoOutline: 1
+  stableDuration: .200000003
+  fallGravity: -3960
+  respawnTime: 4
+  platformPrefab: {fileID: 156484, guid: 16b85cbb72fe0b240ba3085bca0a5851, type: 2}
+  breakMode: 0
 --- !u!1 &650094479
 GameObject:
   m_ObjectHideFlags: 0
@@ -4584,7 +4635,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
       propertyPath: offset.x
-      value: 0
+      value: -256
+      objectReference: {fileID: 0}
+    - target: {fileID: 11465204, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
+      propertyPath: horizontalOffsetDeltaMovementFactor
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
@@ -5062,7 +5117,7 @@ Prefab:
     - target: {fileID: 11473106, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: enemyToSpawn
       value: 
-      objectReference: {fileID: 143148, guid: ccb591b72aa8212428d3cbef43ec9105, type: 2}
+      objectReference: {fileID: 111072, guid: d0dc95a7a5452c14998e63066ac5a0dd, type: 2}
     - target: {fileID: 6196360, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_Size.x
       value: 2240
@@ -5296,6 +5351,134 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
+--- !u!43 &1006252220
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 36
+    topology: 0
+    firstVertex: 0
+    vertexCount: 24
+    localAABB:
+      m_Center: {x: 192, y: 32, z: 0}
+      m_Extent: {x: 192, y: 32, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 0200010000000000030002000600050004000400070006000a000900080008000b000a000e000d000c000c000f000e00120011001000100013001200160015001400140017001600
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 11
+    m_VertexCount: 24
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 768
+    _typelessdata: 0000000000000000000000000000000000000000000080bf00000000000000000000804200000000000000000000000000000000000080bf0000803f000000000000804200008042000000000000000000000000000080bf0000803f0000803f0000000000008042000000000000000000000000000080bf000000000000803f0000804200000000000000000000000000000000000080bf00000000000000000000004300000000000000000000000000000000000080bf0000803f000000000000004300008042000000000000000000000000000080bf0000803f0000803f0000804200008042000000000000000000000000000080bf000000000000803f0000004300000000000000000000000000000000000080bf00000000000000000000404300000000000000000000000000000000000080bf0000803f000000000000404300008042000000000000000000000000000080bf0000803f0000803f0000004300008042000000000000000000000000000080bf000000000000803f0000404300000000000000000000000000000000000080bf00000000000000000000804300000000000000000000000000000000000080bf0000803f000000000000804300008042000000000000000000000000000080bf0000803f0000803f0000404300008042000000000000000000000000000080bf000000000000803f0000804300000000000000000000000000000000000080bf00000000000000000000a04300000000000000000000000000000000000080bf0000803f000000000000a04300008042000000000000000000000000000080bf0000803f0000803f0000804300008042000000000000000000000000000080bf000000000000803f0000a04300000000000000000000000000000000000080bf00000000000000000000c04300000000000000000000000000000000000080bf0000803f000000000000c04300008042000000000000000000000000000080bf0000803f0000803f0000a04300008042000000000000000000000000000080bf000000000000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 192, y: 32, z: 0}
+    m_Extent: {x: 192, y: 32, z: 0}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0
 --- !u!1 &1030490932
 GameObject:
   m_ObjectHideFlags: 0
@@ -5746,6 +5929,7 @@ Transform:
   - {fileID: 95543974}
   - {fileID: 1767967373}
   - {fileID: 167417284}
+  - {fileID: 615438246}
   m_Father: {fileID: 0}
   m_RootOrder: 10
 --- !u!1 &1114587196
@@ -5992,128 +6176,6 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
---- !u!1 &1203277485
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 170568, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1203277486}
-  - 68: {fileID: 1203277488}
-  - 114: {fileID: 1203277487}
-  m_Layer: 15
-  m_Name: Camera Modifier 7
-  m_TagString: Untagged
-  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1203277486
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1203277485}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8512, y: 2768, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1744924640}
-  m_RootOrder: 6
---- !u!114 &1203277487
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1203277485}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 596729bdce0070648a5811ab36dc2709, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  importCameraSettings:
-    importSource: {fileID: 231281799}
-    importCameraSettingsMode: 1
-  redCameraModificationSettings:
-    verticalLockSettings:
-      enabled: 1
-      enableDefaultVerticalLockPosition: 0
-      defaultVerticalLockPosition: 540
-      enableTopVerticalLock: 0
-      topVerticalLockPosition: 2688
-      enableBottomVerticalLock: 0
-      bottomVerticalLockPosition: 0
-      topBoundary: 0
-      bottomBoundary: 0
-      translatedVerticalLockPosition: 0
-    horizontalLockSettings:
-      enabled: 1
-      enableRightHorizontalLock: 0
-      rightHorizontalLockPosition: 11504
-      enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 0
-      rightBoundary: 0
-      leftBoundary: 0
-    zoomSettings:
-      zoomPercentage: 1
-      zoomTime: 0
-      zoomEasingType: 0
-    smoothDampMoveSettings:
-      horizontalSmoothDampTime: .600000024
-      verticalSmoothDampTime: .600000024
-      verticalRapidDescentSmoothDampTime: .00999999978
-      verticalAboveRapidAcsentSmoothDampTime: .0500000007
-    offset: {x: -384, y: 0}
-    verticalCameraFollowMode: 0
-  greenCameraModificationSettings:
-    verticalLockSettings:
-      enabled: 1
-      enableDefaultVerticalLockPosition: 0
-      defaultVerticalLockPosition: 540
-      enableTopVerticalLock: 0
-      topVerticalLockPosition: 2688
-      enableBottomVerticalLock: 0
-      bottomVerticalLockPosition: 0
-      topBoundary: 0
-      bottomBoundary: 0
-      translatedVerticalLockPosition: 0
-    horizontalLockSettings:
-      enabled: 1
-      enableRightHorizontalLock: 0
-      rightHorizontalLockPosition: 11504
-      enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 0
-      rightBoundary: 0
-      leftBoundary: 0
-    zoomSettings:
-      zoomPercentage: 1
-      zoomTime: 0
-      zoomEasingType: 0
-    smoothDampMoveSettings:
-      horizontalSmoothDampTime: .200000003
-      verticalSmoothDampTime: .200000003
-      verticalRapidDescentSmoothDampTime: .00999999978
-      verticalAboveRapidAcsentSmoothDampTime: .0500000007
-    offset: {x: -384, y: 0}
-    verticalCameraFollowMode: 0
-  edgeColliderLength: 768
-  edgeColliderAngle: 0
-  parentPositionObject: {fileID: 1744924639}
---- !u!68 &1203277488
-EdgeCollider2D:
-  m_ObjectHideFlags: 8
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1203277485}
-  m_Enabled: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
-  m_Points:
-  - {x: 0, y: 0}
-  - {x: 0, y: 768}
 --- !u!43 &1215918589
 Mesh:
   m_ObjectHideFlags: 0
@@ -6620,7 +6682,7 @@ Prefab:
     - target: {fileID: 11473106, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: enemyToSpawn
       value: 
-      objectReference: {fileID: 143148, guid: ccb591b72aa8212428d3cbef43ec9105, type: 2}
+      objectReference: {fileID: 111072, guid: d0dc95a7a5452c14998e63066ac5a0dd, type: 2}
     - target: {fileID: 6196360, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_Size.x
       value: 2240
@@ -6661,6 +6723,119 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
   m_PrefabInternal: {fileID: 1288889154}
+--- !u!1 &1290847121
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 138446, guid: c231c59f0afffc647834fbf7dceb3176, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 1290847122}
+  - 23: {fileID: 1290847127}
+  - 33: {fileID: 1290847126}
+  - 114: {fileID: 1290847125}
+  - 114: {fileID: 1290847124}
+  - 61: {fileID: 1290847123}
+  m_Layer: 15
+  m_Name: Floor Hazard 4
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 4294967295
+  m_IsActive: 1
+--- !u!4 &1290847122
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 453200, guid: c231c59f0afffc647834fbf7dceb3176, type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4864, y: 1856, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 593536541}
+  m_RootOrder: 5
+--- !u!61 &1290847123
+BoxCollider2D:
+  m_ObjectHideFlags: 8
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 32, y: 64}
+  serializedVersion: 2
+  m_Size: {x: 64, y: 128}
+--- !u!114 &1290847124
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11484296, guid: c231c59f0afffc647834fbf7dceb3176,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 552d99c3ae4c0be499133e6e63e8ff73, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1290847125
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 11471984, guid: c231c59f0afffc647834fbf7dceb3176,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d735ad4fae8f42e4d9868b2ef5bfd610, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visibilityCheckInterval: .200000003
+  width: 64
+  height: 128
+  createTiles: 1
+  tileWidth: 64
+  tileHeight: 64
+  anchor: 6
+  isTrigger: 1
+  colliderSides: 15
+  prefabMeshFolder: Assets/Meshes/
+  prefabObjectFolder: Assets/Prefabs/TestBlocks/
+--- !u!33 &1290847126
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 3368588, guid: c231c59f0afffc647834fbf7dceb3176,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_Mesh: {fileID: 2144498809}
+--- !u!23 &1290847127
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 2308714, guid: c231c59f0afffc647834fbf7dceb3176,
+    type: 2}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1290847121}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 0f6402da924232049baa9a6d204f080e, type: 2}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 0
+  m_ReflectionProbeUsage: 0
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: -2063158589
+  m_SortingOrder: 0
 --- !u!1 &1317553937
 GameObject:
   m_ObjectHideFlags: 0
@@ -7048,7 +7223,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1411027685}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10176, y: 4464, z: 0}
+  m_LocalPosition: {x: 10624, y: 4464, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1218323993}
@@ -7591,6 +7766,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -7617,11 +7793,12 @@ MonoBehaviour:
       zoomTime: 0
       zoomEasingType: 0
     smoothDampMoveSettings:
-      horizontalSmoothDampTime: .600000024
-      verticalSmoothDampTime: .600000024
+      horizontalSmoothDampTime: .200000003
+      verticalSmoothDampTime: .200000003
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
-    offset: {x: 0, y: 0}
+    offset: {x: -384, y: 0}
+    horizontalOffsetDeltaMovementFactor: 2
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: 0
@@ -7632,128 +7809,6 @@ EdgeCollider2D:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1483116398}
-  m_Enabled: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
-  m_Points:
-  - {x: 0, y: 0}
-  - {x: 0, y: 768}
---- !u!1 &1526628798
-GameObject:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 170568, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  serializedVersion: 4
-  m_Component:
-  - 4: {fileID: 1526628799}
-  - 68: {fileID: 1526628801}
-  - 114: {fileID: 1526628800}
-  m_Layer: 15
-  m_Name: Camera Modifier 6
-  m_TagString: Untagged
-  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1526628799
-Transform:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 452652, guid: becc35d0c2157524f8c959f2d1c0305e, type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1526628798}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8256, y: 2768, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 1744924640}
-  m_RootOrder: 5
---- !u!114 &1526628800
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1526628798}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 596729bdce0070648a5811ab36dc2709, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  importCameraSettings:
-    importSource: {fileID: 231281799}
-    importCameraSettingsMode: 1
-  redCameraModificationSettings:
-    verticalLockSettings:
-      enabled: 1
-      enableDefaultVerticalLockPosition: 0
-      defaultVerticalLockPosition: 540
-      enableTopVerticalLock: 0
-      topVerticalLockPosition: 2688
-      enableBottomVerticalLock: 0
-      bottomVerticalLockPosition: 0
-      topBoundary: 0
-      bottomBoundary: 0
-      translatedVerticalLockPosition: 0
-    horizontalLockSettings:
-      enabled: 1
-      enableRightHorizontalLock: 0
-      rightHorizontalLockPosition: 7056
-      enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 0
-      rightBoundary: 0
-      leftBoundary: 0
-    zoomSettings:
-      zoomPercentage: 1
-      zoomTime: 0
-      zoomEasingType: 0
-    smoothDampMoveSettings:
-      horizontalSmoothDampTime: .400000006
-      verticalSmoothDampTime: .400000006
-      verticalRapidDescentSmoothDampTime: .00999999978
-      verticalAboveRapidAcsentSmoothDampTime: .0500000007
-    offset: {x: 0, y: 0}
-    verticalCameraFollowMode: 0
-  greenCameraModificationSettings:
-    verticalLockSettings:
-      enabled: 1
-      enableDefaultVerticalLockPosition: 0
-      defaultVerticalLockPosition: 540
-      enableTopVerticalLock: 0
-      topVerticalLockPosition: 2688
-      enableBottomVerticalLock: 0
-      bottomVerticalLockPosition: 0
-      topBoundary: 0
-      bottomBoundary: 0
-      translatedVerticalLockPosition: 0
-    horizontalLockSettings:
-      enabled: 1
-      enableRightHorizontalLock: 0
-      rightHorizontalLockPosition: 11504
-      enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 0
-      rightBoundary: 0
-      leftBoundary: 0
-    zoomSettings:
-      zoomPercentage: 1
-      zoomTime: 0
-      zoomEasingType: 0
-    smoothDampMoveSettings:
-      horizontalSmoothDampTime: .400000006
-      verticalSmoothDampTime: .400000006
-      verticalRapidDescentSmoothDampTime: .00999999978
-      verticalAboveRapidAcsentSmoothDampTime: .0500000007
-    offset: {x: -384, y: 0}
-    verticalCameraFollowMode: 0
-  edgeColliderLength: 768
-  edgeColliderAngle: 0
-  parentPositionObject: {fileID: 1744924639}
---- !u!68 &1526628801
-EdgeCollider2D:
-  m_ObjectHideFlags: 8
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1526628798}
   m_Enabled: 1
   m_Material: {fileID: 0}
   m_IsTrigger: 0
@@ -7808,9 +7863,9 @@ MonoBehaviour:
     horizontalLockSettings:
       enabled: 1
       enableRightHorizontalLock: 1
-      rightHorizontalLockPosition: 11632
+      rightHorizontalLockPosition: 12272
       enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 9712
+      leftHorizontalLockPosition: 10352
       rightBoundary: 0
       leftBoundary: 0
     zoomSettings:
@@ -7823,6 +7878,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -7839,9 +7895,9 @@ MonoBehaviour:
     horizontalLockSettings:
       enabled: 1
       enableRightHorizontalLock: 1
-      rightHorizontalLockPosition: 11632
+      rightHorizontalLockPosition: 12272
       enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 9712
+      leftHorizontalLockPosition: 10352
       rightBoundary: 0
       leftBoundary: 0
     zoomSettings:
@@ -7854,6 +7910,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: 180
@@ -7879,7 +7936,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1561845784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10560, y: 4448, z: 0}
+  m_LocalPosition: {x: 10960, y: 4448, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1744924640}
@@ -8139,134 +8196,6 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Size: {x: 1024, y: 1800}
---- !u!43 &1610553290
-Mesh:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_Name: 
-  serializedVersion: 8
-  m_SubMeshes:
-  - serializedVersion: 2
-    firstByte: 0
-    indexCount: 36
-    topology: 0
-    firstVertex: 0
-    vertexCount: 24
-    localAABB:
-      m_Center: {x: 192, y: 32, z: 0}
-      m_Extent: {x: 192, y: 32, z: 0}
-  m_Shapes:
-    vertices: []
-    shapes: []
-    channels: []
-    fullWeights: []
-  m_BindPose: []
-  m_BoneNameHashes: 
-  m_RootBoneNameHash: 0
-  m_MeshCompression: 0
-  m_IsReadable: 1
-  m_KeepVertices: 1
-  m_KeepIndices: 1
-  m_IndexBuffer: 0200010000000000030002000600050004000400070006000a000900080008000b000a000e000d000c000c000f000e00120011001000100013001200160015001400140017001600
-  m_Skin: []
-  m_VertexData:
-    m_CurrentChannels: 11
-    m_VertexCount: 24
-    m_Channels:
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 12
-      format: 0
-      dimension: 3
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 24
-      format: 0
-      dimension: 2
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    - stream: 0
-      offset: 0
-      format: 0
-      dimension: 0
-    m_DataSize: 768
-    _typelessdata: 0000000000000000000000000000000000000000000080bf00000000000000000000804200000000000000000000000000000000000080bf0000803f000000000000804200008042000000000000000000000000000080bf0000803f0000803f0000000000008042000000000000000000000000000080bf000000000000803f0000804200000000000000000000000000000000000080bf00000000000000000000004300000000000000000000000000000000000080bf0000803f000000000000004300008042000000000000000000000000000080bf0000803f0000803f0000804200008042000000000000000000000000000080bf000000000000803f0000004300000000000000000000000000000000000080bf00000000000000000000404300000000000000000000000000000000000080bf0000803f000000000000404300008042000000000000000000000000000080bf0000803f0000803f0000004300008042000000000000000000000000000080bf000000000000803f0000404300000000000000000000000000000000000080bf00000000000000000000804300000000000000000000000000000000000080bf0000803f000000000000804300008042000000000000000000000000000080bf0000803f0000803f0000404300008042000000000000000000000000000080bf000000000000803f0000804300000000000000000000000000000000000080bf00000000000000000000a04300000000000000000000000000000000000080bf0000803f000000000000a04300008042000000000000000000000000000080bf0000803f0000803f0000804300008042000000000000000000000000000080bf000000000000803f0000a04300000000000000000000000000000000000080bf00000000000000000000c04300000000000000000000000000000000000080bf0000803f000000000000c04300008042000000000000000000000000000080bf0000803f0000803f0000a04300008042000000000000000000000000000080bf000000000000803f
-  m_CompressedMesh:
-    m_Vertices:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UV:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Normals:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Tangents:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Weights:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_NormalSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_TangentSigns:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_FloatColors:
-      m_NumItems: 0
-      m_Range: 0
-      m_Start: 0
-      m_Data: 
-      m_BitSize: 0
-    m_BoneIndices:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_Triangles:
-      m_NumItems: 0
-      m_Data: 
-      m_BitSize: 0
-    m_UVInfo: 0
-  m_LocalAABB:
-    m_Center: {x: 192, y: 32, z: 0}
-    m_Extent: {x: 192, y: 32, z: 0}
-  m_MeshUsageFlags: 0
-  m_BakedConvexCollisionMesh: 
-  m_BakedTriangleCollisionMesh: 
-  m_MeshOptimized: 0
 --- !u!1001 &1722696250
 Prefab:
   m_ObjectHideFlags: 0
@@ -8747,8 +8676,6 @@ Transform:
   - {fileID: 458119732}
   - {fileID: 2120218309}
   - {fileID: 1561845787}
-  - {fileID: 1526628799}
-  - {fileID: 1203277486}
   m_Father: {fileID: 0}
   m_RootOrder: 2
 --- !u!1 &1763649310
@@ -8871,7 +8798,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1767967372}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 11040, y: 3744, z: 0}
+  m_LocalPosition: {x: 11408, y: 3744, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1109902075}
@@ -9965,7 +9892,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2052687818}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 288, y: 304, z: 0}
+  m_LocalPosition: {x: 160, y: 272, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 722257506}
@@ -10617,7 +10544,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2120218308}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10368, y: 4448, z: 0}
+  m_LocalPosition: {x: 10304, y: 4448, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1744924640}
@@ -10651,9 +10578,9 @@ MonoBehaviour:
     horizontalLockSettings:
       enabled: 1
       enableRightHorizontalLock: 1
-      rightHorizontalLockPosition: 11632
+      rightHorizontalLockPosition: 12272
       enableLeftHorizontalLock: 1
-      leftHorizontalLockPosition: 9712
+      leftHorizontalLockPosition: 10352
       rightBoundary: 0
       leftBoundary: 0
     zoomSettings:
@@ -10661,11 +10588,12 @@ MonoBehaviour:
       zoomTime: 0
       zoomEasingType: 0
     smoothDampMoveSettings:
-      horizontalSmoothDampTime: .400000006
-      verticalSmoothDampTime: .400000006
+      horizontalSmoothDampTime: .600000024
+      verticalSmoothDampTime: .600000024
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -10692,11 +10620,12 @@ MonoBehaviour:
       zoomTime: 0
       zoomEasingType: 0
     smoothDampMoveSettings:
-      horizontalSmoothDampTime: .400000006
-      verticalSmoothDampTime: .400000006
+      horizontalSmoothDampTime: .600000024
+      verticalSmoothDampTime: .600000024
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: -384, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: 180
@@ -10769,3 +10698,131 @@ Prefab:
 Transform:
   m_PrefabParentObject: {fileID: 486422, guid: 26cc847a9f25edb4584881e8a3a5484b, type: 2}
   m_PrefabInternal: {fileID: 2123506408}
+--- !u!43 &2144498809
+Mesh:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: 
+  serializedVersion: 8
+  m_SubMeshes:
+  - serializedVersion: 2
+    firstByte: 0
+    indexCount: 12
+    topology: 0
+    firstVertex: 0
+    vertexCount: 8
+    localAABB:
+      m_Center: {x: 32, y: 64, z: 0}
+      m_Extent: {x: 32, y: 64, z: 0}
+  m_Shapes:
+    vertices: []
+    shapes: []
+    channels: []
+    fullWeights: []
+  m_BindPose: []
+  m_BoneNameHashes: 
+  m_RootBoneNameHash: 0
+  m_MeshCompression: 0
+  m_IsReadable: 1
+  m_KeepVertices: 1
+  m_KeepIndices: 1
+  m_IndexBuffer: 020001000000000003000200060005000400040007000600
+  m_Skin: []
+  m_VertexData:
+    m_CurrentChannels: 11
+    m_VertexCount: 8
+    m_Channels:
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 12
+      format: 0
+      dimension: 3
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 24
+      format: 0
+      dimension: 2
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    - stream: 0
+      offset: 0
+      format: 0
+      dimension: 0
+    m_DataSize: 256
+    _typelessdata: 0000000000000000000000000000000000000000000080bf00000000000000000000804200000000000000000000000000000000000080bf0000803f000000000000804200008042000000000000000000000000000080bf0000803f0000803f0000000000008042000000000000000000000000000080bf000000000000803f0000000000008042000000000000000000000000000080bf00000000000000000000804200008042000000000000000000000000000080bf0000803f000000000000804200000043000000000000000000000000000080bf0000803f0000803f0000000000000043000000000000000000000000000080bf000000000000803f
+  m_CompressedMesh:
+    m_Vertices:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UV:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Normals:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Tangents:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Weights:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_NormalSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_TangentSigns:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_FloatColors:
+      m_NumItems: 0
+      m_Range: 0
+      m_Start: 0
+      m_Data: 
+      m_BitSize: 0
+    m_BoneIndices:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_Triangles:
+      m_NumItems: 0
+      m_Data: 
+      m_BitSize: 0
+    m_UVInfo: 0
+  m_LocalAABB:
+    m_Center: {x: 32, y: 64, z: 0}
+    m_Extent: {x: 32, y: 64, z: 0}
+  m_MeshUsageFlags: 0
+  m_BakedConvexCollisionMesh: 
+  m_BakedTriangleCollisionMesh: 
+  m_MeshOptimized: 0

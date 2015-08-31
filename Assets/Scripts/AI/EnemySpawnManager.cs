@@ -49,15 +49,13 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   #region methods
   private void Spawn()
   {
-    GameObject spawnedEnemy = _objectPoolingManager.GetObject(enemyToSpawn.name);
+    GameObject spawnedEnemy = _objectPoolingManager.GetObject(enemyToSpawn.name, this.transform.position);
 
     EnemyController enemyController = spawnedEnemy.GetComponent<EnemyController>();
     if (enemyController == null)
       throw new MissingComponentException("Enemies spawned by an enemy spawn manager must contain an EnemyController component.");
 
-    enemyController.startDirection = startDirection;
-
-    spawnedEnemy.transform.position = this.transform.position;
+    enemyController.Reset(startDirection);
 
     Logger.Trace("Spawning enemy from " + this.gameObject.name + " at " + spawnedEnemy.transform.position + ", active: " + spawnedEnemy.activeSelf + ", layer: " + LayerMask.LayerToName(spawnedEnemy.layer));
 
@@ -99,10 +97,8 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
     }
   }
 
-  void FixedUpdate()
+  void Update()
   {
-    // Note: we can not use a coroutine for this because when spawning on the OnEnable method the transform.position of a pooled object would
-    // still point to the last active position when reactivated.
     if (_nextSpawnTime >= 0f
       && Time.time > _nextSpawnTime)
     {
@@ -145,7 +141,7 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
     // TODO (Roman): all this should be done at scene load, not here
     _objectPoolingManager.RegisterPool(enemyToSpawn, 1, int.MaxValue);
 
-    _nextSpawnTime = Time.time;// +continuousSpawnInterval;
+    _nextSpawnTime = Time.time;
   }
   #endregion
 }

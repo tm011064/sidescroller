@@ -218,7 +218,7 @@ InputManager:
     descriptiveName: Square
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: n
+    positiveButton: z
     altNegativeButton: 
     altPositiveButton: joystick button 2
     gravity: 1000
@@ -234,7 +234,7 @@ InputManager:
     descriptiveName: Square
     descriptiveNegativeName: 
     negativeButton: 
-    positiveButton: n
+    positiveButton: a
     altNegativeButton: 
     altPositiveButton: joystick button 2
     gravity: 1000

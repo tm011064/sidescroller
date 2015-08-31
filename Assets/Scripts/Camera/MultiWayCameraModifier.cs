@@ -17,6 +17,8 @@ public partial class MultiWayCameraModifier : MonoBehaviour
     [Tooltip("The (x, y) offset of the camera. This can be used when default vertical locking is disabled and you want the player to be below, above, right or left of the screen center.")]
     public Vector2 offset;
 
+    public float horizontalOffsetDeltaMovementFactor = 40f;
+
     public VerticalCameraFollowMode verticalCameraFollowMode;
 
     public MultiWayCameraModificationSetting Clone()
@@ -30,6 +32,7 @@ public partial class MultiWayCameraModifier : MonoBehaviour
 
       multiWayCameraModificationSetting.offset = offset;
       multiWayCameraModificationSetting.verticalCameraFollowMode = verticalCameraFollowMode;
+      multiWayCameraModificationSetting.horizontalOffsetDeltaMovementFactor = horizontalOffsetDeltaMovementFactor;
 
       return multiWayCameraModificationSetting;
     }
@@ -100,6 +103,7 @@ public partial class MultiWayCameraModifier : MonoBehaviour
       , clone.smoothDampMoveSettings
       , clone.offset
       , clone.verticalCameraFollowMode
+      , clone.horizontalOffsetDeltaMovementFactor
       );
 
     var cameraController = Camera.main.GetComponent<CameraController>();

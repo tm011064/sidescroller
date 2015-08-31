@@ -33,6 +33,7 @@ public partial class CameraModifier : MonoBehaviour
 
           this.offset = multiWayCameraModifier.greenCameraModificationSettings.offset;
           this.verticalCameraFollowMode = multiWayCameraModifier.greenCameraModificationSettings.verticalCameraFollowMode;
+          this.horizontalOffsetDeltaMovementFactor = multiWayCameraModifier.greenCameraModificationSettings.horizontalOffsetDeltaMovementFactor;
 
           Debug.Log("Successfully imported green settings from " + importCameraSettings.importSource.name + " and applied them to greenCameraModificationSettings");
           break;
@@ -46,6 +47,8 @@ public partial class CameraModifier : MonoBehaviour
 
           this.offset = multiWayCameraModifier.redCameraModificationSettings.offset;
           this.verticalCameraFollowMode = multiWayCameraModifier.redCameraModificationSettings.verticalCameraFollowMode;
+          this.horizontalOffsetDeltaMovementFactor = multiWayCameraModifier.redCameraModificationSettings.horizontalOffsetDeltaMovementFactor;
+
           Debug.Log("Successfully imported red settings from " + importCameraSettings.importSource.name + " and applied them to redCameraModificationSettings");
           break;
 
@@ -64,6 +67,7 @@ public partial class CameraModifier : MonoBehaviour
 
       this.offset = cameraModifier.offset;
       this.verticalCameraFollowMode = cameraModifier.verticalCameraFollowMode;
+      this.horizontalOffsetDeltaMovementFactor = cameraModifier.horizontalOffsetDeltaMovementFactor;
     }
     else
     {

@@ -9,6 +9,11 @@ public class EnemyController : BaseCharacterController
     characterPhysicsManager = GetComponent<CharacterPhysicsManager>();
   }
 
+  public virtual void Reset(Direction startDirection)
+  {
+
+  }
+
   public virtual void onPlayerCollide(PlayerController playerController)
   {
 
