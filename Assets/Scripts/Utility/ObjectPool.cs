@@ -106,6 +106,14 @@ public class ObjectPool
     return null;
   }
 
+  public IEnumerable<GameObject> IterateOverGameObjects()
+  {
+    for (int i = 0; i < _pooledObjects.Count; i++)
+    {
+      yield return _pooledObjects[i];
+    }
+  }
+
   /// <summary>
   /// Iterate through the pool and releases as many objects as
   /// possible until the pool size is back to the initial default size.

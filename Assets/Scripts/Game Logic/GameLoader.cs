@@ -33,10 +33,13 @@ public class LaserAimGunSetting
   [Tooltip("The length of the scan rays emitted from the position of this gameobject.")]
   public float scanRayLength = 1280;
   public float bulletsPerSecond = 10;
+  [Tooltip("If true, bps rate will be real time rather than slowed time. This means that the bps is in unscaled time even though all the movement is in slow motion.")]
   public bool allowSlowMotionRealTimeBulletsPerSecond = true;
+  [Tooltip("Constant speed of the bullet.")]
   public float bulletSpeed = 2000f;
 
   //public float aimSlowMotionTimeScaleFactor = .125f;
+  [Tooltip("The time it takes to 'reload' slow motion time functionality. After the slow motion phase is over, it takes 'Interval Between Aiming' time before it can be used again.")]
   public float intervalBetweenAiming = 1f;
   public AnimationCurve slowMotionFactorMultplierCurve = new AnimationCurve(
     new Keyframe(0f, 1f)
@@ -45,9 +48,13 @@ public class LaserAimGunSetting
     , new Keyframe(2f, 1f));
 
   public bool doAutoAim = true;
+  [Tooltip("Angle used for searching a target to auto aim/lock from the current aim direction.")]
   public float autoAimSearchAngle = 12f;
   [Range(1, 6)]
   public int totalAutoAimSearchRaysPerSide = 2;
+
+  [Tooltip("If greater than 0, this will force shot direction to use predefined angles. For example, if the value is 90, there will be 4 possible shot angle directions: 0, 90, 180, 270. Set to -1 if not used.")]
+  public float aimHelpAngle = 30;
 }
 
 [Serializable]

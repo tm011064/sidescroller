@@ -115,6 +115,7 @@ Transform:
   - {fileID: 1604172416}
   - {fileID: 104228399}
   - {fileID: 614656977}
+  - {fileID: 571461178}
   m_Father: {fileID: 0}
   m_RootOrder: 3
 --- !u!1 &3860409
@@ -1109,7 +1110,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 59194602}
-  - 114: {fileID: 59194604}
   - 114: {fileID: 59194603}
   m_Layer: 11
   m_Name: Lower Horizontal Path 8
@@ -1125,11 +1125,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 59194601}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5632, y: 2016, z: 0}
+  m_LocalPosition: {x: 1216, y: -64, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 60167768}
-  m_RootOrder: 2
+  m_Father: {fileID: 571461178}
+  m_RootOrder: 1
 --- !u!114 &59194603
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1138,37 +1138,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 59194601}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedObject: {fileID: 184642, guid: c764b7b29623f7247b63b8d74777ad53, type: 2}
-  easeType: 21
-  loopType: 2
+  outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  showGizmoOutline: 1
+  easingType: 0
+  objectToAttach: {fileID: 184642, guid: c764b7b29623f7247b63b8d74777ad53, type: 2}
+  totalObjectsOnPath: 1
+  loopMode: 2
   time: 4
-  delay: 0
-  pauseTimeOnLoopComplete: .5
-  startPercentage: 0
   movingPlatformType: 0
---- !u!114 &59194604
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 59194601}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bffa8aa898b437183cd5617f7b5303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathName: New Path 1
-  pathColor: {r: 0, g: 1, b: 1, a: 1}
+  synchronizedStartObjects: []
+  startPosition: 0
+  startPathDirection: 0
+  startDelayOnEnabled: 0
+  delayBetweenCycles: .5
+  nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
   - {x: -768, y: 0, z: 0}
-  nodeCount: 2
-  initialized: 1
-  initialName: New Path 1
-  pathVisible: 1
 --- !u!1 &60167767
 GameObject:
   m_ObjectHideFlags: 0
@@ -1193,11 +1182,7 @@ Transform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 924260014}
-  - {fileID: 2050993862}
-  - {fileID: 59194602}
-  - {fileID: 381451790}
+  m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 7
 --- !u!1 &71049339
@@ -1328,6 +1313,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -1359,6 +1345,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 512
   edgeColliderAngle: 90
@@ -1562,6 +1549,7 @@ Transform:
   m_LocalPosition: {x: 640, y: 3328, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 381451790}
   - {fileID: 206658426}
   - {fileID: 1719504223}
   m_Father: {fileID: 3833603}
@@ -1581,6 +1569,7 @@ MonoBehaviour:
   showGizmoOutline: 1
   visibiltyCheckInterval: .100000001
   _children:
+  - {fileID: 381451793}
   - {fileID: 206658427}
   - {fileID: 1719504224}
 --- !u!61 &104228401
@@ -1863,6 +1852,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -1894,6 +1884,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 384
   edgeColliderAngle: 90
@@ -1985,6 +1976,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -2016,6 +2008,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 1024
   edgeColliderAngle: 0
@@ -2740,7 +2733,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11473106, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: enemyToSpawn
@@ -2887,6 +2880,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: -236}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -2918,6 +2912,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: -236}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   edgeColliderLength: 768
   edgeColliderAngle: 90
@@ -3105,7 +3100,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 440896, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11433236, guid: 9906e1dd519a54140b221ea7bd753884, type: 2}
       propertyPath: gameSettings.logSettings.enabledTraceTags.Array.data[5]
@@ -4088,8 +4083,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 381451790}
-  - 114: {fileID: 381451792}
-  - 114: {fileID: 381451791}
+  - 114: {fileID: 381451793}
   m_Layer: 11
   m_Name: Lower Horizontal Path 5
   m_TagString: Untagged
@@ -4104,12 +4098,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 381451789}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 960, y: 3536, z: 0}
+  m_LocalPosition: {x: 320, y: 208, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 60167768}
-  m_RootOrder: 3
---- !u!114 &381451791
+  m_Father: {fileID: 104228399}
+  m_RootOrder: 0
+--- !u!114 &381451793
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -4117,37 +4111,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 381451789}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedObject: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
-  easeType: 21
-  loopType: 2
+  outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  showGizmoOutline: 1
+  easingType: 0
+  objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
+  totalObjectsOnPath: 1
+  loopMode: 2
   time: 4
-  delay: 0
-  pauseTimeOnLoopComplete: .5
-  startPercentage: 0
   movingPlatformType: 0
---- !u!114 &381451792
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 381451789}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bffa8aa898b437183cd5617f7b5303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathName: New Path 1
-  pathColor: {r: 0, g: 1, b: 1, a: 1}
+  synchronizedStartObjects: []
+  startPosition: 0
+  startPathDirection: 0
+  startDelayOnEnabled: 0
+  delayBetweenCycles: .5
+  nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
   - {x: 576, y: 0, z: 0}
-  nodeCount: 2
-  initialized: 1
-  initialName: New Path 1
-  pathVisible: 1
 --- !u!1 &408065868
 GameObject:
   m_ObjectHideFlags: 0
@@ -4973,6 +4956,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -5004,6 +4988,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 512
   edgeColliderAngle: -90
@@ -5761,6 +5746,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -5792,6 +5778,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 768
   edgeColliderAngle: -90
@@ -5810,6 +5797,67 @@ EdgeCollider2D:
   m_Points:
   - {x: 0, y: 0}
   - {x: -768, y: -3.35703444e-05}
+--- !u!1 &571461177
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 571461178}
+  - 61: {fileID: 571461180}
+  - 114: {fileID: 571461179}
+  m_Layer: 15
+  m_Name: Spawn Bucket 9
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &571461178
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 571461177}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4416, y: 2080, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children:
+  - {fileID: 2050993862}
+  - {fileID: 59194602}
+  m_Father: {fileID: 3833603}
+  m_RootOrder: 3
+--- !u!114 &571461179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 571461177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e66044a8247feae4e8540fe3fff0b2d7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  outlineGizmoColor: {r: 1, g: .921568632, b: .0156862754, a: 1}
+  showGizmoOutline: 1
+  visibiltyCheckInterval: .100000001
+  _children:
+  - {fileID: 2050993863}
+  - {fileID: 59194603}
+--- !u!61 &571461180
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 571461177}
+  m_Enabled: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_Offset: {x: 128, y: 128}
+  serializedVersion: 2
+  m_Size: {x: 2800, y: 1024}
 --- !u!1 &593536540
 GameObject:
   m_ObjectHideFlags: 0
@@ -6146,9 +6194,10 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 614656976}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3792, y: 4064, z: 0}
+  m_LocalPosition: {x: 3792, y: 3776, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 924260014}
   - {fileID: 916198596}
   m_Father: {fileID: 3833603}
   m_RootOrder: 2
@@ -6167,6 +6216,7 @@ MonoBehaviour:
   showGizmoOutline: 1
   visibiltyCheckInterval: .100000001
   _children:
+  - {fileID: 924260017}
   - {fileID: 916198597}
 --- !u!61 &614656979
 BoxCollider2D:
@@ -6180,7 +6230,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_Offset: {x: 128, y: 128}
   serializedVersion: 2
-  m_Size: {x: 256, y: 256}
+  m_Size: {x: 1400, y: 1024}
 --- !u!1 &644668567
 GameObject:
   m_ObjectHideFlags: 0
@@ -8178,7 +8228,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 112
+      value: 400
       objectReference: {fileID: 0}
     - target: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_LocalPosition.z
@@ -8202,7 +8252,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_RootOrder
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11473106, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: enemyToSpawn
@@ -8355,8 +8405,7 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 924260014}
-  - 114: {fileID: 924260016}
-  - 114: {fileID: 924260015}
+  - 114: {fileID: 924260017}
   m_Layer: 11
   m_Name: Lower Horizontal Path 4
   m_TagString: Untagged
@@ -8371,12 +8420,12 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 924260013}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4480, y: 3536, z: 0}
+  m_LocalPosition: {x: 688, y: -240, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 60167768}
+  m_Father: {fileID: 614656977}
   m_RootOrder: 0
---- !u!114 &924260015
+--- !u!114 &924260017
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
@@ -8384,37 +8433,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 924260013}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedObject: {fileID: 161664, guid: f2fcaa0f3fb5f5045bf04215f1d02225, type: 2}
-  easeType: 21
-  loopType: 2
+  outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  showGizmoOutline: 1
+  easingType: 0
+  objectToAttach: {fileID: 161664, guid: f2fcaa0f3fb5f5045bf04215f1d02225, type: 2}
+  totalObjectsOnPath: 1
+  loopMode: 2
   time: 6
-  delay: 0
-  pauseTimeOnLoopComplete: .5
-  startPercentage: 0
   movingPlatformType: 1
---- !u!114 &924260016
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 924260013}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bffa8aa898b437183cd5617f7b5303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathName: New Path 1
-  pathColor: {r: 0, g: 1, b: 1, a: 1}
+  synchronizedStartObjects: []
+  startPosition: 0
+  startPathDirection: 0
+  startDelayOnEnabled: 0
+  delayBetweenCycles: .5
+  nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
   - {x: -1280, y: 0, z: 0}
-  nodeCount: 2
-  initialized: 1
-  initialName: New Path 1
-  pathVisible: 1
 --- !u!1 &948455647
 GameObject:
   m_ObjectHideFlags: 0
@@ -15611,7 +15649,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 404724, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: m_RootOrder
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 11473106, guid: b604ccf5b9ef4b749b414c642d2b4fe3, type: 2}
       propertyPath: enemyToSpawn
@@ -16417,6 +16455,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: -236}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -16448,6 +16487,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   edgeColliderLength: 1024
   edgeColliderAngle: -90
@@ -18170,6 +18210,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 1
   greenCameraModificationSettings:
     verticalLockSettings:
@@ -18201,6 +18242,7 @@ MonoBehaviour:
       verticalRapidDescentSmoothDampTime: .00999999978
       verticalAboveRapidAcsentSmoothDampTime: .0500000007
     offset: {x: 0, y: 0}
+    horizontalOffsetDeltaMovementFactor: 40
     verticalCameraFollowMode: 0
   edgeColliderLength: 1536
   edgeColliderAngle: 0
@@ -18889,7 +18931,6 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 2050993862}
-  - 114: {fileID: 2050993864}
   - 114: {fileID: 2050993863}
   m_Layer: 11
   m_Name: Lower Horizontal Path 7
@@ -18905,11 +18946,11 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 2050993861}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 3584, y: 2240, z: 0}
+  m_LocalPosition: {x: -832, y: 160, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 60167768}
-  m_RootOrder: 1
+  m_Father: {fileID: 571461178}
+  m_RootOrder: 0
 --- !u!114 &2050993863
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18918,37 +18959,26 @@ MonoBehaviour:
   m_GameObject: {fileID: 2050993861}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79f9dadf008d8cf4b91ef5c03aef4d79, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a8af5998aed3ec40a1844b3af7aca80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  attachedObject: {fileID: 184642, guid: c764b7b29623f7247b63b8d74777ad53, type: 2}
-  easeType: 21
-  loopType: 2
+  outlineGizmoColor: {r: 1, g: 1, b: 1, a: 1}
+  showGizmoOutline: 1
+  easingType: 0
+  objectToAttach: {fileID: 184642, guid: c764b7b29623f7247b63b8d74777ad53, type: 2}
+  totalObjectsOnPath: 1
+  loopMode: 2
   time: 4
-  delay: 0
-  pauseTimeOnLoopComplete: .5
-  startPercentage: 0
   movingPlatformType: 0
---- !u!114 &2050993864
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 2050993861}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 01bffa8aa898b437183cd5617f7b5303, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  pathName: New Path 1
-  pathColor: {r: 0, g: 1, b: 1, a: 1}
+  synchronizedStartObjects: []
+  startPosition: 0
+  startPathDirection: 0
+  startDelayOnEnabled: 0
+  delayBetweenCycles: .5
+  nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
   - {x: 768, y: 0, z: 0}
-  nodeCount: 2
-  initialized: 1
-  initialName: New Path 1
-  pathVisible: 1
 --- !u!1 &2052687818
 GameObject:
   m_ObjectHideFlags: 0

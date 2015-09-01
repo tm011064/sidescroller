@@ -257,7 +257,23 @@ public class PowerUpGunControlHandler : DefaultPlayerControlHandler
 
       _playerController.laserGunAimContainer.Deactivate(); // make sure it is inactive
 
-      EvaluateShot(new Vector2(horizontalAxisState.value, verticalAxisState.value));
+      Vector2 aimVector = new Vector2(horizontalAxisState.value, verticalAxisState.value);
+      if (_powerUpSettings.laserAimGunSetting.aimHelpAngle > 0f)
+      {
+        float theta = Mathf.Atan2(aimVector.y, aimVector.x);
+
+        if (theta < 0f)
+          theta = 2 * Mathf.PI + theta;
+
+        float aimHelpAngle = _powerUpSettings.laserAimGunSetting.aimHelpAngle * Mathf.Deg2Rad;
+
+        theta += aimHelpAngle * .5f;        
+        theta = ((float)((int)(theta / aimHelpAngle))) * aimHelpAngle;
+
+        aimVector = new Vector2(Mathf.Cos(theta), Mathf.Sin(theta));
+      }
+
+      EvaluateShot(aimVector);
     }
   }
 

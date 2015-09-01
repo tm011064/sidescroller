@@ -56,6 +56,15 @@ public class CameraController : MonoBehaviour
   private float _targetedTransformPositionX;
   #endregion
 
+  public void SetPosition(Vector3 position)
+  {
+    this.transform.position = position;
+    _lastTargetPosition = position;
+    _targetedTransformPositionX = _lastTargetPosition.x;
+
+    _horizontalSmoothDampVelocity = _verticalSmoothDampVelocity = 0f;
+  }
+
   void Reset()
   {
     Logger.Info("Resetting camera movement settings.");

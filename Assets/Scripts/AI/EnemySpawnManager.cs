@@ -118,6 +118,17 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   #endregion
 
   #region monobehaviour
+  public void DeactivateSpawnedObjects()
+  {
+    _isDisabling = true;
+    for (int i = _spawnedEnemies.Count - 1; i >= 0; i--)
+    {
+      _objectPoolingManager.Deactivate(_spawnedEnemies[i]);
+      _spawnedEnemies.RemoveAt(i);
+    }
+    _isDisabling = false;
+  }
+
   void OnDisable()
   {
     Logger.Trace("Disabling EnemySpawnManager " + this.name);

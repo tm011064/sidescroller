@@ -146,7 +146,7 @@ public partial class PlayerController : BaseCharacterController
 
     #region set up special purpose child transforms
     Transform childTransform;
-    
+
     childTransform = this.transform.FindChild("SpinMeleeAttackBoxCollider");
     Logger.Assert(childTransform != null, "Player controller is expected to have a SpinMeleeAttackBoxCollider child object. If this is no longer needed, remove this line in code.");
     spinMeleeAttackBoxCollider = childTransform.gameObject;
@@ -307,8 +307,22 @@ public partial class PlayerController : BaseCharacterController
 
   public void Respawn()
   {
+    // reset the scene
+    foreach (EnemySpawnManager enemySpawnManager in FindObjectsOfType<EnemySpawnManager>())
+    {
+      if (!enemySpawnManager.destroySpawnedEnemiesWhenGettingDisabled)
+        enemySpawnManager.DeactivateSpawnedObjects();
+    }
+    foreach (SpawnBucket spawnBucket in FindObjectsOfType<SpawnBucket>())
+    {
+      spawnBucket.Reload();
+    }
+
     characterPhysicsManager.Reset(spawnLocation);
 
+    CameraController cameraController = Camera.main.GetComponent<CameraController>();
+    cameraController.SetPosition(spawnLocation);
+    
     adjustedGravity = jumpSettings.gravity;
 
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
@@ -317,7 +331,7 @@ public partial class PlayerController : BaseCharacterController
 
     this.transform.parent = null; // just in case we were still attached
   }
-  
+
   protected override void Update()
   {
     if ((_gameManager.inputStateManager.GetButtonState("SwitchPowerUp").buttonPressState & ButtonPressState.IsUp) != 0)

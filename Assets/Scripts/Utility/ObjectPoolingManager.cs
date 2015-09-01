@@ -107,7 +107,7 @@ public class ObjectPoolingManager
   /// <param name="obj">The object.</param>
   public void Deactivate(GameObject obj)
   {
-    if (obj != null)
+    if (obj != null && obj.activeSelf)
     {
       var handler = BeforeDeactivated;
       if (handler != null)
@@ -119,6 +119,20 @@ public class ObjectPoolingManager
       var handler2 = AfterDeactivated;
       if (handler2 != null)
         handler2.Invoke(obj);
+    }
+  }
+
+  public void DeactivateAll()
+  {
+    foreach (ObjectPool objectPool in _objectPools.Values)
+    {
+      foreach (GameObject item in objectPool.IterateOverGameObjects())
+      {
+        if (item.activeSelf)
+        {
+          Deactivate(item);
+        }
+      }
     }
   }
 }

@@ -266,20 +266,21 @@ public partial class LinearPath : SpawnBucketItemBehaviour
 
   void OnDisable()
   {
+    if (_needsToUnSubscribeAttachedEvent)
+    {
+      for (int i = 0; i < totalObjectsOnPath; i++)
+      {
+        _gameObjectTrackingInformation[i].gameObject.GetComponent<IAttachableObject>().Attached -= attachableObject_Attached;
+      }
+      _needsToUnSubscribeAttachedEvent = false;
+    }
+
     for (int i = _gameObjectTrackingInformation.Count - 1; i >= 0; i--)
     {
       ObjectPoolingManager.Instance.Deactivate(_gameObjectTrackingInformation[i].gameObject);
       _gameObjectTrackingInformation[i].gameObject = null;
     }
-
-    if (_needsToUnSubscribeAttachedEvent)
-    {
-      for (int i = 0; i < totalObjectsOnPath; i++)
-        _gameObjectTrackingInformation[i].gameObject.GetComponent<IAttachableObject>().Attached -= attachableObject_Attached;
-
-      _needsToUnSubscribeAttachedEvent = false;
-    }
-
+    
     _gameObjectTrackingInformation = new List<GameObjectTrackingInformation>();
     _isMoving = false;
 
