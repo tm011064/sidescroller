@@ -249,7 +249,8 @@ public class PlayerControlHandler : BaseControlHandler
         hasJumped = true;
         _hasPerformedGroundJumpThisFrame = true;
         _hadDashPressedWhileJumpOff = (_gameManager.inputStateManager.GetButtonState("Dash").buttonPressState & ButtonPressState.IsPressed) != 0;
-        Logger.Info("Ground Jump executed. Velocity y: " + value);
+
+        _playerController.JumpedThisFrame();
       }
     }
 

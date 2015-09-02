@@ -106,10 +106,7 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
               if (_currentIndex >= _worldSpacePlatformCoordinates.Count)
                 _currentIndex = 0;
 
-              GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name);
-              platform.transform.position = _worldSpacePlatformCoordinates[_currentIndex];
-              platform.SetActive(true);
-
+              GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name, _worldSpacePlatformCoordinates[_currentIndex]);
               _currentPlatforms.Enqueue(platform);
             }
           }
@@ -135,10 +132,7 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
           if (_currentIndex >= _worldSpacePlatformCoordinates.Count)
             _currentIndex = 0;
 
-          GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name);
-          platform.transform.position = _worldSpacePlatformCoordinates[_currentIndex];
-          platform.SetActive(true);
-
+          GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name, _worldSpacePlatformCoordinates[_currentIndex]);
           _currentPlatforms.Enqueue(platform);
         }
 
@@ -176,9 +170,7 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
 
     for (int i = 0; i < totalInitialVisiblePlatforms; i++)
     {
-      GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name);
-      platform.transform.position = _worldSpacePlatformCoordinates[i];
-      platform.SetActive(true);
+      GameObject platform = _objectPoolingManager.GetObject(platformPrefab.name, _worldSpacePlatformCoordinates[i]);
 
       _currentPlatforms.Enqueue(platform);
       _currentIndex = i;

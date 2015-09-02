@@ -27,7 +27,29 @@ public class GameManager : MonoBehaviour
 
   private List<Checkpoint> _orderedSceneCheckpoints;
   private int _currentCheckpointIndex = 0;
-  
+
+  public void RefreshScene(Vector3 cameraPosition)
+  {
+    // reset the scene
+    foreach (EnemySpawnManager enemySpawnManager in FindObjectsOfType<EnemySpawnManager>())
+    {
+      if (!enemySpawnManager.destroySpawnedEnemiesWhenGettingDisabled)
+        enemySpawnManager.DeactivateSpawnedObjects();
+    }
+    foreach (SpawnBucket spawnBucket in FindObjectsOfType<SpawnBucket>())
+    {
+      spawnBucket.Reload();
+    }
+    // TODO (Roman): have a flag for pooled objects that need to be deactivated
+
+    CameraController cameraController = Camera.main.GetComponent<CameraController>();
+    cameraController.SetPosition(cameraPosition);
+
+#if !FINAL
+    _sceneStartTime = Time.time;
+#endif
+  }
+
   public void LoadScene()
   {
     GameObject checkpoint = null;
@@ -57,6 +79,9 @@ public class GameManager : MonoBehaviour
     playerController.spawnLocation = checkpoint.transform.position;
 
     this.player = playerController;
+#if !FINAL
+    _sceneStartTime = Time.time;
+#endif
   }
 
   void Awake()
@@ -89,7 +114,7 @@ public class GameManager : MonoBehaviour
     inputStateManager.Update();
 
     // TODO (Roman): this must not make it into release
-//#if !FINAL
+    //#if !FINAL
 
     if (Input.GetKeyUp("n"))
     {
@@ -127,7 +152,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-//#endif
+    //#endif
 
     if (Input.GetKey("escape"))
     {
@@ -145,6 +170,8 @@ public class GameManager : MonoBehaviour
 
   #region fps draws
 #if !FINAL
+  private float _sceneStartTime;
+
   private float FPS;
   private float FPSTime;
   private int FPSFrames;
@@ -195,9 +222,13 @@ public class GameManager : MonoBehaviour
   {
 #if !FINAL
     // Display on screen the current Frames Per Second.
-    string fps_string = string.Format("FPS: {0:d2}", (int)FPS);
-    GUIDrawRect(new Rect(0, 0, 60, 22), Color.red);
-    GUI.Label(new Rect(4, 0, 60, 22), fps_string);
+    GUIDrawRect(new Rect(0, 0, 64, 40), Color.red);
+    GUI.Label(new Rect(4, 0, 60, 22), "FPS: " + (int)FPS);
+
+    TimeSpan sceneRunTime = TimeSpan.FromSeconds(Time.time - _sceneStartTime);
+    GUI.Label(new Rect(4, 18, 120, 22), sceneRunTime.Minutes.ToString("00") + ":"
+      + sceneRunTime.Seconds.ToString("00") + "."
+      + sceneRunTime.Milliseconds.ToString("000"));
 #endif
   }
 

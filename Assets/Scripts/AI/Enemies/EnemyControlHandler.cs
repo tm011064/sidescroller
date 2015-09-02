@@ -55,7 +55,6 @@ public class EnemyControlHandler<TEnemyController>
     if (jumpVelocityY.HasValue)
     {
       velocity.y = jumpVelocityY.Value;
-      Debug.Log("JUMP: " + velocity.y);
     }
     else if (_characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
       velocity.y = 0;

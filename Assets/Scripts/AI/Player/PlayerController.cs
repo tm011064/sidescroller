@@ -195,6 +195,16 @@ public partial class PlayerController : BaseCharacterController
   }
 
   public event EventHandler<GroundedPlatformChangedEventArgs> OnGroundedPlatformChanged;
+  public event Action OnJumpedThisFrame;
+
+  public void JumpedThisFrame()
+  {
+    Logger.Info("Ground Jump executed.");
+
+    var handler = OnJumpedThisFrame;
+    if (handler != null)
+      handler.Invoke();
+  }
 
   void characterPhysicsManager_onControllerBecameGrounded(GameObject obj)
   {
@@ -307,22 +317,10 @@ public partial class PlayerController : BaseCharacterController
 
   public void Respawn()
   {
-    // reset the scene
-    foreach (EnemySpawnManager enemySpawnManager in FindObjectsOfType<EnemySpawnManager>())
-    {
-      if (!enemySpawnManager.destroySpawnedEnemiesWhenGettingDisabled)
-        enemySpawnManager.DeactivateSpawnedObjects();
-    }
-    foreach (SpawnBucket spawnBucket in FindObjectsOfType<SpawnBucket>())
-    {
-      spawnBucket.Reload();
-    }
+    _gameManager.RefreshScene(spawnLocation);
 
     characterPhysicsManager.Reset(spawnLocation);
-
-    CameraController cameraController = Camera.main.GetComponent<CameraController>();
-    cameraController.SetPosition(spawnLocation);
-    
+        
     adjustedGravity = jumpSettings.gravity;
 
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));
