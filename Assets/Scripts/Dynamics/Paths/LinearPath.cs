@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System;
 using System.Linq;
 
-public partial class LinearPath : SpawnBucketItemBehaviour
+public partial class LinearPath : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   #region nested classes
   public enum StartPosition
@@ -48,14 +48,22 @@ public partial class LinearPath : SpawnBucketItemBehaviour
   public int totalObjectsOnPath = 1;
   public LoopMode loopMode = LoopMode.Once;
 
+  public bool useTime = true;
   public float time = 5f;
+  public bool useSpeed = false;
+  public float speedInUnitsPerSecond = 100;
+
   public MovingPlatformType movingPlatformType = MovingPlatformType.StartsWhenPlayerLands;
   public List<GameObject> synchronizedStartObjects = new List<GameObject>();
-  public StartPosition startPosition = StartPosition.Center;
   public StartPathDirection startPathDirection = StartPathDirection.Forward;
+
+  public StartPosition startPosition = StartPosition.Center;
+  public float startPositionOffsetPercentage = 0f;
 
   public float startDelayOnEnabled = 0f;
   public float delayBetweenCycles = 0f;
+
+  public bool lookForward;
 
   public int nodeCount;
   [HideInInspector]
@@ -69,6 +77,8 @@ public partial class LinearPath : SpawnBucketItemBehaviour
 
   private float[] _segmentLengthPercentages = null;
   private GameManager _gameManager;
+
+  private float _totalTime = 0f;
 
   private void SetStartPositions()
   {
@@ -87,12 +97,23 @@ public partial class LinearPath : SpawnBucketItemBehaviour
         break;
     }
 
+    itemPositionPercentage = Mathf.Repeat(itemPositionPercentage + startPositionOffsetPercentage, 1f);
+
     for (int i = 0; i < _gameObjectTrackingInformation.Count; i++)
     {
-      _gameObjectTrackingInformation[i].gameObject.transform.position = GetLengthAdjustedPoint(itemPositionPercentage);
+      Vector3 segmentDirectionVector;
+      _gameObjectTrackingInformation[i].gameObject.transform.position = GetLengthAdjustedPoint(itemPositionPercentage, out segmentDirectionVector);
       _gameObjectTrackingInformation[i].percentage = itemPositionPercentage;
 
-      itemPositionPercentage += step;
+      if (lookForward)
+      {
+        float rot_z = Mathf.Atan2(segmentDirectionVector.y, segmentDirectionVector.x) * Mathf.Rad2Deg;
+        _gameObjectTrackingInformation[i].gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+      }
+
+      Debug.Log(this.name + "; pct: " + itemPositionPercentage);
+      itemPositionPercentage = Mathf.Repeat(itemPositionPercentage + step, 1f);
+      //itemPositionPercentage += step;
     }
   }
 
@@ -135,7 +156,7 @@ public partial class LinearPath : SpawnBucketItemBehaviour
     }
   }
 
-  public Vector3 GetLengthAdjustedPoint(float t)
+  public Vector3 GetLengthAdjustedPoint(float t, out Vector3 segmentDirectionVector)
   {
     int index = 0;
     if (t >= 1f)
@@ -161,8 +182,8 @@ public partial class LinearPath : SpawnBucketItemBehaviour
       }
     }
 
-    Vector3 vector = nodes[index + 1] - nodes[index];
-    Vector3 direction = nodes[index] + (vector.normalized * (vector.magnitude * t));
+    segmentDirectionVector = nodes[index + 1] - nodes[index];
+    Vector3 direction = nodes[index] + (segmentDirectionVector.normalized * (segmentDirectionVector.magnitude * t));
 
     return transform.TransformPoint(direction);
   }
@@ -171,7 +192,7 @@ public partial class LinearPath : SpawnBucketItemBehaviour
   {
     if (_isMoving && Time.time >= _moveStartTime)
     {
-      float pct = Time.deltaTime / time;
+      float pct = Time.deltaTime / _totalTime;
       if (pct > 0f)
       {
         for (int i = 0; i < _gameObjectTrackingInformation.Count; i++)
@@ -255,9 +276,19 @@ public partial class LinearPath : SpawnBucketItemBehaviour
 
           if (_gameObjectTrackingInformation[i].gameObject != null)
           {// can be null if loop mode with delay
+
+            Vector3 segmentDirectionVector;
             _gameObjectTrackingInformation[i].gameObject.transform.position = GetLengthAdjustedPoint(
               _gameManager.easing.GetValue(easingType, _gameObjectTrackingInformation[i].percentage, 1f)
+              , out segmentDirectionVector
               );
+
+            if (lookForward)
+            {
+              float rot_z = Mathf.Atan2(segmentDirectionVector.y, segmentDirectionVector.x) * Mathf.Rad2Deg;
+              _gameObjectTrackingInformation[i].gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
+            }
+
           }
         }
       }
@@ -280,7 +311,7 @@ public partial class LinearPath : SpawnBucketItemBehaviour
       ObjectPoolingManager.Instance.Deactivate(_gameObjectTrackingInformation[i].gameObject);
       _gameObjectTrackingInformation[i].gameObject = null;
     }
-    
+
     _gameObjectTrackingInformation = new List<GameObjectTrackingInformation>();
     _isMoving = false;
 
@@ -291,7 +322,6 @@ public partial class LinearPath : SpawnBucketItemBehaviour
   {
     Logger.Info("Enabled moving linear path " + this.name);
 
-    Logger.Assert(time > 0f, "Time must be set to a positive value greater than 0");
     if (_gameManager == null)
       _gameManager = GameManager.instance;
 
@@ -325,11 +355,25 @@ public partial class LinearPath : SpawnBucketItemBehaviour
       }
 
       _segmentLengthPercentages = segmentLengthPercentages;
+
+      #region get total time
+      if (useTime)
+      {
+        _totalTime = time;
+      }
+      else if (useSpeed)
+      {
+        Logger.Assert(speedInUnitsPerSecond > 0f, "Speed must be greater than 0.");
+
+        _totalTime = totalLength / speedInUnitsPerSecond;
+        Debug.Log("Time: " + _totalTime + "( " + totalLength + " )");
+        // TODO (Roman): divide length to get time
+      }
+      Logger.Assert(_totalTime > 0f, "Time must be set to a positive value greater than 0");
+      #endregion
     }
     _gameObjectTrackingInformation = new List<GameObjectTrackingInformation>();
 
-    // we wanna do this in start as we know that the player has been added to the game context
-    ObjectPoolingManager.Instance.RegisterPool(objectToAttach, totalObjectsOnPath, int.MaxValue);
 
     for (int i = 0; i < totalObjectsOnPath; i++)
       _gameObjectTrackingInformation.Add(new GameObjectTrackingInformation(ObjectPoolingManager.Instance.GetObject(objectToAttach.name), 0f, startPathDirection == StartPathDirection.Forward ? 1f : -1f));
@@ -357,8 +401,20 @@ public partial class LinearPath : SpawnBucketItemBehaviour
     {
       _isMoving = true;
       _moveStartTime = Time.time + startDelayOnEnabled;
-      
-      Logger.Info("Start moving linear path " + this.name);      
+
+      Logger.Info("Start moving linear path " + this.name);
     }
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(objectToAttach, totalObjectsOnPath)
+    };
+  }
+
+  #endregion
 }

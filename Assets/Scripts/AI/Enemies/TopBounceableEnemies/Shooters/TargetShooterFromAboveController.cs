@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class TargetShooterFromAboveController : TopBounceableEnemyController
+public class TargetShooterFromAboveController : TopBounceableEnemyController, IObjectPoolBehaviour
 {
   public float speed = 200f;
   public float gravity = -3960f;
@@ -35,5 +36,17 @@ public class TargetShooterFromAboveController : TopBounceableEnemyController
     // TODO (Roman): does that break anything - there was a reason for inserting at 0, but can't remember why :(
     ResetControlHandlers(new TargetShooterFromAboveControlHandler(this, startDirection));
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(projectileToSpawn, minProjectilesToInstanciate)
+    };
+  }
+
+  #endregion
 }
 

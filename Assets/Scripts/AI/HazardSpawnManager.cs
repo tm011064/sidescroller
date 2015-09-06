@@ -3,7 +3,7 @@ using System.Collections;
 using System;
 using System.Collections.Generic;
 
-public partial class HazardSpawnManager : SpawnBucketItemBehaviour
+public partial class HazardSpawnManager : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   private ObjectPoolingManager _objectPoolingManager;
   private float _nextSpawnTime;
@@ -42,8 +42,6 @@ public partial class HazardSpawnManager : SpawnBucketItemBehaviour
   void OnEnable()
   {
     Logger.Trace("Enabling HazardSpawnManager " + this.GetHashCode());
-    // TODO (Roman): all this should be done at scene load, not here
-    _objectPoolingManager.RegisterPool(projectileToSpawn, minProjectilesToInstanciate, int.MaxValue);
 
     _nextSpawnTime = Time.time + continuousSpawnInterval;
   }
@@ -66,4 +64,16 @@ public partial class HazardSpawnManager : SpawnBucketItemBehaviour
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(projectileToSpawn, minProjectilesToInstanciate)
+    };
+  }
+
+  #endregion
 }

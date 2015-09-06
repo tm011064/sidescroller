@@ -19,7 +19,7 @@ public enum RespawnMode
   SpawnWhenDestroyed
 }
 
-public partial class EnemySpawnManager : SpawnBucketItemBehaviour
+public partial class EnemySpawnManager : SpawnBucketItemBehaviour, IObjectPoolBehaviour 
 {
   #region fields
 
@@ -146,13 +146,18 @@ public partial class EnemySpawnManager : SpawnBucketItemBehaviour
   void OnEnable()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-
     Logger.Trace("Enabling EnemySpawnManager " + this.name);
-
-    // TODO (Roman): all this should be done at scene load, not here
-    _objectPoolingManager.RegisterPool(enemyToSpawn, 1, int.MaxValue);
 
     _nextSpawnTime = Time.time;
   }
   #endregion
+
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(enemyToSpawn, 1)
+    };
+  }
 }

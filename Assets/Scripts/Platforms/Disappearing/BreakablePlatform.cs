@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-public partial class BreakablePlatform : MonoBehaviour
+public partial class BreakablePlatform : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   #region nested classes
   public enum BreakMode
@@ -101,6 +101,7 @@ public partial class BreakablePlatform : MonoBehaviour
   private ObjectPoolingManager _objectPoolingManager;
   private List<SpawnRoutine> _spawnedObjects = new List<SpawnRoutine>();
   private Vector3 _spawnLocation;
+  private float _nextSpawnTime = -1f;
   #endregion
 
   #endregion
@@ -131,44 +132,76 @@ public partial class BreakablePlatform : MonoBehaviour
             break;
         }
 
-        Invoke("Spawn", respawnTime);
+        _nextSpawnTime = Time.time + respawnTime;
+
+        //Invoke("Spawn", respawnTime);
       }
+    }
+
+    if (_nextSpawnTime > 0f && Time.time >= _nextSpawnTime)
+    {
+      Spawn();
+      _nextSpawnTime = -1f;
     }
   }
   #endregion
 
   #region start/awake
-  void Awake()
+  void _objectPoolingManager_BeforeDeactivated(GameObject obj)
   {
-    _objectPoolingManager = ObjectPoolingManager.Instance;
+    for (int i = _spawnedObjects.Count - 1; i >= 0; i--)
+    {
+      if (_spawnedObjects[i].gameObject == obj)
+      {
+        // object was deactivated, so we remove it from the list. That way it won't be called at the Update() method
+        _spawnedObjects.RemoveAt(i);
+        break;
+      }
+    }
   }
 
-  void Start()
+  void OnDisable()
   {
-    // we wanna do this in start as we know that the player has been added to the game context
-    _objectPoolingManager.RegisterPool(platformPrefab, 1, int.MaxValue);
+    for (int i = _spawnedObjects.Count - 1; i >= 0; i--)
+    {
+      _objectPoolingManager.Deactivate(_spawnedObjects[i].gameObject);
+    }
+    _spawnedObjects.Clear();
+    _nextSpawnTime = -1f;
+  }
+
+  void OnEnable()
+  {
     _spawnLocation = this.transform.position;
 
-    switch (breakMode)
+    if (_objectPoolingManager == null)
     {
-      case BreakMode.FallDown:
-        _objectPoolingManager.BeforeDeactivated += ((GameObject obj) =>
-        {
-          for (int i = _spawnedObjects.Count - 1; i >= 0; i--)
-          {
-            if (_spawnedObjects[i].gameObject == obj)
-            {
-              // object was deactivated, so we remove it from the list. That way it won't be called at the Update() method
-              _spawnedObjects.RemoveAt(i);
-              break;
-            }
-          }
-        });
-        break;
+      _objectPoolingManager = ObjectPoolingManager.Instance;
+      
+      switch (breakMode)
+      {
+        case BreakMode.FallDown:
+          _objectPoolingManager.BeforeDeactivated += _objectPoolingManager_BeforeDeactivated;
+          break;
+      }
     }
 
     Spawn();
   }
+
+
+  #endregion
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(platformPrefab, 1)
+    };
+  }
+
   #endregion
 }
 

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public enum MovingPlatformType
 {
@@ -8,7 +9,7 @@ public enum MovingPlatformType
   StartsWhenPlayerLands
 }
 
-public class AttachObjectToPath : BaseMonoBehaviour
+public class AttachObjectToPath : BaseMonoBehaviour, IObjectPoolBehaviour
 {
   public GameObject attachedObject;
   public iTween.EaseType easeType = iTween.EaseType.easeInOutSine;
@@ -112,10 +113,7 @@ public class AttachObjectToPath : BaseMonoBehaviour
     if (attachedObject == null)
       throw new MissingReferenceException("Game object '" + this.name + "' is missing variable 'attachedObject'.");
 #endif
-
-    // we wanna do this in start as we know that the player has been added to the game context
-    ObjectPoolingManager.Instance.RegisterPool(attachedObject, 1, int.MaxValue);
-
+    
     _gameObject = ObjectPoolingManager.Instance.GetObject(attachedObject.name);
 
     if (movingPlatformType == MovingPlatformType.StartsWhenPlayerLands)
@@ -139,6 +137,18 @@ public class AttachObjectToPath : BaseMonoBehaviour
     if (movingPlatformType == MovingPlatformType.MovesAlways)
       StartMove();
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(attachedObject, 5)
+    };
+  }
+
+  #endregion
 
 
 }

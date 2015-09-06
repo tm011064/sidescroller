@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class JumpControlledPlatformSwitchGroup : SpawnBucketItemBehaviour
+public partial class JumpControlledPlatformSwitchGroup : SpawnBucketItemBehaviour, IObjectPoolBehaviour 
 {
   #region nested
   [Serializable]
@@ -35,18 +35,27 @@ public partial class JumpControlledPlatformSwitchGroup : SpawnBucketItemBehaviou
 
   private List<Vector3> _worldSpacePlatformCoordinates = new List<Vector3>();
 
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    List<ObjectPoolRegistrationInfo> list = new List<ObjectPoolRegistrationInfo>();
+
+    for (int i = 0; i < platformGroupPositions.Count; i++)
+    {
+      list.Add(new ObjectPoolRegistrationInfo(platformGroupPositions[i].enabledGameObject, platformGroupPositions[i].positions.Count));
+      list.Add(new ObjectPoolRegistrationInfo(platformGroupPositions[i].disabledGameObject, platformGroupPositions[i].positions.Count));
+    }
+
+    return list;
+  }
+
   void OnEnable()
   {
     _playerController = GameManager.instance.player;
     if (_objectPoolingManager == null)
     {
       _objectPoolingManager = ObjectPoolingManager.Instance;
-      // TODO (Roman): this should be done at camera script
       for (int i = 0; i < platformGroupPositions.Count; i++)
       {
-        _objectPoolingManager.RegisterPool(platformGroupPositions[i].enabledGameObject, platformGroupPositions[i].positions.Count, int.MaxValue);
-        _objectPoolingManager.RegisterPool(platformGroupPositions[i].disabledGameObject, platformGroupPositions[i].positions.Count, int.MaxValue);
-
         platformGroupPositions[i].gameObjects = new GameObject[platformGroupPositions[i].positions.Count];
         platformGroupPositions[i].worldSpaceCoordinates = new Vector3[platformGroupPositions[i].positions.Count];
         for (int j = 0; j < platformGroupPositions[i].positions.Count; j++)
@@ -67,6 +76,18 @@ public partial class JumpControlledPlatformSwitchGroup : SpawnBucketItemBehaviou
 
   void OnDisable()
   {
+    for (int i = 0; i < platformGroupPositions.Count; i++)
+    {
+      for (int j = 0; j < platformGroupPositions[i].worldSpaceCoordinates.Length; j++)
+      {
+        if (platformGroupPositions[i].gameObjects[j] != null)
+        {
+          _objectPoolingManager.Deactivate(platformGroupPositions[i].gameObjects[j]);
+          platformGroupPositions[i].gameObjects[j] = null;
+        }
+      }
+    }
+
     _playerController.OnJumpedThisFrame -= _playerController_OnJumpedThisFrame;
   }
 

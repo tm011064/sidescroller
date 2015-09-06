@@ -13,6 +13,8 @@ public partial class CameraTrolley : MonoBehaviour
   [HideInInspector]
   public bool isPlayerWithinBoundingBox;
 
+  private Vector3[] _worldCoordinateNodes = null;
+
   void OnTriggerEnter2D(Collider2D col)
   {
     isPlayerWithinBoundingBox = true;
@@ -22,18 +24,29 @@ public partial class CameraTrolley : MonoBehaviour
     isPlayerWithinBoundingBox = false;
   }
 
+  void OnEnable()
+  {
+    if (_worldCoordinateNodes == null)
+    {
+      _worldCoordinateNodes = new Vector3[nodes.Count];
+      for (int i = 0; i < nodes.Count; i++)
+      {
+        _worldCoordinateNodes[i] = this.transform.TransformPoint(nodes[i]);
+
+        if (i > 0 && _worldCoordinateNodes[i - 1].x == _worldCoordinateNodes[i].x)
+          throw new ArgumentOutOfRangeException("Vertical lines not supported.");
+      }
+    }
+  }
+
   public float? GetPositionY(float posX)
   {
     for (int i = 1; i < nodeCount; i++)
     {
-      if (nodes[i - 1].x <= posX && nodes[i].x >= posX)
+      if (_worldCoordinateNodes[i - 1].x <= posX && _worldCoordinateNodes[i].x >= posX)
       {
-        Logger.Assert(nodes[i - 1].x != nodes[i].x, "Vertical lines not supported");
-
-        var m = (nodes[i - 1].y - nodes[i].y) / (nodes[i - 1].x - nodes[i].x);
-
-        Vector3 point = this.transform.TransformPoint(0f, m * posX - m * nodes[i - 1].x + nodes[i - 1].y, 0f);
-        return point.y;
+        float m = (_worldCoordinateNodes[i - 1].y - _worldCoordinateNodes[i].y) / (_worldCoordinateNodes[i - 1].x - _worldCoordinateNodes[i].x);
+        return m * posX - m * _worldCoordinateNodes[i - 1].x + _worldCoordinateNodes[i - 1].y;
       }
     }
 

@@ -1,13 +1,14 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System;
+using System.Collections.Generic;
 
 public interface IEnemyProjectile
 {
   void StartMove(Vector2 startPosition, Vector2 direction, float acceleration, float targetVelocity);
 }
 
-public class StationarySentryCanon : SpawnBucketItemBehaviour
+public class StationarySentryCanon : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   public GameObject projectilePrefab;
   public float projectileAcceleration = .05f;
@@ -21,8 +22,8 @@ public class StationarySentryCanon : SpawnBucketItemBehaviour
 
   public float timeNeededToDetectPlayer = .1f;
   [Range(.1f, 6000f)]
-  public float roundsPerMinute = 30f;  
-  
+  public float roundsPerMinute = 30f;
+
   private float _startAngleRad;
   private float _endAngleRad;
   private float _step;
@@ -52,10 +53,7 @@ public class StationarySentryCanon : SpawnBucketItemBehaviour
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
     _playerController = GameManager.instance.player;
-
-    // TODO (Roman): this should be done by level manager...
-    _objectPoolingManager.RegisterPool(projectilePrefab, 10, int.MaxValue);
-
+    
     Logger.Info("Enabled sentry canon " + this.GetHashCode());
   }
 
@@ -94,11 +92,11 @@ public class StationarySentryCanon : SpawnBucketItemBehaviour
     {
       if (_lastRoundFiredTime + _rateOfFireInterval <= Time.time)
       {
-         GameObject enemyProjectileGameObject = _objectPoolingManager.GetObject(projectilePrefab.name);
-         IEnemyProjectile enemyProjectile = enemyProjectileGameObject.GetComponent<IEnemyProjectile>();
-         Logger.Assert(enemyProjectile != null, "Enemy projectile must not be null");
+        GameObject enemyProjectileGameObject = _objectPoolingManager.GetObject(projectilePrefab.name, this.transform.position);
+        IEnemyProjectile enemyProjectile = enemyProjectileGameObject.GetComponent<IEnemyProjectile>();
+        Logger.Assert(enemyProjectile != null, "Enemy projectile must not be null");
 
-         enemyProjectile.StartMove(this.transform.position, _playerController.transform.position - this.transform.position, projectileAcceleration, projectileTargetVelocity);
+        enemyProjectile.StartMove(this.transform.position, _playerController.transform.position - this.transform.position, projectileAcceleration, projectileTargetVelocity);
 
         _lastRoundFiredTime = Time.time;
       }
@@ -106,4 +104,16 @@ public class StationarySentryCanon : SpawnBucketItemBehaviour
 
     #endregion
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(projectilePrefab, 5)
+    };
+  }
+
+  #endregion
 }

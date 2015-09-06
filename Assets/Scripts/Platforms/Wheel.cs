@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public partial class Wheel : SpawnBucketItemBehaviour
+public partial class Wheel : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   #region nested
   private class GameObjectContainer
@@ -47,8 +47,6 @@ public partial class Wheel : SpawnBucketItemBehaviour
   void OnEnable()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    // TODO (Roman): this should be done at global scene load
-    _objectPoolingManager.RegisterPool(floatingAttachedPlatform, (int)totalPlatforms, int.MaxValue);
 
     Logger.Info("Enabling wheel " + this.name);
     List<GameObjectContainer> platforms = new List<GameObjectContainer>();
@@ -81,5 +79,17 @@ public partial class Wheel : SpawnBucketItemBehaviour
     }
     _platforms.Clear();
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(floatingAttachedPlatform, (int)totalPlatforms)
+    };
+  }
+
+  #endregion
 }
 

@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 /// <summary>
 /// 
 /// </summary>
-public partial class RotatingPlatformCollisionController : MonoBehaviour
+public partial class RotatingPlatformCollisionController : MonoBehaviour, IObjectPoolBehaviour
 {
   private const string TRACE_TAG = "RotatingPlatformCollisionController";
 
@@ -32,8 +33,6 @@ public partial class RotatingPlatformCollisionController : MonoBehaviour
 
   void Start()
   {
-    ObjectPoolingManager.Instance.RegisterPool(rotatingObject, 1, int.MaxValue);
-
     _gameObject = ObjectPoolingManager.Instance.GetObject(rotatingObject.name);
     _gameObject.transform.position = this.transform.position;
     _gameObject.SetActive(true);
@@ -137,4 +136,16 @@ public partial class RotatingPlatformCollisionController : MonoBehaviour
       }
     }
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(rotatingObject, 1)
+    };
+  }
+
+  #endregion
 }

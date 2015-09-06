@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public partial class WheelEllipse : SpawnBucketItemBehaviour
+public partial class WheelEllipse : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   #region nested
   private class GameObjectContainer
@@ -46,13 +46,10 @@ public partial class WheelEllipse : SpawnBucketItemBehaviour
   void OnEnable()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    // TODO (Roman): this should be done at global scene load
-    _objectPoolingManager.RegisterPool(floatingAttachedPlatform, (int)totalPlatforms, int.MaxValue);
 
-    Logger.Info("Enabling wheel " + this.name);
     List<GameObjectContainer> platforms = new List<GameObjectContainer>();
-
-    for (float angle = 0f; angle < 360 * Mathf.Deg2Rad; angle += 360 * Mathf.Deg2Rad / totalPlatforms)
+    float twoPi = Mathf.PI * 2f;
+    for (float angle = 0f; angle < twoPi; angle += twoPi / totalPlatforms)
     {
       GameObject platform = _objectPoolingManager.GetObject(floatingAttachedPlatform.name);
       
@@ -70,13 +67,23 @@ public partial class WheelEllipse : SpawnBucketItemBehaviour
 
   void OnDisable()
   {
-    Logger.Info("Disabling wheel " + this.name);
-
     for (int i = _platforms.Count - 1; i >= 0; i--)
     {
       _objectPoolingManager.Deactivate(_platforms[i].GameObject);
     }
     _platforms.Clear();
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(floatingAttachedPlatform, (int)totalPlatforms)
+    };
+  }
+
+  #endregion
 }
 

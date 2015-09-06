@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public partial class Pendulum : SpawnBucketItemBehaviour
+public partial class Pendulum : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   public GameObject floatingAttachedPlatform;
   public float radius = 256f;
@@ -71,8 +71,6 @@ public partial class Pendulum : SpawnBucketItemBehaviour
   void OnEnable()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    // TODO (Roman): this should be done at global scene load
-    _objectPoolingManager.RegisterPool(floatingAttachedPlatform, 1, int.MaxValue);
     
     _startAngleRad = startAngle * Mathf.Deg2Rad;
     _endAngleRad = endAngle * Mathf.Deg2Rad;
@@ -101,5 +99,17 @@ public partial class Pendulum : SpawnBucketItemBehaviour
   {
     _objectPoolingManager.Deactivate(_platform);
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(floatingAttachedPlatform, 1)
+    };
+  }
+
+  #endregion
 }
 

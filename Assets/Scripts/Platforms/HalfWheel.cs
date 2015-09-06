@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-public partial class HalfWheel : SpawnBucketItemBehaviour
+public partial class HalfWheel : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   public GameObject floatingAttachedPlatform;
   public float radius = 256f;
@@ -74,8 +74,6 @@ public partial class HalfWheel : SpawnBucketItemBehaviour
   void OnEnable()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    // TODO (Roman): this should be done at global scene load
-    _objectPoolingManager.RegisterPool(floatingAttachedPlatform, 1, int.MaxValue);
 
     Logger.Info("Enabling half wheel " + this.name);
 
@@ -108,5 +106,17 @@ public partial class HalfWheel : SpawnBucketItemBehaviour
     Logger.Info("Disabling half wheel " + this.name);
     _objectPoolingManager.Deactivate(_platform);
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(floatingAttachedPlatform, 1)
+    };
+  }
+
+  #endregion
 }
 

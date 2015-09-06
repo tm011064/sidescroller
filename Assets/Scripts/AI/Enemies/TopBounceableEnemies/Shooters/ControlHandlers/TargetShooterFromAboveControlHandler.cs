@@ -12,7 +12,6 @@ public class TargetShooterFromAboveControlHandler : EnemyControlHandler<TargetSh
     : base(targetShooterFromAboveController, -1f)
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    _objectPoolingManager.RegisterPool(targetShooterFromAboveController.projectileToSpawn, targetShooterFromAboveController.minProjectilesToInstanciate, int.MaxValue);
 
     if (startDirection == Direction.Left)
       _moveDirectionFactor = -1f;

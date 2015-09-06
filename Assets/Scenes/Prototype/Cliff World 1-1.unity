@@ -1102,14 +1102,19 @@ MonoBehaviour:
   objectToAttach: {fileID: 156484, guid: 16b85cbb72fe0b240ba3085bca0a5851, type: 2}
   totalObjectsOnPath: 1
   loopMode: 0
+  useTime: 1
   time: 4
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 1
   synchronizedStartObjects:
   - {fileID: 521694584}
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: .200000003
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -1159,13 +1164,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 156484, guid: 16b85cbb72fe0b240ba3085bca0a5851, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 3
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 1
   startPathDirection: 0
+  startPosition: 1
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .600000024
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -1312,13 +1322,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 1.39999998
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: .699999988
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -1368,13 +1383,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 1.39999998
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2514,13 +2534,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 124956, guid: 3054ef3c73255f54b9c17f60e65fe728, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 3
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 1
   startPathDirection: 0
+  startPosition: 1
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2570,13 +2595,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 124956, guid: 3054ef3c73255f54b9c17f60e65fe728, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 3.20000005
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 1
   startPathDirection: 1
+  startPosition: 1
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .400000006
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -3848,13 +3878,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 124956, guid: 3054ef3c73255f54b9c17f60e65fe728, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 3.20000005
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 1
   startPathDirection: 1
+  startPosition: 1
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .400000006
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8982,13 +9017,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 1.39999998
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -10257,13 +10297,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 124956, guid: 3054ef3c73255f54b9c17f60e65fe728, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 3
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 1
   startPathDirection: 0
+  startPosition: 1
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}

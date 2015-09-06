@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
+public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour, IObjectPoolBehaviour
 {
   #region nested
   public enum JumpControlledDisappearingPlatformMode
@@ -157,8 +157,6 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
   void Start()
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
-    // TODO (Roman): this should be done at camera script
-    _objectPoolingManager.RegisterPool(platformPrefab, totalVisiblePlatforms, int.MaxValue);
 
     if (totalVisiblePlatforms >= platformPositions.Count)
       throw new ArgumentOutOfRangeException("Total visible platforms must be less or equal the number of platform positions.");
@@ -176,4 +174,16 @@ public partial class JumpControlledDisappearingPlatformGroup : MonoBehaviour
       _currentIndex = i;
     }
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(platformPrefab, totalVisiblePlatforms)
+    };
+  }
+
+  #endregion
 }

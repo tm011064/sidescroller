@@ -74,6 +74,45 @@ public class GameManager : MonoBehaviour
         break;
     }
 
+    #region object pool maintenance
+    ObjectPoolingManager objectPoolingManager = ObjectPoolingManager.Instance;
+
+    // TODO (Roman): some logging
+
+    objectPoolingManager.DeactivateAndClearAll();
+
+    objectPoolingManager.RegisterPool(gameSettings.pooledObjects.basicPowerUpPrefab.prefab, gameSettings.pooledObjects.basicPowerUpPrefab.initialSize, int.MaxValue);
+    objectPoolingManager.RegisterPool(gameSettings.pooledObjects.basicBullet.prefab, gameSettings.pooledObjects.basicBullet.initialSize, int.MaxValue);
+    objectPoolingManager.RegisterPool(gameSettings.pooledObjects.defaultEnemyDeathParticlePrefab.prefab, gameSettings.pooledObjects.defaultEnemyDeathParticlePrefab.initialSize, int.MaxValue);
+    objectPoolingManager.RegisterPool(gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.prefab, gameSettings.pooledObjects.defaultPlayerDeathParticlePrefab.initialSize, int.MaxValue);
+
+    MonoBehaviour[] monoBehaviours = GameObject.FindObjectsOfType<MonoBehaviour>();
+    Dictionary<string, ObjectPoolRegistrationInfo> gameObjectTypes = new Dictionary<string, ObjectPoolRegistrationInfo>();
+    for (int i = 0; i < monoBehaviours.Length; i++)
+    {
+      IObjectPoolBehaviour objectPoolBehaviour = monoBehaviours[i] as IObjectPoolBehaviour;
+      if (objectPoolBehaviour != null)
+      {
+        foreach (ObjectPoolRegistrationInfo objectPoolRegistrationInfo in objectPoolBehaviour.GetObjectPoolRegistrationInfos())
+        {
+          if (gameObjectTypes.ContainsKey(objectPoolRegistrationInfo.gameObject.name))
+          {
+            if (gameObjectTypes[objectPoolRegistrationInfo.gameObject.name].totalInstances < objectPoolRegistrationInfo.totalInstances)
+              gameObjectTypes[objectPoolRegistrationInfo.gameObject.name] = objectPoolRegistrationInfo.Clone();
+          }
+          else
+            gameObjectTypes[objectPoolRegistrationInfo.gameObject.name] = objectPoolRegistrationInfo.Clone();
+        }
+      }
+    }
+
+    Logger.Info("Registering " + gameObjectTypes.Count + " objects at object pool.");
+    foreach (ObjectPoolRegistrationInfo objectPoolRegistrationInfo in gameObjectTypes.Values)
+    {
+      objectPoolingManager.RegisterPool(objectPoolRegistrationInfo.gameObject, objectPoolRegistrationInfo.totalInstances, int.MaxValue);
+    }
+    #endregion
+
     PlayerController playerController = Instantiate(GameManager.instance.player, checkpoint.transform.position, Quaternion.identity) as PlayerController;
 
     playerController.spawnLocation = checkpoint.transform.position;

@@ -4,14 +4,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class BreakablePlatform : MonoBehaviour
+public partial class BreakablePlatform : SpawnBucketItemBehaviour
 {
   private Vector3 _gizmoCenter = Vector3.zero;
   private Vector3 _gizmoExtents = new Vector3(16, 16, 0);
 
   public Color outlineGizmoColor = Color.yellow;
   public bool showGizmoOutline = true;
-
 
   void OnDrawGizmos()
   {

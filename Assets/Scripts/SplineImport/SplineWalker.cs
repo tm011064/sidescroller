@@ -1,6 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
-public class SplineWalker : MonoBehaviour
+public class SplineWalker : MonoBehaviour, IObjectPoolBehaviour
 {
   public BezierSpline spline;
   public float duration;
@@ -38,8 +39,6 @@ public class SplineWalker : MonoBehaviour
   }
   void Start()
   {
-    ObjectPoolingManager.Instance.RegisterPool(movingObjectPrefab, 1, int.MaxValue);
-
     _gameObject = ObjectPoolingManager.Instance.GetObject(movingObjectPrefab.name);
 
     if (!goingForward)
@@ -127,4 +126,16 @@ public class SplineWalker : MonoBehaviour
       _gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
     }
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(movingObjectPrefab, 1)
+    };
+  }
+
+  #endregion
 }

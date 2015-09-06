@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public partial class DynamicPingPongPath : SpawnBucketItemBehaviour
+public partial class DynamicPingPongPath : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 {
   #region nested classes  
   [Serializable]
@@ -143,12 +143,21 @@ public partial class DynamicPingPongPath : SpawnBucketItemBehaviour
       _segmentLengthPercentages = segmentLengthPercentages;
     }
 
-    // we wanna do this in start as we know that the player has been added to the game context
-    ObjectPoolingManager.Instance.RegisterPool(objectToAttach, 1, int.MaxValue);
-
     _gameObject = ObjectPoolingManager.Instance.GetObject(objectToAttach.name, this.gameObject.transform.position);
     _percentage = 0f;
 
     _isMovingForward = false;
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(objectToAttach, 1)
+    };
+  }
+
+  #endregion
 }

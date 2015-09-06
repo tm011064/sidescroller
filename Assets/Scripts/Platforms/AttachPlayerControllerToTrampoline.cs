@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public interface IAttachableObject
@@ -7,7 +8,7 @@ public interface IAttachableObject
   event Action<IAttachableObject, GameObject> Detached;
 }
 
-public partial class AttachPlayerControllerToTrampoline : MonoBehaviour, IAttachableObject
+public partial class AttachPlayerControllerToTrampoline : MonoBehaviour, IAttachableObject, IObjectPoolBehaviour
 {
   public bool canJump = true;
 
@@ -50,9 +51,6 @@ public partial class AttachPlayerControllerToTrampoline : MonoBehaviour, IAttach
 
   void Start()
   {
-    // we wanna do this in start as we know that the player has been added to the game context
-    ObjectPoolingManager.Instance.RegisterPool(trampolinePrefab, 1, int.MaxValue);
-
     _gameObject = ObjectPoolingManager.Instance.GetObject(trampolinePrefab.name);
     _gameObject.transform.position = this.transform.position;
     _gameObject.transform.parent = this.transform;
@@ -171,4 +169,16 @@ public partial class AttachPlayerControllerToTrampoline : MonoBehaviour, IAttach
 
     _lastPosition = _gameObject.transform.position;
   }
+
+  #region IObjectPoolBehaviour Members
+
+  public List<ObjectPoolRegistrationInfo> GetObjectPoolRegistrationInfos()
+  {
+    return new List<ObjectPoolRegistrationInfo>()
+    {
+      new ObjectPoolRegistrationInfo(trampolinePrefab, 1)
+    };
+  }
+
+  #endregion
 }

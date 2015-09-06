@@ -169,7 +169,6 @@ public class CameraController : MonoBehaviour
             yPos = posY.Value;
             isOnCameraTrolley = true;
           }
-
           break;
         }
       }
