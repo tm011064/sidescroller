@@ -15,7 +15,6 @@ public class EnemyRocket : MonoBehaviour, IEnemyProjectile
   void OnBecameInvisible()
   {
     ObjectPoolingManager.Instance.Deactivate(this.gameObject);
-    Debug.Log("EnemyRocket " + this.gameObject.GetHashCode() + " got invisible and was deactivated.");
   }
 
   void OnTriggerEnter2D(Collider2D col)
@@ -25,7 +24,6 @@ public class EnemyRocket : MonoBehaviour, IEnemyProjectile
     deathParticles.transform.position = this.gameObject.transform.position;
 
     ObjectPoolingManager.Instance.Deactivate(this.gameObject);
-    Debug.Log("Collided with " + col.gameObject.name);
     
     if (col.gameObject.layer == LayerMask.NameToLayer("Player"))
     {

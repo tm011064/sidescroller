@@ -16,10 +16,12 @@ public class StationaryCanon : SpawnBucketItemBehaviour, IObjectPoolBehaviour
   public GameObject projectilePrefab;
   public float projectileAcceleration = .05f;
   public float projectileTargetVelocity = 600f;
+  public Space fireDirectionSpace = Space.World;
 
   public List<CanonFireDirectionVectors> fireDirectionVectorGroups = new List<CanonFireDirectionVectors>();
 
   public float roundsPerMinute = 30f;
+  public bool onlyShootWhenInvisible;
 
   private float _rateOfFireInterval;
 
@@ -31,9 +33,12 @@ public class StationaryCanon : SpawnBucketItemBehaviour, IObjectPoolBehaviour
 
   private int _currentfireDirectionVectorGroupIndex = 0;
 
+  private CameraController _cameraController;
+
   void Awake()
   {
     _rateOfFireInterval = 60f / roundsPerMinute;
+    _cameraController = Camera.main.GetComponent<CameraController>();
 
     Logger.Assert(fireDirectionVectorGroups.Count > 0, "Please specify at least one fire direction vector. " + this.name);
   }
@@ -42,29 +47,36 @@ public class StationaryCanon : SpawnBucketItemBehaviour, IObjectPoolBehaviour
   {
     _objectPoolingManager = ObjectPoolingManager.Instance;
     _playerController = GameManager.instance.player;
-    
+
     _currentfireDirectionVectorGroupIndex = 0;
   }
 
   void Update()
   {
     #region now check whether we can see the player
-
-    if (_lastRoundFiredTime + _rateOfFireInterval <= Time.time)
+    if (!onlyShootWhenInvisible || _cameraController.IsPointVisible(this.transform.position))
     {
-      for (int i = 0; i < fireDirectionVectorGroups[_currentfireDirectionVectorGroupIndex].vectors.Count; i++)
+      if (_lastRoundFiredTime + _rateOfFireInterval <= Time.time)
       {
-        GameObject enemyProjectileGameObject = _objectPoolingManager.GetObject(projectilePrefab.name, this.transform.position);
-        IEnemyProjectile enemyProjectile = enemyProjectileGameObject.GetComponent<IEnemyProjectile>();
-        Logger.Assert(enemyProjectile != null, "Enemy projectile must not be null");
+        for (int i = 0; i < fireDirectionVectorGroups[_currentfireDirectionVectorGroupIndex].vectors.Count; i++)
+        {
+          GameObject enemyProjectileGameObject = _objectPoolingManager.GetObject(projectilePrefab.name, this.transform.position);
+          IEnemyProjectile enemyProjectile = enemyProjectileGameObject.GetComponent<IEnemyProjectile>();
+          Logger.Assert(enemyProjectile != null, "Enemy projectile must not be null");
 
-        enemyProjectile.StartMove(this.transform.position, fireDirectionVectorGroups[_currentfireDirectionVectorGroupIndex].vectors[i], projectileAcceleration, projectileTargetVelocity);
+          Vector2 direction;
+          if (fireDirectionSpace == Space.World)
+            direction = fireDirectionVectorGroups[_currentfireDirectionVectorGroupIndex].vectors[i];
+          else
+            direction = this.transform.TransformDirection(fireDirectionVectorGroups[_currentfireDirectionVectorGroupIndex].vectors[i]);
+
+          enemyProjectile.StartMove(this.transform.position, direction, projectileAcceleration, projectileTargetVelocity);
+        }
+
+        _currentfireDirectionVectorGroupIndex = _currentfireDirectionVectorGroupIndex == fireDirectionVectorGroups.Count - 1 ? 0 : _currentfireDirectionVectorGroupIndex + 1;
+        _lastRoundFiredTime = Time.time;
       }
-
-      _currentfireDirectionVectorGroupIndex = _currentfireDirectionVectorGroupIndex == fireDirectionVectorGroups.Count - 1 ? 0 : _currentfireDirectionVectorGroupIndex + 1;
-      _lastRoundFiredTime = Time.time;
     }
-
     #endregion
   }
 

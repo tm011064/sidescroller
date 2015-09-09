@@ -111,9 +111,7 @@ public partial class LinearPath : SpawnBucketItemBehaviour, IObjectPoolBehaviour
         _gameObjectTrackingInformation[i].gameObject.transform.rotation = Quaternion.Euler(0f, 0f, rot_z - 90);
       }
 
-      Debug.Log(this.name + "; pct: " + itemPositionPercentage);
       itemPositionPercentage = Mathf.Repeat(itemPositionPercentage + step, 1f);
-      //itemPositionPercentage += step;
     }
   }
 
@@ -366,8 +364,6 @@ public partial class LinearPath : SpawnBucketItemBehaviour, IObjectPoolBehaviour
         Logger.Assert(speedInUnitsPerSecond > 0f, "Speed must be greater than 0.");
 
         _totalTime = totalLength / speedInUnitsPerSecond;
-        Debug.Log("Time: " + _totalTime + "( " + totalLength + " )");
-        // TODO (Roman): divide length to get time
       }
       Logger.Assert(_totalTime > 0f, "Time must be set to a positive value greater than 0");
       #endregion

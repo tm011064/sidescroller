@@ -25,8 +25,7 @@ public class FixedBackgroundScroller : MonoBehaviour
   void Update()
   {
     Vector2 delta = _transform.position - _oldPos;
-    Debug.Log("Translate: " + delta);
-    this.gameObject.transform.Translate(delta, Space.Self);
+    this.gameObject.transform.Translate(new Vector3(delta.x * .8f, delta.y * .7f), Space.World);
     _oldPos = _transform.position;
   }
 }

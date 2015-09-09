@@ -114,7 +114,7 @@ Transform:
   m_Children:
   - {fileID: 1604172416}
   m_Father: {fileID: 0}
-  m_RootOrder: 1
+  m_RootOrder: 2
 --- !u!1 &3860409
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,7 +488,7 @@ Transform:
   - {fileID: 688033065}
   - {fileID: 437130352}
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
 --- !u!1 &71049339
 GameObject:
   m_ObjectHideFlags: 0
@@ -1004,13 +1004,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 2
   loopMode: 1
+  useTime: 1
   time: 4.4000001
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 1
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -1169,13 +1174,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 121956, guid: 6bbc9647d21b9854ab677b3860c5464b, type: 2}
   totalObjectsOnPath: 1
   loopMode: 0
+  useTime: 1
   time: 8
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 1
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -1644,13 +1654,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 4.4000001
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 1
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2299,13 +2314,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 4.4000001
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 1
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 2.20000005
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2355,13 +2375,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 2
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2764,13 +2789,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -2929,13 +2959,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 1
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -3098,7 +3133,7 @@ Transform:
   - {fileID: 1137990407}
   - {fileID: 41586530}
   m_Father: {fileID: 0}
-  m_RootOrder: 2
+  m_RootOrder: 3
 --- !u!1 &607447359
 GameObject:
   m_ObjectHideFlags: 0
@@ -3126,7 +3161,7 @@ Transform:
   m_Children:
   - {fileID: 71049342}
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 9
 --- !u!1 &619575563
 GameObject:
   m_ObjectHideFlags: 0
@@ -3395,7 +3430,7 @@ Transform:
   - {fileID: 2052687821}
   - {fileID: 3860410}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 8
 --- !u!1 &676898276
 GameObject:
   m_ObjectHideFlags: 0
@@ -3721,13 +3756,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -4173,13 +4213,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 1
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -4293,6 +4338,72 @@ MeshRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -2063158589
   m_SortingOrder: 0
+--- !u!1 &840259972
+GameObject:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 4
+  m_Component:
+  - 4: {fileID: 840259975}
+  - 212: {fileID: 840259974}
+  - 114: {fileID: 840259973}
+  m_Layer: 11
+  m_Name: Background Test
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &840259973
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 840259972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e753f8a3e1edfa743ba942bd4bfc6df1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!212 &840259974
+SpriteRenderer:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 840259972}
+  m_Enabled: 1
+  m_CastShadows: 0
+  m_ReceiveShadows: 0
+  m_Materials:
+  - {fileID: 10754, guid: 0000000000000000e000000000000000, type: 0}
+  m_SubsetIndices: 
+  m_StaticBatchRoot: {fileID: 0}
+  m_UseLightProbes: 1
+  m_ReflectionProbeUsage: 1
+  m_ProbeAnchor: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_ImportantGI: 0
+  m_AutoUVMaxDistance: .5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingOrder: 0
+  m_Sprite: {fileID: 21300000, guid: e809fb884ec93224c85760b361a3f2b1, type: 3}
+  m_Color: {r: .433823526, g: .433823526, b: .433823526, a: 1}
+--- !u!4 &840259975
+Transform:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 840259972}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3408, y: 1632, z: 0}
+  m_LocalScale: {x: 3, y: 3, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
 --- !u!1 &851334620
 GameObject:
   m_ObjectHideFlags: 0
@@ -4544,13 +4655,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 3
   loopMode: 1
+  useTime: 1
   time: 4.4000001
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 1.10000002
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -4602,6 +4718,10 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 1395120358}
+    - target: {fileID: 166680, guid: 7b380e8d646044a459dfaca7345dcf70, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 11486344, guid: 7b380e8d646044a459dfaca7345dcf70, type: 2}
   m_ParentPrefab: {fileID: 100100000, guid: 7b380e8d646044a459dfaca7345dcf70, type: 2}
@@ -5051,13 +5171,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -6150,13 +6275,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 2
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -6406,7 +6536,7 @@ Transform:
   - {fileID: 350209650}
   - {fileID: 307195790}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
 --- !u!1 &1238815843
 GameObject:
   m_ObjectHideFlags: 0
@@ -7241,13 +7371,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 1.5
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8217,13 +8352,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8273,13 +8413,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 1.5
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8523,13 +8668,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8641,13 +8791,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 2
   loopMode: 1
+  useTime: 1
   time: 4.4000001
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -8932,7 +9087,7 @@ Transform:
   - {fileID: 1191980814}
   - {fileID: 1291383083}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 1
 --- !u!43 &1797030693
 Mesh:
   m_ObjectHideFlags: 0
@@ -9234,13 +9389,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -9527,13 +9687,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 13
   loopMode: 1
+  useTime: 1
   time: 25
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 1
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -9583,13 +9748,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 1
   loopMode: 2
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: .200000003
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -10206,13 +10376,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 199292, guid: 1d379d780f9b21a48884b3868d2ad658, type: 2}
   totalObjectsOnPath: 13
   loopMode: 1
+  useTime: 1
   time: 25
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 0
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}
@@ -10761,13 +10936,18 @@ MonoBehaviour:
   objectToAttach: {fileID: 185638, guid: 05ffa42594c8f7845ab616ee7e2d0327, type: 2}
   totalObjectsOnPath: 1
   loopMode: 1
+  useTime: 1
   time: 2
+  useSpeed: 0
+  speedInUnitsPerSecond: 100
   movingPlatformType: 0
   synchronizedStartObjects: []
-  startPosition: 0
   startPathDirection: 0
+  startPosition: 0
+  startPositionOffsetPercentage: 0
   startDelayOnEnabled: 0
   delayBetweenCycles: 1
+  lookForward: 0
   nodeCount: 2
   nodes:
   - {x: 0, y: 0, z: 0}

@@ -48,10 +48,7 @@ public class DontGoThroughThings : MonoBehaviour
         );
       if (hitInfo)
       {
-        //if (hitInfo.collider.isTrigger)
         myCollider.SendMessage("OnTriggerEnter2D", hitInfo.collider, SendMessageOptions.DontRequireReceiver);
-
-        Debug.Log("HIT -> origin: " + previousPosition + ", direction: " + (movementThisStep.normalized * movementThisStep.magnitude));
       }
     }
 

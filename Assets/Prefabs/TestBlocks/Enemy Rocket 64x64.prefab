@@ -14,6 +14,7 @@ GameObject:
   - 114: {fileID: 11422282}
   - 61: {fileID: 6178892}
   - 50: {fileID: 5031856}
+  - 114: {fileID: 11462974}
   m_Layer: 18
   m_Name: Enemy Rocket 64x64
   m_TagString: Untagged
@@ -103,6 +104,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff82a6d71574eb84d9f1d6ef5a149637, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &11462974
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 154292}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7e461a2bea6b33040a9c4d7bfc8e59ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scanRayDirectionDownCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 5632
+  scanRayDirectionUpCollisionLayers:
+    serializedVersion: 2
+    m_Bits: 5120
+  skinWidth: .100000001
 --- !u!114 &11499460
 MonoBehaviour:
   m_ObjectHideFlags: 1

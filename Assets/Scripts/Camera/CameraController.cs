@@ -125,6 +125,16 @@ public class CameraController : MonoBehaviour
       updateCameraPosition();
   }
 
+  public bool IsPointVisible(Vector2 point)
+  {
+    float defaultOrthographicSize = (targetScreenSize.y * .5f);
+    float zoomPercentage = Camera.main.orthographicSize / defaultOrthographicSize;
+    
+    Vector2 screenSize = new Vector2((float)targetScreenSize.x * zoomPercentage, (float)targetScreenSize.y * zoomPercentage);
+    Rect r = new Rect(Camera.main.transform.position.x - screenSize.x * .5f, Camera.main.transform.position.y - screenSize.y * .5f, screenSize.x, screenSize.y);
+    return r.Contains(point);
+  }
+
   public void SetCameraMovementSettings(CameraMovementSettings cameraMovementSettings)
   {
     _cameraMovementSettings = cameraMovementSettings;
@@ -273,15 +283,15 @@ public class CameraController : MonoBehaviour
               yPos = target.position.y;
 
             if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-              && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary)
+              && target.position.y > _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y)
             {
               yPos = _cameraMovementSettings.verticalLockSettings.topBoundary + cameraOffset.y;
 
               // we might have been shot up, so use smooth damp override
               doSmoothDamp = true;
             }
-            else if (_cameraMovementSettings.verticalLockSettings.enableTopVerticalLock
-              && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary)
+            else if (_cameraMovementSettings.verticalLockSettings.enableBottomVerticalLock
+              && target.position.y < _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y)
             {
               yPos = _cameraMovementSettings.verticalLockSettings.bottomBoundary + cameraOffset.y;
 
@@ -331,7 +341,7 @@ public class CameraController : MonoBehaviour
     if (doAdjustHorizontalOffset)
     {
       xPos = _targetedTransformPositionX;
-      
+
       if ((xTargetDelta < -.001f
           || xTargetDelta > .001f))
       {

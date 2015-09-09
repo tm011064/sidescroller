@@ -283,39 +283,135 @@ public class CharacterPhysicsManager : BasePhysicsManager
     this.velocity.Set(this.velocity.x + x, this.velocity.y + y, this.velocity.z);
   }
 
-  public bool CanMoveVertically(float verticalRayDistance)
+  public bool CanMoveVertically(float verticalRayDistance, bool allowEdgeSlideUp)
   {
     verticalRayDistance += _skinWidth;
-    var initialRayOrigin = _raycastOrigins.topLeft;
 
-    for (var i = 0; i < totalVerticalRays; i++)
+    if (enableEdgeSlideUpHelp && allowEdgeSlideUp)
     {
-      var ray = new Vector2(initialRayOrigin.x + i * _horizontalDistanceBetweenRays, initialRayOrigin.y);
+      #region going up && enableEdgeSlideUpHelp
+            
+      // apply our horizontal deltaMovement here so that we do our raycast from the actual position we would be in if we had moved
+      float leftOriginX = _raycastOrigins.topLeft.x;
+      float rightOriginX = _raycastOrigins.bottomRight.x;
+      float topOriginY = _raycastOrigins.topLeft.y;
+      float leftAdjustmentBoundaryPosition = leftOriginX - _skinWidth + edgeSlideUpCornerWidth;
+      float rightAdjustmentBoundaryPosition = rightOriginX + _skinWidth - edgeSlideUpCornerWidth;
 
-      DrawRay(ray, Vector2.up * verticalRayDistance, Color.red);
+      bool hasHit = false;
+      bool hasHitOutsideAdjustmentBoundaries = false;
+      bool hasHitWithinLeftAdjustmentBoundaries = false;
+      bool hasHitWithinRightAdjustmentBoundaries = false;
 
-      RaycastHit2D raycastHit = Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
-      if (raycastHit)
+      for (var i = 0; i < totalVerticalRays; i++)
       {
-        // we need to check whether the hit point is on the edge of the collider. If not, the ray was sent from within the collider which can happen
-        // on moving platforms        
-        if (raycastHit.distance == 0f)
+        _topEdgeCollisionTestContainers[i].insetLeft = leftOriginX + i * _horizontalDistanceBetweenRays;
+        _topEdgeCollisionTestContainers[i].isWithinLeftAdjustmentArea = _topEdgeCollisionTestContainers[i].insetLeft <= leftAdjustmentBoundaryPosition;
+        _topEdgeCollisionTestContainers[i].isWithinRightAdjustmentArea = _topEdgeCollisionTestContainers[i].insetLeft >= rightAdjustmentBoundaryPosition;
+
+        Vector2 ray = new Vector2(_topEdgeCollisionTestContainers[i].insetLeft, topOriginY);
+
+        _topEdgeCollisionTestContainers[i].raycastHit2D = Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
+        
+        if (_topEdgeCollisionTestContainers[i].raycastHit2D)
         {
-          // if the distance is 0, we are inside a collider since the raycast origin is inside the player (due to skin width logic). This can
-          // happen when a moving platform moves into a non moving player. In such a case we allow the jump to proceed.
-          // in case this distance check doesn't work, we can also use "if (!raycastHit.collider.bounds.IsPointOnEdge(raycastHit.point))"
-          Logger.Trace(TRACE_TAG, "Jump raycast hit [" + i + ", distance: " + raycastHit.distance + "] ignored because we are inside the collider. Ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
+          hasHit = true;
+
+          if (!hasHitOutsideAdjustmentBoundaries
+            && !_topEdgeCollisionTestContainers[i].isWithinLeftAdjustmentArea
+            && !_topEdgeCollisionTestContainers[i].isWithinRightAdjustmentArea)
+          {
+            hasHitOutsideAdjustmentBoundaries = true;
+          }
+          if (!hasHitWithinLeftAdjustmentBoundaries
+            && _topEdgeCollisionTestContainers[i].isWithinLeftAdjustmentArea)
+          {
+            hasHitWithinLeftAdjustmentBoundaries = true;
+          }
+          if (!hasHitWithinRightAdjustmentBoundaries
+            && _topEdgeCollisionTestContainers[i].isWithinRightAdjustmentArea)
+          {
+            hasHitWithinRightAdjustmentBoundaries = true;
+          }
+          
+          float deltaMovementY = _topEdgeCollisionTestContainers[i].raycastHit2D.point.y - ray.y;
+          if (!_topEdgeCollisionTestContainers[i].isWithinLeftAdjustmentArea
+            && !_topEdgeCollisionTestContainers[i].isWithinRightAdjustmentArea
+            && Mathf.Abs(deltaMovementY) < _skinWidth + K_SKIN_WIDTH_FLOAT_FUDGE_FACTOR)
+          {
+            return false;
+          }
         }
-        else
+      }
+      
+      if (hasHit)
+      {
+        if (!hasHitOutsideAdjustmentBoundaries)
         {
-          Logger.Trace(TRACE_TAG, "Can not jump [" + i + ", distance: " + raycastHit.distance + "] because of ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
-          return false;
+          RaycastHit2D leftAdjustmentRaycastHit = new RaycastHit2D();
+
+          // first left
+          Vector2 leftAdjustmentRay = new Vector2(leftAdjustmentBoundaryPosition, topOriginY);
+
+          leftAdjustmentRaycastHit = Physics2D.Raycast(leftAdjustmentRay, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
+
+          if (!leftAdjustmentRaycastHit
+            && !hasHitWithinRightAdjustmentBoundaries)
+          {
+            return true;
+          }
+
+          // we reached this line, so do right
+          RaycastHit2D rightAdjustmentRaycastHit = new RaycastHit2D();
+          Vector2 rightAdjustmentRay = new Vector2(rightAdjustmentBoundaryPosition, topOriginY);
+          rightAdjustmentRaycastHit = Physics2D.Raycast(rightAdjustmentRay, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
+
+          if (!rightAdjustmentRaycastHit
+            && !hasHitWithinLeftAdjustmentBoundaries)
+          {
+            return true;
+          }
+        }
+
+        // TODO (Roman): additional check when moving platform moves into static player
+      }
+      #endregion
+    }
+    else
+    {
+      var initialRayOrigin = _raycastOrigins.topLeft;
+
+      for (var i = 0; i < totalVerticalRays; i++)
+      {
+        var ray = new Vector2(initialRayOrigin.x + i * _horizontalDistanceBetweenRays, initialRayOrigin.y);
+
+        DrawRay(ray, Vector2.up * verticalRayDistance, Color.red);
+
+        RaycastHit2D raycastHit = Physics2D.Raycast(ray, Vector2.up, verticalRayDistance, _platformMaskWithoutOneWay);
+        if (raycastHit)
+        {
+          // we need to check whether the hit point is on the edge of the collider. If not, the ray was sent from within the collider which can happen
+          // on moving platforms        
+          if (raycastHit.distance == 0f)
+          {
+            // if the distance is 0, we are inside a collider since the raycast origin is inside the player (due to skin width logic). This can
+            // happen when a moving platform moves into a non moving player. In such a case we allow the jump to proceed.
+            // in case this distance check doesn't work, we can also use "if (!raycastHit.collider.bounds.IsPointOnEdge(raycastHit.point))"
+            Logger.Trace(TRACE_TAG, "Jump raycast hit [" + i + ", distance: " + raycastHit.distance + "] ignored because we are inside the collider. Ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
+          }
+          else
+          {
+            Logger.Trace(TRACE_TAG, "Can not jump [" + i + ", distance: " + raycastHit.distance + "] because of ray: " + ray + ", hit point: " + raycastHit.point + ", collider bounds: " + raycastHit.collider.bounds);
+            return false;
+          }
         }
       }
     }
 
     return true;
   }
+
+
 
   public MoveCalculationResult SlideDown(Direction platformDirection, float downwardVelocity)
   {

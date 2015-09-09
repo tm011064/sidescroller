@@ -8,8 +8,6 @@ public class StationarySentryLaser : SpawnBucketItemBehaviour
 
   [Tooltip("All layers that the scan rays can collide with. Should include platforms and player.")]
   public LayerMask scanRayCollisionLayers = 0;
-  [Tooltip("Total scan rays to use.")]
-  public int totalScanRays = 36;
   [Tooltip("Scan rays are sent out in all directions. The start angle defines the start boundary of the line of sight in degrees. 0 degrees means right direction (1,0), going counter clockwise. Example: 0 = (1, 0), 90 = (0, 1), 180 = (-1, 0)")]
   public float scanRayStartAngle = 0f;
   [Tooltip("Scan rays are sent out in all directions. The end angle defines the end boundary of the line of sight in degrees. 0 degrees means right direction (1,0), going counter clockwise. Example: 0 = (1, 0), 90 = (0, 1), 180 = (-1, 0)")]
@@ -22,7 +20,6 @@ public class StationarySentryLaser : SpawnBucketItemBehaviour
 
   private float _startAngleRad;
   private float _endAngleRad;
-  private float _step;
   private float _rateOfFireInterval;
 
   private float _playerInSightDuration;
@@ -42,7 +39,6 @@ public class StationarySentryLaser : SpawnBucketItemBehaviour
 
     _startAngleRad = scanRayStartAngle * Mathf.Deg2Rad;
     _endAngleRad = scanRayEndAngle * Mathf.Deg2Rad;
-    _step = (_endAngleRad - _startAngleRad) / (float)totalScanRays;
   }
 
   void OnEnable()
@@ -54,30 +50,50 @@ public class StationarySentryLaser : SpawnBucketItemBehaviour
   void Update()
   {
     #region now check whether we can see the player
+    //bool isSeeingPlayer = false;
+    //for (float theta = _endAngleRad; theta > _startAngleRad - _step / 2; theta -= _step)
+    //{
+    //  Vector2 vector = new Vector2(Mathf.Cos(theta), Mathf.Sin(theta));
+    //  RaycastHit2D raycastHit2D = Physics2D.Raycast(this.gameObject.transform.position, vector.normalized, scanRayLength, scanRayCollisionLayers);
+    //  if (raycastHit2D)
+    //  {
+    //    if (raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
+    //    {
+    //      _playerInSightDuration += Time.deltaTime;
+    //      isSeeingPlayer = true;
+    //      DrawRay(this.gameObject.transform.position, _playerController.transform.position - this.gameObject.transform.position, Color.red);
+    //      break;
+    //    }
+    //    else
+    //    {
+    //      DrawRay(this.gameObject.transform.position, raycastHit2D.point.ToVector3() - this.gameObject.transform.position, Color.grey);
+    //    }
+    //  }
+    //  else
+    //  {
+    //    DrawRay(this.gameObject.transform.position, vector * scanRayLength, Color.grey);
+    //  }
+    //}
+
+
     bool isSeeingPlayer = false;
-    for (float theta = _endAngleRad; theta > _startAngleRad - _step / 2; theta -= _step)
+
+    Vector3 playerVector = _playerController.transform.position - this.transform.position;
+    float angle = Mathf.Atan2(playerVector.y, playerVector.x);
+    if (angle < 0f)
+      angle += 2 * Mathf.PI;
+
+    if (angle >= _startAngleRad && angle <= _endAngleRad)
     {
-      Vector2 vector = new Vector2(Mathf.Cos(theta), Mathf.Sin(theta));
-      RaycastHit2D raycastHit2D = Physics2D.Raycast(this.gameObject.transform.position, vector.normalized, scanRayLength, scanRayCollisionLayers);
-      if (raycastHit2D)
+      RaycastHit2D raycastHit2D = Physics2D.Raycast(this.gameObject.transform.position, playerVector.normalized, playerVector.magnitude, scanRayCollisionLayers);
+      if (raycastHit2D && raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
       {
-        if (raycastHit2D.collider.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-          _playerInSightDuration += Time.deltaTime;
-          isSeeingPlayer = true;
-          DrawRay(this.gameObject.transform.position, _playerController.transform.position - this.gameObject.transform.position, Color.red);
-          break;
-        }
-        else
-        {
-          DrawRay(this.gameObject.transform.position, raycastHit2D.point.ToVector3() - this.gameObject.transform.position, Color.grey);
-        }
-      }
-      else
-      {
-        DrawRay(this.gameObject.transform.position, vector * scanRayLength, Color.grey);
+        isSeeingPlayer = true;
+        _playerInSightDuration += Time.deltaTime;
       }
     }
+
+    DrawRay(this.gameObject.transform.position, playerVector, isSeeingPlayer ? Color.red : Color.gray);
 
     if (!isSeeingPlayer)
       _playerInSightDuration = 0f;

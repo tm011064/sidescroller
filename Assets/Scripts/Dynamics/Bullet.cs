@@ -29,7 +29,6 @@ public class Bullet : MonoBehaviour
   void OnBecameInvisible()
   {
     ObjectPoolingManager.Instance.Deactivate(this.gameObject);
-    Debug.Log("Bullet " + this.gameObject.GetHashCode() + " got invisible and was deactivated.");
   }
 
   void OnTriggerEnter2D(Collider2D col)

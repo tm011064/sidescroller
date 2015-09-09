@@ -5,6 +5,7 @@ public class PlayerControlHandler : BaseControlHandler
 {
   #region members
   private const string TRACE_TAG = "PlayerControlHandler";
+  private const float CROUCH_STANDUP_COLLISION_FUDGE_FACTOR = .0001f;
 
   protected PlayerController _playerController;
   protected PlayerMetricSettings _playerMetricSettings;
@@ -114,7 +115,7 @@ public class PlayerControlHandler : BaseControlHandler
       {
         if (_playerController.isCrouching)
         {
-          if (_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
+          if (_characterPhysicsManager.CanMoveVertically(_playerController.boxColliderSizeDefault.y - _playerController.boxColliderSizeCrouched.y - CROUCH_STANDUP_COLLISION_FUDGE_FACTOR, false))
           {
             // we need to check whether we can stand up
 
@@ -352,7 +353,11 @@ public class PlayerControlHandler : BaseControlHandler
 
   protected virtual bool CanJump()
   {
-    if (!_characterPhysicsManager.CanMoveVertically(_characterPhysicsManager.boxCollider.size.y * .5f))
+    if (!_characterPhysicsManager.CanMoveVertically(
+      _playerController.isCrouching
+        ? _playerController.boxColliderSizeDefault.y - _playerController.boxColliderSizeCrouched.y
+        : CROUCH_STANDUP_COLLISION_FUDGE_FACTOR
+        , !_playerController.isCrouching)) // if we crouch we don't allow edge slide up to simplify things
     {
       return false;
     }
