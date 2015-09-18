@@ -28,6 +28,40 @@ public class GameManager : MonoBehaviour
   private List<Checkpoint> _orderedSceneCheckpoints;
   private int _currentCheckpointIndex = 0;
 
+  #region spawn and checkpoint logic
+  public void SpawnPlayerAtNextCheckpoint(bool doCycle)
+  {
+    if (_currentCheckpointIndex >= _orderedSceneCheckpoints.Count - 1)
+    {
+      if (doCycle)
+        _currentCheckpointIndex = 0;
+      else
+        _currentCheckpointIndex = _orderedSceneCheckpoints.Count - 1;
+    }
+    else
+    {
+      _currentCheckpointIndex++;
+    }
+
+    GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
+    this.player.spawnLocation = checkpoint.gameObject.transform.position;
+    this.player.Respawn();
+  }
+  public void SpawnPlayerAtCheckpoint(int checkpointIndex)
+  {
+    if (checkpointIndex < 0)
+      _currentCheckpointIndex = 0;
+    else if (checkpointIndex >= _orderedSceneCheckpoints.Count)
+      _currentCheckpointIndex = _orderedSceneCheckpoints.Count - 1;
+    else
+      _currentCheckpointIndex = checkpointIndex;
+
+    GameObject checkpoint = _orderedSceneCheckpoints[_currentCheckpointIndex].gameObject;
+    this.player.spawnLocation = checkpoint.gameObject.transform.position;
+    this.player.Respawn();
+  }
+  #endregion
+
   public void RefreshScene(Vector3 cameraPosition)
   {
     // reset the scene

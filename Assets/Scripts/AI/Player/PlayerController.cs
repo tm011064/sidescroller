@@ -81,6 +81,8 @@ public partial class PlayerController : BaseCharacterController
 
   public Vector2 boxColliderOffsetCrouched = Vector2.zero;
   public Vector2 boxColliderSizeCrouched = Vector2.zero;
+  public Vector2 boxColliderOffsetWallAttached = Vector2.zero;
+  public Vector2 boxColliderSizeWallAttached = Vector2.zero;
   #endregion
 
   #region public fields
@@ -147,13 +149,21 @@ public partial class PlayerController : BaseCharacterController
     #region set up special purpose child transforms
     Transform childTransform;
 
+    // TODO (Roman): these checks should come from an inherited class as not all playable characters will share the same special transforms
     childTransform = this.transform.FindChild("SpinMeleeAttackBoxCollider");
-    Logger.Assert(childTransform != null, "Player controller is expected to have a SpinMeleeAttackBoxCollider child object. If this is no longer needed, remove this line in code.");
-    spinMeleeAttackBoxCollider = childTransform.gameObject;
-    spinMeleeAttackBoxCollider.SetActive(false); // we only want to activate this when the player performs the attack.
+    if (childTransform != null)
+    {
+      Logger.Assert(childTransform != null, "Player controller is expected to have a SpinMeleeAttackBoxCollider child object. If this is no longer needed, remove this line in code.");
+      spinMeleeAttackBoxCollider = childTransform.gameObject;
+      spinMeleeAttackBoxCollider.SetActive(false); // we only want to activate this when the player performs the attack.
+    }
 
-    laserGunAimContainer = new LaserGunAimContainer();
-    laserGunAimContainer.Initialize(this.transform.FindChild("LaserGunAim"));
+    childTransform = this.transform.FindChild("LaserGunAim");
+    if (childTransform != null)
+    {
+      laserGunAimContainer = new LaserGunAimContainer();
+      laserGunAimContainer.Initialize(childTransform);
+    }
 
     childTransform = this.transform.FindChild("SpriteAndAnimator");
     Logger.Assert(childTransform != null, "Player controller is expected to have a SpriteAndAnimator child object. If this is no longer needed, remove this line in code.");
@@ -320,7 +330,7 @@ public partial class PlayerController : BaseCharacterController
     _gameManager.RefreshScene(spawnLocation);
 
     characterPhysicsManager.Reset(spawnLocation);
-        
+
     adjustedGravity = jumpSettings.gravity;
 
     ResetControlHandlers(new GoodHealthPlayerControlHandler(this));

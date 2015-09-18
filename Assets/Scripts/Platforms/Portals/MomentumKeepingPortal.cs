@@ -12,6 +12,7 @@ public class MomentumKeepingPortal : BaseMonoBehaviour
   [Tooltip("This can be used to multiply the exit .")]
   public Vector2 emissionVelocityMultiplier = new Vector2(1, 1);
   public Vector3 spawnOffset = Vector3.zero;
+  public Vector2 incommingVectorVelocityMultiplier = new Vector2(1, 1);
 
   private MomentumKeepingPortal _connectedMomentumKeepingPortal;
 
@@ -27,6 +28,9 @@ public class MomentumKeepingPortal : BaseMonoBehaviour
 
     Vector3 velocity = playerController.characterPhysicsManager.velocity;
 
+    velocity = new Vector3(velocity.x * _connectedMomentumKeepingPortal.incommingVectorVelocityMultiplier.x
+      , velocity.y * _connectedMomentumKeepingPortal.incommingVectorVelocityMultiplier.y, 0f);
+
     float angle = Mathf.Atan2(velocity.y, velocity.x);
     float exitAngle = _connectedMomentumKeepingPortal.emissionAngle * Mathf.Deg2Rad + angle;
 
@@ -35,7 +39,8 @@ public class MomentumKeepingPortal : BaseMonoBehaviour
     exitVelocity.x *= velocity.magnitude * _connectedMomentumKeepingPortal.emissionVelocityMultiplier.x;
     exitVelocity.y *= velocity.magnitude * _connectedMomentumKeepingPortal.emissionVelocityMultiplier.y;
 
-    Debug.Log(this.name + ": Incoming velocity: " + velocity + ", angle: " + angle * Mathf.Rad2Deg + ", exit angle: " + exitAngle * Mathf.Rad2Deg + ", exit velocity: " + exitVelocity);
+    Debug.Log(this.name + ": Incoming velocity: " + playerController.characterPhysicsManager.velocity + ", adjusted velocity: " + velocity 
+      + ", angle: " + angle * Mathf.Rad2Deg + ", exit angle: " + exitAngle * Mathf.Rad2Deg + ", exit velocity: " + exitVelocity);
 
     playerController.transform.position = connectedPortal.transform.position + _connectedMomentumKeepingPortal.spawnOffset;
     playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below = false;

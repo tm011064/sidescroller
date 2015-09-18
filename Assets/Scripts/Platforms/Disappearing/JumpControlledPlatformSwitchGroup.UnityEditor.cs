@@ -44,7 +44,7 @@ public partial class JumpControlledPlatformSwitchGroup : SpawnBucketItemBehaviou
               if (boxCollider2D != null)
               {
                 gizmoCenter = boxCollider2D.offset;
-                gizmoExtents = boxCollider2D.bounds.extents;
+                gizmoExtents = boxCollider2D.size / 2;
               }
             }
 

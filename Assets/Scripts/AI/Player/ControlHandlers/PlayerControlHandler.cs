@@ -71,6 +71,10 @@ public class PlayerControlHandler : BaseControlHandler
         _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
 
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
+
+      // we also need to adjust the collider size...
+      _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetWallAttached;
+      _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeWallAttached;
     }
     else if (_playerController.isAttachedToWall
       && _playerController.characterPhysicsManager.velocity.y < 0f
@@ -80,6 +84,10 @@ public class PlayerControlHandler : BaseControlHandler
         _playerController.sprite.transform.localScale = new Vector3(_playerController.sprite.transform.localScale.x * -1, _playerController.sprite.transform.localScale.y, _playerController.sprite.transform.localScale.z);
 
       _playerController.animator.Play(Animator.StringToHash("PlayerWallAttached"));
+      
+      // we also need to adjust the collider size...
+      _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetWallAttached;
+      _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeWallAttached;
     }
     else if (_playerController.characterPhysicsManager.lastMoveCalculationResult.collisionState.below)
     {
@@ -113,6 +121,10 @@ public class PlayerControlHandler : BaseControlHandler
       }
       else
       {
+        // we also need to adjust the collider size...
+        _characterPhysicsManager.boxCollider.offset = _playerController.boxColliderOffsetDefault;
+        _characterPhysicsManager.boxCollider.size = _playerController.boxColliderSizeDefault;
+
         if (_playerController.isCrouching)
         {
           if (_characterPhysicsManager.CanMoveVertically(_playerController.boxColliderSizeDefault.y - _playerController.boxColliderSizeCrouched.y - CROUCH_STANDUP_COLLISION_FUDGE_FACTOR, false))

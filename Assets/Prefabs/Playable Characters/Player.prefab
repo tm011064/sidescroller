@@ -104,7 +104,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &421806
 Transform:
   m_ObjectHideFlags: 1
@@ -161,7 +161,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 113450}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4119.02344, y: -282.678955, z: 0}
+  m_LocalPosition: {x: 576, y: 320, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 437382}
@@ -222,9 +222,9 @@ BoxCollider2D:
   m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -15}
   serializedVersion: 2
-  m_Size: {x: 96, y: 96}
+  m_Size: {x: 88, y: 90}
 --- !u!61 &6141704
 BoxCollider2D:
   m_ObjectHideFlags: 1
@@ -247,7 +247,7 @@ Animator:
   m_GameObject: {fileID: 178590}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: f9b7607e6ca3f464f98abd27f1818a2a, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1f6c39474d43e5b4a8233044a8d1ad6a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -281,10 +281,10 @@ Light:
   m_Enabled: 1
   serializedVersion: 6
   m_Type: 0
-  m_Color: {r: .985294104, g: 0, b: 0, a: 1}
-  m_Intensity: 7.19000006
+  m_Color: {r: .558823526, g: .558823526, b: .558823526, a: 1}
+  m_Intensity: 2.1500001
   m_Range: 2048
-  m_SpotAngle: 104.099998
+  m_SpotAngle: 125.599998
   m_CookieSize: 10
   m_Shadows:
     m_Type: 2
@@ -403,8 +403,10 @@ MonoBehaviour:
     runSpeed: 900
     accelerationGroundDamping: 6
     decelerationGroundDamping: 8
-  boxColliderOffsetCrouched: {x: 0, y: -24}
-  boxColliderSizeCrouched: {x: 96, y: 48}
+  boxColliderOffsetCrouched: {x: 0, y: -38}
+  boxColliderSizeCrouched: {x: 88, y: 44}
+  boxColliderOffsetWallAttached: {x: 0, y: -15}
+  boxColliderSizeWallAttached: {x: 88, y: 90}
   boxColliderOffsetDefault: {x: 0, y: 0}
   boxColliderSizeDefault: {x: 0, y: 0}
   adjustedGravity: 0
@@ -524,7 +526,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -752253655
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 29689edf152f76a40916850ad149b4a2, type: 3}
+  m_Sprite: {fileID: 21300032, guid: c37c99358d51bd246b53dcd532ee44a4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
 --- !u!212 &21253176
 SpriteRenderer:
